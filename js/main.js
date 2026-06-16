@@ -1,11 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-
     /* ==========================================================================
        1. Global Beat Player Logic
        ========================================================================== */
     const globalAudio = new Audio();
     let currentBeatRow = null;
-    
+
     // UI Elements
     const playerBar = document.getElementById('global-player-bar');
     const barPlayPauseBtn = document.getElementById('bar-play-pause');
@@ -15,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const timeCurrent = document.getElementById('time-current');
     const timeTotal = document.getElementById('time-total');
     const volumeSlider = document.getElementById('volume-slider');
-    
+
     const barTitle = document.getElementById('bar-title');
     const barSubtitle = document.getElementById('bar-subtitle');
     const barArtwork = document.getElementById('bar-artwork');
@@ -63,12 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Load new source
         globalAudio.src = src;
         globalAudio.load();
-        
+
         // Update Sticky Player Bar Info
         barTitle.textContent = title;
         barSubtitle.textContent = genre;
         barArtwork.textContent = art;
-        
+
         // Show player bar
         playerBar.classList.add('visible');
     }
@@ -79,14 +78,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (globalAudio.paused) {
             // Pause mix-master compare player if running
             pauseComparisonPlayer();
-            
-            globalAudio.play()
+
+            globalAudio
+                .play()
                 .then(() => {
                     updateBeatRowUI(currentBeatRow, true);
                     barPlayIcon.style.display = 'none';
                     barPauseIcon.style.display = 'block';
                 })
-                .catch(err => console.error("Error playing audio:", err));
+                .catch((err) => console.error('Error playing audio:', err));
         } else {
             globalAudio.pause();
             updateBeatRowUI(currentBeatRow, false);
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Row click listeners
-    beatRows.forEach(row => {
+    beatRows.forEach((row) => {
         const playBtn = row.querySelector('.beat-play-btn');
         playBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 togglePlay();
             }
         });
-        
+
         // Let row click play as well
         row.addEventListener('click', () => {
             if (currentBeatRow === row) {
@@ -125,7 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Audio Event Listeners
     globalAudio.addEventListener('timeupdate', () => {
         if (globalAudio.duration) {
-            const percent = (globalAudio.currentTime / globalAudio.duration) * 100;
+            const percent =
+                (globalAudio.currentTime / globalAudio.duration) * 100;
             progressBar.value = percent;
             timeCurrent.textContent = formatTime(globalAudio.currentTime);
         }
@@ -156,17 +157,16 @@ document.addEventListener('DOMContentLoaded', () => {
         globalAudio.volume = volumeSlider.value;
     });
 
-
     /* ==========================================================================
        2. Seamless Mix & Master Comparison Player
        ========================================================================== */
     const audioRaw = new Audio('audio/mix_raw.wav');
     const audioMastered = new Audio('audio/mix_mastered.wav');
-    
+
     // Set looping on both
     audioRaw.loop = true;
     audioMastered.loop = true;
-    
+
     // Set initial volume
     audioRaw.volume = 0.8;
     audioMastered.volume = 0.8;
@@ -204,10 +204,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Align playback positions
-        const currentTime = Math.max(audioRaw.currentTime, audioMastered.currentTime);
+        const currentTime = Math.max(
+            audioRaw.currentTime,
+            audioMastered.currentTime
+        );
         audioRaw.currentTime = currentTime;
         audioMastered.currentTime = currentTime;
-        
+
         syncMuteState();
 
         Promise.all([audioRaw.play(), audioMastered.play()])
@@ -216,11 +219,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 comparePlayBtn.classList.add('playing');
                 comparePlayIcon.style.display = 'none';
                 comparePauseIcon.style.display = 'block';
-                
+
                 // Continuous alignment syncing loop
                 startSyncTimer();
             })
-            .catch(err => console.error("Error playing comparison audio:", err));
+            .catch((err) =>
+                console.error('Error playing comparison audio:', err)
+            );
     }
 
     function pauseComparisonPlayer() {
@@ -247,7 +252,10 @@ document.addEventListener('DOMContentLoaded', () => {
         syncInterval = setInterval(() => {
             if (isComparisonPlaying) {
                 // Ensure synchronization within ~50ms
-                if (Math.abs(audioRaw.currentTime - audioMastered.currentTime) > 0.05) {
+                if (
+                    Math.abs(audioRaw.currentTime - audioMastered.currentTime) >
+                    0.05
+                ) {
                     audioMastered.currentTime = audioRaw.currentTime;
                 }
             }
@@ -285,7 +293,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize mute states
     syncMuteState();
 
-
     /* ==========================================================================
        3. Photography Gallery & Lightbox
        ========================================================================== */
@@ -303,14 +310,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPhotoIndex = -1;
 
     // Filters
-    filterButtons.forEach(btn => {
+    filterButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
-            filterButtons.forEach(b => b.classList.remove('active'));
+            filterButtons.forEach((b) => b.classList.remove('active'));
             btn.classList.add('active');
-            
+
             const category = btn.getAttribute('data-filter');
-            
-            photoItems.forEach(item => {
+
+            photoItems.forEach((item) => {
                 const itemCat = item.getAttribute('data-category');
                 if (category === 'all' || itemCat === category) {
                     item.style.display = 'block';
@@ -323,13 +330,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Gather currently visible photos in the grid
     function getVisiblePhotos() {
-        return Array.from(photoItems).filter(item => item.style.display !== 'none');
+        return Array.from(photoItems).filter(
+            (item) => item.style.display !== 'none'
+        );
     }
 
     function openLightbox(item) {
         currentPhotoList = getVisiblePhotos();
         currentPhotoIndex = currentPhotoList.indexOf(item);
-        
+
         const imgSrc = item.querySelector('img').src;
         const title = item.getAttribute('data-title');
         const category = item.getAttribute('data-category');
@@ -349,9 +358,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function navigateLightbox(direction) {
         if (currentPhotoList.length === 0) return;
-        
+
         currentPhotoIndex += direction;
-        
+
         // Wrap around logic
         if (currentPhotoIndex < 0) {
             currentPhotoIndex = currentPhotoList.length - 1;
@@ -360,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const nextItem = currentPhotoList[currentPhotoIndex];
-        
+
         const imgSrc = nextItem.querySelector('img').src;
         const title = nextItem.getAttribute('data-title');
         const category = nextItem.getAttribute('data-category');
@@ -370,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
         lightboxCategory.textContent = category;
     }
 
-    photoItems.forEach(item => {
+    photoItems.forEach((item) => {
         item.addEventListener('click', () => openLightbox(item));
     });
 
@@ -380,7 +389,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Close on click outside
     lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox || e.target.classList.contains('lightbox-content')) {
+        if (
+            e.target === lightbox ||
+            e.target.classList.contains('lightbox-content')
+        ) {
             closeLightbox();
         }
     });
@@ -388,12 +400,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Keyboard Navigation
     document.addEventListener('keydown', (e) => {
         if (!lightbox.classList.contains('visible')) return;
-        
+
         if (e.key === 'Escape') closeLightbox();
         if (e.key === 'ArrowLeft') navigateLightbox(-1);
         if (e.key === 'ArrowRight') navigateLightbox(1);
     });
-
 
     /* ==========================================================================
        4. Dynamic Writing System — loads from data/writings.json
@@ -407,7 +418,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const writingGrid = document.getElementById('writing-grid');
     const writingLoading = document.getElementById('writing-loading');
     const writingEmpty = document.getElementById('writing-empty');
-    const writingFilterBtns = document.querySelectorAll('[data-writing-filter]');
+    const writingFilterBtns = document.querySelectorAll(
+        '[data-writing-filter]'
+    );
 
     let allWritings = [];
     let activeWritingFilter = 'all';
@@ -416,7 +429,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function formatWritingDate(dateStr) {
         if (!dateStr) return '';
         const d = new Date(dateStr);
-        return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        return d.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        });
     }
 
     // Build a writing card element from a writing object
@@ -430,18 +447,25 @@ document.addEventListener('DOMContentLoaded', () => {
             <div>
                 <div class="writing-card-meta">
                     <span class="writing-category">${writing.category}</span>
-                    <span class="writing-date">${formatWritingDate(writing.date)}</span>
+                    <span class="writing-date">${formatWritingDate(
+                        writing.date
+                    )}</span>
                 </div>
                 <h3>${writing.title}</h3>
                 <p class="writing-excerpt">${writing.excerpt}</p>
             </div>
-            <button class="writing-read-more" aria-label="Read ${writing.title}">Read Full Piece →</button>
+            <button class="writing-read-more" aria-label="Read ${
+                writing.title
+            }">Read Full Piece →</button>
         `;
 
         // Open reader on button click
-        card.querySelector('.writing-read-more').addEventListener('click', () => {
-            openWritingReader(writing);
-        });
+        card.querySelector('.writing-read-more').addEventListener(
+            'click',
+            () => {
+                openWritingReader(writing);
+            }
+        );
 
         return card;
     }
@@ -450,9 +474,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderWritings(filter) {
         writingGrid.innerHTML = '';
 
-        const filtered = filter === 'all'
-            ? allWritings
-            : allWritings.filter(w => w.category === filter);
+        const filtered =
+            filter === 'all'
+                ? allWritings
+                : allWritings.filter((w) => w.category === filter);
 
         if (filtered.length === 0) {
             writingEmpty.style.display = 'flex';
@@ -466,7 +491,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Stagger fade-in
             card.style.opacity = '0';
             card.style.transform = 'translateY(20px)';
-            card.style.transition = `opacity 0.5s ease ${i * 0.08}s, transform 0.5s ease ${i * 0.08}s`;
+            card.style.transition = `opacity 0.5s ease ${
+                i * 0.08
+            }s, transform 0.5s ease ${i * 0.08}s`;
             writingGrid.appendChild(card);
             // Trigger reflow for transition
             requestAnimationFrame(() => {
@@ -491,7 +518,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             writingLoading.style.display = 'none';
             writingEmpty.style.display = 'flex';
-            writingEmpty.querySelector('p').textContent = 'Could not load writings. Check data/writings.json.';
+            writingEmpty.querySelector('p').textContent =
+                'Could not load writings. Check data/writings.json.';
             console.error('Failed to load writings.json:', err);
         }
     }
@@ -499,9 +527,9 @@ document.addEventListener('DOMContentLoaded', () => {
     loadWritings();
 
     // Writing category filter buttons
-    writingFilterBtns.forEach(btn => {
+    writingFilterBtns.forEach((btn) => {
         btn.addEventListener('click', () => {
-            writingFilterBtns.forEach(b => b.classList.remove('active'));
+            writingFilterBtns.forEach((b) => b.classList.remove('active'));
             btn.classList.add('active');
             activeWritingFilter = btn.getAttribute('data-writing-filter');
             renderWritings(activeWritingFilter);
@@ -527,20 +555,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === readerModal) closeReader();
     });
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && readerModal.classList.contains('visible')) closeReader();
+        if (e.key === 'Escape' && readerModal.classList.contains('visible'))
+            closeReader();
     });
-
 
     /* ==========================================================================
        5. Scroll Fade-in Animations (Intersection Observer)
        ========================================================================== */
     const observerOptions = {
         threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        rootMargin: '0px 0px -50px 0px',
     };
 
     const fadeObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('animate-in');
                 fadeObserver.unobserve(entry.target); // run once
@@ -549,20 +577,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }, observerOptions);
 
     // Apply basic fade classes to main blocks
-    const animatedElements = document.querySelectorAll('.stack-card, .beat-row, .mix-showcase-box, .photo-item, .writing-card, .booking-form');
-    animatedElements.forEach(el => {
+    const animatedElements = document.querySelectorAll(
+        '.stack-card, .beat-row, .mix-showcase-box, .photo-item, .writing-card, .booking-form'
+    );
+    animatedElements.forEach((el) => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+        el.style.transition =
+            'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
         fadeObserver.observe(el);
     });
 
     // Style helper for observer triggers
     const styleSheet = document.createElement('style');
     styleSheet.type = 'text/css';
-    styleSheet.innerText = '.animate-in { opacity: 1 !important; transform: translateY(0) !important; }';
+    styleSheet.innerText =
+        '.animate-in { opacity: 1 !important; transform: translateY(0) !important; }';
     document.head.appendChild(styleSheet);
-
 
     /* ==========================================================================
        6. Navbar Highlight on Scroll
@@ -573,8 +604,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', () => {
         let current = '';
         const scrollPos = window.scrollY + 100;
-        
-        sections.forEach(sec => {
+
+        sections.forEach((sec) => {
             const secTop = sec.offsetTop;
             const secHeight = sec.clientHeight;
             if (scrollPos >= secTop && scrollPos < secTop + secHeight) {
@@ -582,12 +613,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        navLinks.forEach(link => {
+        navLinks.forEach((link) => {
             link.classList.remove('active');
             if (link.getAttribute('href') === `#${current}`) {
                 link.classList.add('active');
             }
         });
     });
-
 });
