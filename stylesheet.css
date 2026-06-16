@@ -1233,18 +1233,40 @@ nav a:hover, nav a.active {
 
 .social-links {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
-.social-icon {
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+.social-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: 50px;
+    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.03);
     color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    transition: var(--transition-smooth);
 }
 
-.social-icon:hover {
+.social-icon-btn svg {
+    flex-shrink: 0;
+    transition: var(--transition-fast);
+}
+
+.social-icon-btn:hover {
+    border-color: var(--accent-purple);
+    color: var(--text-primary);
+    background: rgba(168, 85, 247, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.15);
+}
+
+.social-icon-btn:hover svg {
     color: var(--accent-purple);
 }
 
