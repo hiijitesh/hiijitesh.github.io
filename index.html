@@ -305,58 +305,32 @@
         <!-- Writing Section -->
         <section id="writing">
             <div class="container">
-                <h2 style="margin-bottom: 1rem;">The Written Word</h2>
-                <p style="max-width: 600px; margin-bottom: 4rem;">Lyric sheets, poetry slabs, and analytical thoughts. Click a card to read the full draft in dynamic layout.</p>
-
-                <div class="writing-grid">
-                    <!-- Card 1 -->
-                    <div class="writing-card" data-fulltext="Vessels of Dust
-
-We are but columns of air vibrating at frequencies we call memory. In the hollows of our chests, we store the echoes of old room acoustics, the hum of fluorescent lighting in empty hallways.
-
-We speak in waveforms, transient spikes of laughter quickly decayed by the soft absorption of drywall and carpets. We walk through acoustic thresholds, hoping to find a space with zero resonance—a clean slate, an anechoic chamber where the only sound left is the rhythm of our own blood moving.
-
-But the dust gathers in our ears, acting as a low-pass filter, slowly rounding off the sharp corners of our regrets, leaving only a warm, saturated hum." id="writing-card-1">
-                        <div>
-                            <span class="writing-category">Poetry</span>
-                            <h3>Vessels of Dust</h3>
-                            <p class="writing-excerpt">"We are but columns of air vibrating at frequencies we call memory. In the hollows of our chests, we store the echoes of old room acoustics..."</p>
-                        </div>
-                        <button class="writing-read-more" id="read-writing-1">Read Full Piece →</button>
+                <div class="writing-section-header">
+                    <div>
+                        <h2 style="margin-bottom: 1rem;">The Written Word</h2>
+                        <p style="max-width: 600px; margin-bottom: 0;">Lyric sheets, poetry slabs, and analytical thoughts. Click a card to read the full piece.</p>
                     </div>
-
-                    <!-- Card 2 -->
-                    <div class="writing-card" data-fulltext="Subwoofer Sins
-
-Low frequency vibrations rattling the windowpanes of this rental flat. 45 Hertz is where the anger sits.
-
-I mix the sub-bass so loud it masks the squeak of the hardwood floors, masks the hum of the old refrigerator, masks the sound of my own voice wondering what went wrong.
-
-We filter out the mud at 250, but we can't filter out the clutter in our heads. We compress the vocals to make them sit upfront, but some stories are meant to stay buried in the back of the mix." id="writing-card-2">
-                        <div>
-                            <span class="writing-category">Lyrics</span>
-                            <h3>Subwoofer Sins</h3>
-                            <p class="writing-excerpt">"Low frequency vibrations rattling the windowpanes of this rental flat. 45 Hertz is where the anger sits. I mix the sub-bass so loud..."</p>
-                        </div>
-                        <button class="writing-read-more" id="read-writing-2">Read Full Piece →</button>
-                    </div>
-
-                    <!-- Card 3 -->
-                    <div class="writing-card" data-fulltext="The Geometry of Silence
-
-Silence is not the absence of sound; it is the presence of structure.
-
-In architectural design, negative space defines the building. In mixing, the space between transient peaks defines the dynamics. Without the quiet valley, the high peak is just flat compression, a wall of noise that wears down the ear.
-
-We build walls to create rooms, and we create rooms to isolate sound. But isolation is a myth. The low end always leaks through the walls. The street always creeps into the microphone. True art is not about creating a perfect vacuum; it is about choosing which leaks to keep." id="writing-card-3">
-                        <div>
-                            <span class="writing-category">Essay</span>
-                            <h3>The Geometry of Silence</h3>
-                            <p class="writing-excerpt">"Silence is not the absence of sound; it is the presence of structure. In architectural design, negative space defines the building. In mixing..."</p>
-                        </div>
-                        <button class="writing-read-more" id="read-writing-3">Read Full Piece →</button>
-                    </div>
+                    <ul class="photography-filters writing-filters" id="writing-filters">
+                        <li><button class="filter-btn active" data-writing-filter="all" id="wf-all">All</button></li>
+                        <li><button class="filter-btn" data-writing-filter="Poetry" id="wf-poetry">Poetry</button></li>
+                        <li><button class="filter-btn" data-writing-filter="Lyrics" id="wf-lyrics">Lyrics</button></li>
+                        <li><button class="filter-btn" data-writing-filter="Essay" id="wf-essay">Essays</button></li>
+                    </ul>
                 </div>
+
+                <!-- Loading state -->
+                <div id="writing-loading" class="writing-loading">
+                    <div class="writing-spinner"></div>
+                    <p>Loading writings…</p>
+                </div>
+
+                <!-- Empty state -->
+                <div id="writing-empty" class="writing-empty" style="display:none;">
+                    <p>No pieces found in this category yet.</p>
+                </div>
+
+                <!-- Dynamic grid — populated by JS from data/writings.json -->
+                <div class="writing-grid" id="writing-grid"></div>
             </div>
         </section>
 

@@ -396,30 +396,126 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* ==========================================================================
-       4. Writing Reader Modal
+       4. Dynamic Writing System — loads from data/writings.json
        ========================================================================== */
     const readerModal = document.getElementById('reader-modal');
     const readerCategory = readerModal.querySelector('.reader-category');
     const readerTitle = readerModal.querySelector('.reader-title');
     const readerBody = readerModal.querySelector('.reader-body');
     const readerClose = readerModal.querySelector('.reader-close');
-    const readMoreBtns = document.querySelectorAll('.writing-read-more');
 
-    readMoreBtns.forEach(btn => {
+    const writingGrid = document.getElementById('writing-grid');
+    const writingLoading = document.getElementById('writing-loading');
+    const writingEmpty = document.getElementById('writing-empty');
+    const writingFilterBtns = document.querySelectorAll('[data-writing-filter]');
+
+    let allWritings = [];
+    let activeWritingFilter = 'all';
+
+    // Format date e.g. "June 1, 2026"
+    function formatWritingDate(dateStr) {
+        if (!dateStr) return '';
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    // Build a writing card element from a writing object
+    function buildWritingCard(writing) {
+        const card = document.createElement('div');
+        card.className = 'writing-card';
+        card.setAttribute('data-id', writing.id);
+        card.setAttribute('data-category', writing.category);
+
+        card.innerHTML = `
+            <div>
+                <div class="writing-card-meta">
+                    <span class="writing-category">${writing.category}</span>
+                    <span class="writing-date">${formatWritingDate(writing.date)}</span>
+                </div>
+                <h3>${writing.title}</h3>
+                <p class="writing-excerpt">${writing.excerpt}</p>
+            </div>
+            <button class="writing-read-more" aria-label="Read ${writing.title}">Read Full Piece →</button>
+        `;
+
+        // Open reader on button click
+        card.querySelector('.writing-read-more').addEventListener('click', () => {
+            openWritingReader(writing);
+        });
+
+        return card;
+    }
+
+    // Render cards filtered by category
+    function renderWritings(filter) {
+        writingGrid.innerHTML = '';
+
+        const filtered = filter === 'all'
+            ? allWritings
+            : allWritings.filter(w => w.category === filter);
+
+        if (filtered.length === 0) {
+            writingEmpty.style.display = 'flex';
+            return;
+        }
+
+        writingEmpty.style.display = 'none';
+
+        filtered.forEach((writing, i) => {
+            const card = buildWritingCard(writing);
+            // Stagger fade-in
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = `opacity 0.5s ease ${i * 0.08}s, transform 0.5s ease ${i * 0.08}s`;
+            writingGrid.appendChild(card);
+            // Trigger reflow for transition
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    }
+
+    // Fetch writings.json and bootstrap
+    async function loadWritings() {
+        try {
+            const res = await fetch('data/writings.json');
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            allWritings = await res.json();
+            // Sort newest first
+            allWritings.sort((a, b) => new Date(b.date) - new Date(a.date));
+            writingLoading.style.display = 'none';
+            renderWritings(activeWritingFilter);
+        } catch (err) {
+            writingLoading.style.display = 'none';
+            writingEmpty.style.display = 'flex';
+            writingEmpty.querySelector('p').textContent = 'Could not load writings. Check data/writings.json.';
+            console.error('Failed to load writings.json:', err);
+        }
+    }
+
+    loadWritings();
+
+    // Writing category filter buttons
+    writingFilterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            const card = btn.closest('.writing-card');
-            const category = card.querySelector('.writing-category').textContent;
-            const title = card.querySelector('h3').textContent;
-            const fullText = card.getAttribute('data-fulltext');
-
-            readerCategory.textContent = category;
-            readerTitle.textContent = title;
-            readerBody.textContent = fullText;
-
-            readerModal.classList.add('visible');
-            document.body.style.overflow = 'hidden';
+            writingFilterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeWritingFilter = btn.getAttribute('data-writing-filter');
+            renderWritings(activeWritingFilter);
         });
     });
+
+    // Open reader modal with full writing content
+    function openWritingReader(writing) {
+        readerCategory.textContent = writing.category;
+        readerTitle.textContent = writing.title;
+        readerBody.textContent = writing.content;
+        readerModal.classList.add('visible');
+        document.body.style.overflow = 'hidden';
+    }
 
     function closeReader() {
         readerModal.classList.remove('visible');
@@ -428,9 +524,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     readerClose.addEventListener('click', closeReader);
     readerModal.addEventListener('click', (e) => {
-        if (e.target === readerModal) {
-            closeReader();
-        }
+        if (e.target === readerModal) closeReader();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && readerModal.classList.contains('visible')) closeReader();
     });
 
 
