@@ -20,11 +20,41 @@ window.App = window.App || {};
     constructor() {
       // Live Google Apps Script Webhook endpoint for logging likes & views directly to Google Sheets
       this.apiEndpoint = window.ENGAGEMENT_API_URL || 'https://script.google.com/macros/s/AKfycbx4yq-WGnp4bl7tPjaoge6mj-oluJupxcHjZcCKgcX2T_JFpRT5xv8h124azfJ0U7iL/exec';
-      this.onServerSync = null;
+      this.syncListeners = [];
+      this.hasSynced = false;
+      this.lastStats = null;
     }
 
     /**
-     * wConfigure or change the remote server endpoint URL
+     * Register a callback to be notified whenever server stats are fetched
+     * @param {Function} fn
+     */
+    addSyncListener(fn) {
+      if (typeof fn === 'function') {
+        this.syncListeners.push(fn);
+        if (this.hasSynced && this.lastStats) {
+          try { fn(this.lastStats); } catch (e) { console.error(e); }
+        }
+      }
+    }
+
+    /**
+     * Notify all registered sync listeners with fresh stats
+     * @param {Object} stats
+     */
+    notifySyncListeners(stats) {
+      this.hasSynced = true;
+      this.lastStats = stats;
+      this.syncListeners.forEach(fn => {
+        try { fn(stats); } catch (e) { console.error(e); }
+      });
+      if (typeof this.onServerSync === 'function') {
+        try { this.onServerSync(stats); } catch (e) { console.error(e); }
+      }
+    }
+
+    /**
+     * Configure or change the remote server endpoint URL
      * @param {string} url
      */
     setApiEndpoint(url) {
