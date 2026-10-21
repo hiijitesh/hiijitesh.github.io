@@ -18,7 +18,7 @@
   <link rel="apple-touch-icon" href="images/favicon.png?v=2">
 
   <!-- Minimal Stylesheet -->
-  <link rel="stylesheet" href="stylesheet.css?v=10">
+  <link rel="stylesheet" href="stylesheet.css?v=12">
 </head>
 <body>
 
@@ -55,12 +55,24 @@
           </p>
         </div>
 
-        <!-- Filter Chips -->
-        <div class="poetry-filters">
-          <button class="p-filter active" data-wfilter="all">Sabhi</button>
-          <button class="p-filter" data-wfilter="Poetry">Poetry</button>
-          <button class="p-filter" data-wfilter="Nazm">Nazmein</button>
-          <button class="p-filter" data-wfilter="Shayari">Shayari</button>
+        <!-- Filter Chips & Sort Controls -->
+        <div class="poetry-controls">
+          <div class="poetry-filters">
+            <button class="p-filter active" data-wfilter="all">Sabhi</button>
+            <button class="p-filter" data-wfilter="Poetry">Poetry</button>
+            <button class="p-filter" data-wfilter="Nazm">Nazmein</button>
+            <button class="p-filter" data-wfilter="Shayari">Shayari</button>
+          </div>
+          <div class="poetry-sort">
+            <span class="sort-label">Sort:</span>
+            <button class="p-sort-btn active" id="sort-views-btn" data-sort="views" type="button" title="Sort by Most Views">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span>Most Read</span>
+            </button>
+            <button class="p-sort-btn" id="sort-recent-btn" data-sort="recent" type="button" title="Sort by Order in Archive">
+              <span>Latest</span>
+            </button>
+          </div>
         </div>
 
         <!-- Editorial Poetry Folio -->
@@ -176,17 +188,40 @@
       <div class="reader-header-sticky">
         <div class="reader-header-top">
           <div class="reader-cat" id="reader-cat">Category</div>
-          <button class="reader-lang-toggle" id="reader-lang-toggle" type="button" title="Hinglish / हिंदी script toggle" aria-label="Toggle language">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="m5 8 6 6"/>
-              <path d="m4 14 6-6 2-3"/>
-              <path d="M2 5h12"/>
-              <path d="M7 2h1"/>
-              <path d="m22 22-5-10-5 10"/>
-              <path d="M14 18h6"/>
-            </svg>
-            <span id="reader-lang-label">A / अ</span>
-          </button>
+          <div class="reader-actions">
+            <!-- Total View / Read Count -->
+            <div class="reader-stat" id="reader-views" title="Total Reads">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <span id="reader-views-count">0</span>
+            </div>
+
+            <!-- Like (Heart) Button with Bubble Animation -->
+            <button class="reader-like-btn" id="reader-like-btn" type="button" aria-label="Like this poem" title="Dil se like karein">
+              <span class="like-heart-icon" id="like-heart-icon" aria-hidden="true">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                </svg>
+              </span>
+              <span class="like-count" id="reader-likes-count">0</span>
+              <span class="heart-bubble-container" id="heart-bubble-container" aria-hidden="true"></span>
+            </button>
+
+            <!-- Language Toggle Button -->
+            <button class="reader-lang-toggle" id="reader-lang-toggle" type="button" title="Hinglish / हिंदी script toggle" aria-label="Toggle language">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m5 8 6 6"/>
+                <path d="m4 14 6-6 2-3"/>
+                <path d="M2 5h12"/>
+                <path d="M7 2h1"/>
+                <path d="m22 22-5-10-5 10"/>
+                <path d="M14 18h6"/>
+              </svg>
+              <span id="reader-lang-label">A / अ</span>
+            </button>
+          </div>
         </div>
         <h2 class="reader-heading" id="reader-heading">Title</h2>
       </div>
@@ -213,15 +248,16 @@
   </footer>
 
   <!-- Modular Components & Architecture -->
-  <script src="js/data/defaultWritings.js?v=11"></script>
-  <script src="js/utils/validator.js?v=11"></script>
-  <script src="js/utils/transliterator.js?v=11"></script>
-  <script src="js/components/Toast.js?v=11"></script>
-  <script src="js/components/PoetryCard.js?v=11"></script>
-  <script src="js/components/ReaderModal.js?v=11"></script>
-  <script src="js/components/TicketModal.js?v=11"></script>
-  <script src="js/components/PoetrySection.js?v=11"></script>
-  <script src="js/components/TourSection.js?v=11"></script>
-  <script src="js/main.js?v=11"></script>
+  <script src="js/data/defaultWritings.js?v=12"></script>
+  <script src="js/utils/validator.js?v=12"></script>
+  <script src="js/utils/transliterator.js?v=12"></script>
+  <script src="js/utils/engagement.js?v=12"></script>
+  <script src="js/components/Toast.js?v=12"></script>
+  <script src="js/components/PoetryCard.js?v=12"></script>
+  <script src="js/components/ReaderModal.js?v=12"></script>
+  <script src="js/components/TicketModal.js?v=12"></script>
+  <script src="js/components/PoetrySection.js?v=12"></script>
+  <script src="js/components/TourSection.js?v=12"></script>
+  <script src="js/main.js?v=12"></script>
 </body>
 </html>

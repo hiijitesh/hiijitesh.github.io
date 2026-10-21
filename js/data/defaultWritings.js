@@ -10,7 +10,9 @@ window.App.defaultWritings = [
     category: "Poetry",
     title: "Mere Soch Pare Bhi, Kuch Hona Hain",
     title_hi: "मेरे सोच परे भी, कुछ होना हैं",
-    date: "October 2026",
+    date: "Aug 2024",
+    views: 1842,
+    likes: 128,
     excerpt: "Ek samay tha jahan sab kuch naa paane ka bhay tha, ek aaj waqt hain jaha sab kuch hoke bhi jindgi lagti kamwaqt hain...",
     content: `Ek samay tha jahan,
 Sab kuch naa paane ka bhay tha
@@ -31,7 +33,7 @@ Mere सोच pare bhi, kuch hona hain.
 
 Sambhaal ke rakhata uss pal ko, jo khaas the
 Jab pata hota isko bhi, ek din khona hain.
-Mere سوچ pare bhi, kuch hona hain.`,
+Mere soch pare bhi, kuch hona hain.`,
     content_hi: `एक समय था जहाँ,
 सब कुछ ना पाने का भय था
 
@@ -59,6 +61,8 @@ Mere سوچ pare bhi, kuch hona hain.`,
     title: "Kuch Khayaal Aise Hain",
     title_hi: "कुछ ख़्याल ऐसे हैं",
     date: "October 2026",
+    views: 2410,
+    likes: 195,
     excerpt: "Kuch khayal aise hain jo meet nahi patein, kuch shaam aisi hain jo dhal nahi patein. Log toh charo taraf hain lekin fir sab me hum ghool meel nahi patein...",
     content: `Kuch khayal aise hain jo meet nahi patein
 Kuch shaam aisi hain jo dhal nahi patein
@@ -74,16 +78,16 @@ Kuch shaam aisi hain jo dhal nahi patein
 
 Kabhi aarzoo hoti hain apno ki,
 Fir lagta sab thik ho jayegaa
-Par ye toh waqat he batayega, 
-Lagta hain ye zindgi yuhi, 
+Par ye toh waqat he batayega,
+Lagta hain ye zindgi yuhi,
 Tanha kat jayega
 
-Sapne toh hazaar hain, 
-Bahut he besoomar hain 
-Sapno ko pana hain ya apno ko, 
+Sapne toh hazaar hain,
+Bahut he besoomar hain
+Sapno ko pana hain ya apno ko,
 Ye सोच ke dil av bhi bekaraar hain
 
-Anshu toh dil me aatein hain, 
+Anshu toh dil me aatein hain,
 Ankho ki aukaat kya hain
 Sochata hu ro lu jee bhar ke,
 Par itna v ye aashaan kahan hain
@@ -127,6 +131,8 @@ Kuch shaam aisi hain jo dhal nahi patein`,
     title: "Kahani Me Kuch Khaas Nahi",
     title_hi: "कहानी में कुछ ख़ास नहीं",
     date: "October 2026",
+    views: 1150,
+    likes: 84,
     excerpt: "kahani me ab kuch khaas nahi, ab woh pahale wali baat nahi. phone pe hoti baat sahi, par hoti koi ab mulakaat nahi...",
     content: `kahani me ab kuch khaas nahi
 ab woh pahale wali baat nahi
@@ -153,13 +159,15 @@ kahani me ab kuch khaas nahi`,
     title: "Tum Woh Ehsaas Ho",
     title_hi: "तुम वो एहसास हो",
     date: "October 2026",
+    views: 3280,
+    likes: 267,
     excerpt: "Tum woh ehsaas ho jo pal pal mere saath ho. Kabhi sochta hu ek din kaise katega tum bin, magar sach toh ye hain ki ek pal bhi sadiyo sa lagega...",
-    content: `Tum woh ehsaas ho 
+    content: `Tum woh ehsaas ho
 jo pal pal mere saath ho
 
-kabhi sochta hu ek din 
-kaise katega tum bin, 
-magar sach toh ye hain ki 
+kabhi sochta hu ek din
+kaise katega tum bin,
+magar sach toh ye hain ki
 ek pal bhi sadiyo sa lagea
 7 janam sa ek ek din
 
@@ -167,8 +175,8 @@ tum woh aadat ban gayi ho
 jisko main gum me khushi me
 jeev jantu sab me dhudhata hun
 
-guzaara nahi hota mera 
-tum bin ek pal, kyuki 
+guzaara nahi hota mera
+tum bin ek pal, kyuki
 sahaaraa ho tum mere pal pal ka
 
 likhana chahatu bahut kuch tumhare baare me

@@ -10,14 +10,17 @@ window.App = window.App || {};
     constructor() {
       this.grid = document.getElementById('poetry-grid');
       this.filterChips = document.querySelectorAll('.poetry-filters .p-filter');
+      this.sortButtons = document.querySelectorAll('.poetry-sort .p-sort-btn');
       this.writings = App.defaultWritings || [];
       this.activeFilter = 'all';
+      this.activeSort = 'views'; // Default sort by views
 
       this.init();
     }
 
     async init() {
       this.setupFilters();
+      this.setupSorting();
       // Render immediate default writings so page is never empty
       this.render();
       // Try to load any updated writings from JSON
@@ -30,6 +33,17 @@ window.App = window.App || {};
           this.filterChips.forEach(c => c.classList.remove('active'));
           chip.classList.add('active');
           this.activeFilter = chip.getAttribute('data-wfilter') || 'all';
+          this.render();
+        });
+      });
+    }
+
+    setupSorting() {
+      this.sortButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.sortButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          this.activeSort = btn.getAttribute('data-sort') || 'views';
           this.render();
         });
       });
@@ -54,9 +68,18 @@ window.App = window.App || {};
       if (!this.grid) return;
       this.grid.innerHTML = '';
 
-      const list = this.activeFilter === 'all'
-        ? this.writings
+      let list = this.activeFilter === 'all'
+        ? [...this.writings]
         : this.writings.filter(w => w.category === this.activeFilter);
+
+      // Sort by views (highest views first) or recent archive order
+      if (this.activeSort === 'views') {
+        list.sort((a, b) => {
+          const vA = App.Engagement ? App.Engagement.getStats(a).views : (Number(a.views) || 0);
+          const vB = App.Engagement ? App.Engagement.getStats(b).views : (Number(b.views) || 0);
+          return vB - vA;
+        });
+      }
 
       // Empty condition state
       if (!list || list.length === 0) {
@@ -66,7 +89,12 @@ window.App = window.App || {};
 
       list.forEach((piece, index) => {
         const card = App.createPoetryCard(piece, index, (selected) => {
-          if (App.ReaderModal) App.ReaderModal.open(selected);
+          if (App.ReaderModal) {
+            App.ReaderModal.open(selected, () => {
+              // Refresh counts on card row when engagement updates
+              this.render();
+            });
+          }
         });
         this.grid.appendChild(card);
       });

@@ -23,6 +23,7 @@ window.App = window.App || {};
     row.setAttribute('aria-label', `${piece.title} — ${piece.category}`);
 
     const num = String(index + 1).padStart(2, '0');
+    const stats = App.Engagement ? App.Engagement.getStats(piece) : { formattedViews: String(piece.views || 0) };
 
     row.innerHTML = `
       <div class="row-left">
@@ -34,6 +35,13 @@ window.App = window.App || {};
         <p class="row-excerpt">"${escapeHtml(piece.excerpt)}"</p>
       </div>
       <div class="row-right">
+        <span class="row-views" title="${stats.formattedViews} reads">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <span>${stats.formattedViews}</span>
+        </span>
         <span class="row-date">${escapeHtml(piece.date)}</span>
         <span class="row-arrow" aria-hidden="true">→</span>
       </div>

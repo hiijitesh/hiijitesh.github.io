@@ -16,10 +16,16 @@ window.App = window.App || {};
       this.closeBtn = null;
       this.langBtn = null;
       this.langLabel = null;
+      this.viewsCount = null;
+      this.likeBtn = null;
+      this.likeIcon = null;
+      this.likesCount = null;
+      this.bubbleContainer = null;
       this.currentPiece = null;
       this.isHindi = false;
       this.hindiTitle = '';
       this.hindiBody = '';
+      this.onUpdate = null;
       this.initialized = false;
     }
 
@@ -33,6 +39,11 @@ window.App = window.App || {};
       this.closeBtn = document.getElementById('reader-close');
       this.langBtn = document.getElementById('reader-lang-toggle');
       this.langLabel = document.getElementById('reader-lang-label');
+      this.viewsCount = document.getElementById('reader-views-count');
+      this.likeBtn = document.getElementById('reader-like-btn');
+      this.likeIcon = document.getElementById('like-heart-icon');
+      this.likesCount = document.getElementById('reader-likes-count');
+      this.bubbleContainer = document.getElementById('heart-bubble-container');
 
       if (this.closeBtn) {
         this.closeBtn.addEventListener('click', () => this.close());
@@ -44,6 +55,9 @@ window.App = window.App || {};
       }
       if (this.langBtn) {
         this.langBtn.addEventListener('click', () => this.toggleLanguage());
+      }
+      if (this.likeBtn) {
+        this.likeBtn.addEventListener('click', () => this.handleLikeClick());
       }
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && this.isOpen()) {
@@ -124,14 +138,100 @@ window.App = window.App || {};
       }
     }
 
-    async open(piece) {
+    handleLikeClick() {
+      if (!this.currentPiece || !App.Engagement) return;
+      const res = App.Engagement.toggleLike(this.currentPiece);
+      
+      if (this.likesCount) {
+        this.likesCount.textContent = res.stats.formattedLikes;
+      }
+
+      if (res.userLiked) {
+        if (this.likeBtn) this.likeBtn.classList.add('liked');
+        this.playHeartBubbleAnimation();
+      } else {
+        if (this.likeBtn) this.likeBtn.classList.remove('liked');
+      }
+
+      if (typeof this.onUpdate === 'function') {
+        this.onUpdate();
+      }
+    }
+
+    playHeartBubbleAnimation() {
+      if (this.likeIcon) {
+        this.likeIcon.classList.remove('pop');
+        void this.likeIcon.offsetWidth; // Reflow for re-triggering animation
+        this.likeIcon.classList.add('pop');
+      }
+
+      if (!this.bubbleContainer) return;
+
+      const colors = ['#ff3b5c', '#ff5277', '#ff7096', '#ffa8ba', '#ffb86c'];
+      const heartSvg = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+
+      const bubbleCount = 8;
+      for (let i = 0; i < bubbleCount; i++) {
+        const bubble = document.createElement('span');
+        bubble.className = 'heart-bubble';
+        bubble.innerHTML = heartSvg;
+
+        // Randomized upward trajectories and sway
+        const dx = (Math.random() * 56 - 28).toFixed(1) + 'px';
+        const dy = (-(Math.random() * 50 + 55)).toFixed(1) + 'px';
+        const rot = (Math.random() * 50 - 25).toFixed(1) + 'deg';
+        const scale = (Math.random() * 0.4 + 0.75).toFixed(2);
+        const duration = (Math.random() * 300 + 750).toFixed(0) + 'ms';
+        const delay = (i * 40) + 'ms';
+        const color = colors[i % colors.length];
+
+        bubble.style.setProperty('--dx', dx);
+        bubble.style.setProperty('--dy', dy);
+        bubble.style.setProperty('--rot', rot);
+        bubble.style.setProperty('--bubble-scale', scale);
+        bubble.style.setProperty('--bubble-color', color);
+        bubble.style.animationDuration = duration;
+        bubble.style.animationDelay = delay;
+
+        this.bubbleContainer.appendChild(bubble);
+
+        setTimeout(() => {
+          if (bubble.parentNode) bubble.parentNode.removeChild(bubble);
+        }, 1250);
+      }
+    }
+
+    async open(piece, onUpdate) {
       this.init();
       if (!this.modal || !piece) return;
       this.currentPiece = piece;
+      this.onUpdate = onUpdate || null;
+
       const startHindi = !!piece.isHindi;
       this.isHindi = false;
       this.hindiTitle = piece.title_hi || '';
       this.hindiBody = piece.content_hi ? this.cleanPoemBody(piece.content_hi, piece.title_hi) : '';
+
+      // Record read/view and fetch latest stats
+      const stats = App.Engagement ? App.Engagement.recordView(piece) : {
+        formattedViews: String(piece.views || 0),
+        formattedLikes: String(piece.likes || 0),
+        userLiked: false
+      };
+
+      if (this.viewsCount) {
+        this.viewsCount.textContent = stats.formattedViews;
+      }
+      if (this.likesCount) {
+        this.likesCount.textContent = stats.formattedLikes;
+      }
+      if (this.likeBtn) {
+        if (stats.userLiked) {
+          this.likeBtn.classList.add('liked');
+        } else {
+          this.likeBtn.classList.remove('liked');
+        }
+      }
 
       if (this.category) this.category.textContent = piece.category;
       if (this.heading) this.heading.textContent = piece.title;
@@ -145,6 +245,11 @@ window.App = window.App || {};
 
       if (startHindi) {
         await this.toggleLanguage();
+      }
+
+      // Notify parent list if view count updated
+      if (typeof this.onUpdate === 'function') {
+        this.onUpdate();
       }
 
       this.modal.classList.add('active');
