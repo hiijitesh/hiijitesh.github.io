@@ -1,9 +1,9 @@
-/**
+bb/**
  * TicketModal Component
  * Manages ticket booking popup, form validations, and confirmation messages.
  */
 import { Toast } from './Toast.js';
-import { isValidEmail } from '../utils/validator.js';
+import { validateEmail } from '../utils/validator.js';
 
 export class TicketModalComponent {
   constructor() {
@@ -64,14 +64,15 @@ export class TicketModalComponent {
     const buyerName = nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Bhai';
     const buyerEmail = emailInput ? emailInput.value.trim() : '';
 
-    if (!isValidEmail(buyerEmail)) {
-      Toast.show('Bhai, ticket ke liye sahi email address daalo!');
+    const validation = validateEmail(buyerEmail);
+    if (!validation.valid) {
+      Toast.show(validation.error);
       if (emailInput) {
         emailInput.focus();
         emailInput.style.borderColor = 'var(--accent)';
         setTimeout(() => {
           if (emailInput) emailInput.style.borderColor = '';
-        }, 2000);
+        }, 2200);
       }
       return;
     }

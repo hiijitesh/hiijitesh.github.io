@@ -3,7 +3,7 @@
  * Manages the city notifications form and organizer email copy interaction.
  */
 import { Toast } from './Toast.js';
-import { isValidEmail } from '../utils/validator.js';
+import { validateEmail } from '../utils/validator.js';
 
 export class TourSectionComponent {
   constructor() {
@@ -28,14 +28,15 @@ export class TourSectionComponent {
     if (e && e.preventDefault) e.preventDefault();
     const email = this.emailInput ? this.emailInput.value.trim() : '';
 
-    if (!isValidEmail(email)) {
-      Toast.show('Bhai, sahi email address likho!');
+    const validation = validateEmail(email);
+    if (!validation.valid) {
+      Toast.show(validation.error);
       if (this.emailInput) {
         this.emailInput.focus();
         this.emailInput.style.borderColor = 'var(--accent)';
         setTimeout(() => {
           if (this.emailInput) this.emailInput.style.borderColor = '';
-        }, 2000);
+        }, 2200);
       }
       return;
     }

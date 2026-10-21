@@ -13,7 +13,7 @@ import { ReaderModal } from './components/ReaderModal.js';
 import { TicketModal } from './components/TicketModal.js';
 import { PoetrySectionComponent } from './components/PoetrySection.js';
 import { TourSectionComponent } from './components/TourSection.js';
-import { isValidEmail } from './utils/validator.js';
+import { validateEmail, isValidEmail } from './utils/validator.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize UI components
@@ -30,8 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e && e.preventDefault) e.preventDefault();
     const input = e && e.target ? e.target.querySelector('input[type="email"]') : null;
     const email = input ? input.value.trim() : '';
-    if (!isValidEmail(email)) {
-      Toast.show('Bhai, sahi email address likho!');
+    const validation = validateEmail(email);
+    if (!validation.valid) {
+      Toast.show(validation.error);
       if (input) input.focus();
       return;
     }
