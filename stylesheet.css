@@ -4,7 +4,7 @@
    Warm Obsidian (#10100e) & Ivory (#ffffe3) · Editorial Serif
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..400&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
 :root {
   --bg: #10100e;
@@ -20,9 +20,15 @@
   --border: rgba(255, 255, 227, 0.08);
   --border-hover: rgba(255, 255, 227, 0.25);
 
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  /* User Specified Font Stack */
+  --font-poetry-title: 'Cormorant Garamond', Georgia, serif;
+  --font-poetry-body: 'Lora', Georgia, serif;
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Aliases for general elements */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Inter', ui-monospace, monospace;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --t-fast: 160ms var(--ease);
@@ -120,10 +126,10 @@ button {
 }
 
 .brand-name {
-  font-family: var(--font-sans);
+  font-family: var(--font-ui);
   font-weight: 700;
-  font-size: 0.95rem;
-  letter-spacing: 0.14em;
+  font-size: 14px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink);
 }
@@ -135,7 +141,8 @@ button {
 }
 
 .nav-link-simple {
-  font-size: 0.875rem;
+  font-family: var(--font-ui);
+  font-size: 14px;
   color: var(--ink-secondary);
   font-weight: 400;
   transition: color var(--t-fast);
@@ -151,7 +158,8 @@ button {
   gap: 0.4rem;
   background: var(--ink);
   color: var(--bg);
-  font-size: 0.8125rem;
+  font-family: var(--font-ui);
+  font-size: 13px;
   font-weight: 600;
   padding: 0.45rem 1.05rem;
   border-radius: 9999px;
@@ -232,9 +240,9 @@ section {
 }
 
 .section-tag {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.16em;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
 }
@@ -294,8 +302,8 @@ section {
 }
 
 .show-date-sub {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-family: var(--font-ui);
+  font-size: 13px;
   color: var(--ink-muted);
 }
 
@@ -317,8 +325,8 @@ section {
 }
 
 .show-status {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-family: var(--font-ui);
+  font-size: 13px;
   padding: 0.35rem 0.75rem;
   border-radius: 9999px;
   background: var(--bg-card);
@@ -340,7 +348,8 @@ section {
   border-radius: 9999px;
   background: var(--ink);
   color: var(--bg);
-  font-size: 0.875rem;
+  font-family: var(--font-ui);
+  font-size: 14px;
   font-weight: 600;
   transition: all var(--t-fast);
   white-space: nowrap;
@@ -428,10 +437,10 @@ section {
 }
 
 .p-filter {
-  padding: 0.4rem 0.95rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
+  padding: 0.45rem 1rem;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  letter-spacing: 0.03em;
   border-radius: 9999px;
   background: var(--bg-surface);
   border: 1px solid var(--border);
@@ -448,7 +457,7 @@ section {
 
 .poetry-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
 }
 
@@ -479,41 +488,45 @@ section {
 }
 
 .p-category {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-family: var(--font-ui);
+  font-size: 13px;
   color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
+  font-weight: 500;
 }
 
 .p-date {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-family: var(--font-ui);
+  font-size: 13px;
   color: var(--ink-muted);
 }
 
 .p-title {
-  font-family: var(--font-display);
-  font-size: 1.65rem;
-  font-weight: 500;
-  line-height: 1.2;
+  font-family: var(--font-poetry-title);
+  font-size: clamp(36px, 3.5vw, 48px);
+  font-weight: 600;
+  line-height: 1.15;
   color: var(--ink);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
+  letter-spacing: -0.01em;
 }
 
 .p-excerpt {
-  font-size: 0.95rem;
-  line-height: 1.65;
+  font-family: var(--font-poetry-body);
+  font-size: clamp(19px, 1.5vw, 21px);
+  line-height: 1.8;
   color: var(--ink-secondary);
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .p-read-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  font-size: 0.8125rem;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
   color: var(--ink);
 }
 
@@ -545,11 +558,12 @@ section {
 }
 
 .organizer-email-btn {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   color: var(--ink);
   text-decoration: underline;
   text-underline-offset: 0.3em;
-  font-size: 1rem;
+  font-size: 14px;
+  font-weight: 500;
   transition: color var(--t-fast);
 }
 
@@ -608,31 +622,32 @@ section {
 }
 
 .reader-cat {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-family: var(--font-ui);
+  font-size: 13px;
   text-transform: uppercase;
   color: var(--accent);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   margin-bottom: 0.5rem;
+  font-weight: 500;
 }
 
 .reader-heading {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 2.75rem);
-  font-weight: 400;
+  font-family: var(--font-poetry-title);
+  font-size: clamp(36px, 4vw, 48px);
+  font-weight: 600;
   line-height: 1.15;
   margin-bottom: 1.75rem;
   color: var(--ink);
+  letter-spacing: -0.01em;
 }
 
 .reader-text {
-  font-family: var(--font-display);
-  font-size: clamp(1.15rem, 2vw, 1.35rem);
-  line-height: 2;
+  font-family: var(--font-poetry-body);
+  font-size: clamp(19px, 1.6vw, 21px);
+  line-height: 1.8;
   color: var(--ink);
-  font-weight: 300;
+  font-weight: 400;
   white-space: pre-line;
-  letter-spacing: -0.01em;
 }
 
 .ticket-modal-card {
@@ -670,8 +685,8 @@ section {
 }
 
 .t-date {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
+  font-family: var(--font-ui);
+  font-size: 14px;
   color: var(--accent);
 }
 
@@ -715,7 +730,8 @@ section {
   border-radius: 9999px;
   background: var(--ink);
   color: var(--bg);
-  font-size: 0.875rem;
+  font-family: var(--font-ui);
+  font-size: 14px;
   font-weight: 600;
   transition: background-color var(--t-fast);
 }
