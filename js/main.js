@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
       category: "Poetry",
       title: "Mere Soch Pare Bhi, Kuch Hona Hain",
       date: "October 2026",
-      excerpt: "Ek samay tha jaha sab kuch naa paane ka bhay tha, ek aaj waqt hain jaha sab kuch hoke bhi jindgi lagti kamwaqt hain...",
-      content: "Mere Soch Pare Bhi, Kuch Hona Hain\n\nEk samay tha jaha,\nSab kuch naa paane ka bhay tha\n\nEk aaj waqt hain, jaha sab kuch hoke bhi\nJindgi, lagti kamwaqt hain!!!\n\nKuch paya, toh kuch khoya hu\nKuch paya, toh kuch khoya hu\nDil jab jab na laga, tab tab roya hu.\n\nSapne dekhe bade udaan ke hain,\nPar main toh yunhi soya hu.\nDil jab jab na laga, tab tab roya hu.\n\nPata hota agar, kuch paane ko, kuch khona hain!\nMere soch pare bhi, kuch hona hain.\n\nSambhaal ke rakhata uss pal ko, jo khaas the\nJab pata hota isko bhi, ek din khona hain.\nMere soch pare bhi, kuch hona hain."
+      excerpt: "Ek samay tha jahan sab kuch naa paane ka bhay tha, ek aaj waqt hain jaha sab kuch hoke bhi jindgi lagti kamwaqt hain...",
+      content: "Mere Soch Pare Bhi, Kuch Hona Hain\n\nEk samay tha jahan,\nSab kuch naa paane ka bhay tha\n\nEk aaj waqt hain, jaha sab kuch hoke bhi\nJindgi, lagti kamwaqt hain!!!\n\nKuch paya, toh kuch khoya hu\nKuch paya, toh kuch khoya hu\nDil jab jab na laga, tab tab roya hu.\n\nSapne dekhe bade udaan ke hain,\nPar main toh yunhi soya hu.\nDil jab jab na laga, tab tab roya hu.\n\nPata hota agar, kuch paane ko, kuch khona hain!\nMere soch pare bhi, kuch hona hain.\n\nSambhaal ke rakhata uss pal ko, jo khaas the\nJab pata hota isko bhi, ek din khona hain.\nMere soch pare bhi, kuch hona hain."
     },
     {
       id: "kuch-khayaal-aise-hain",
@@ -24,22 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
       date: "October 2026",
       excerpt: "Kuch khayal aise hain jo meet nahi patein, kuch shaam aisi hain jo dhal nahi patein. Log toh charo taraf hain lekin fir sab me hum ghool meel nahi patein...",
       content: "Kuch Khayaal Aise Hain\n\nKuch khayal aise hain jo meet nahi patein\nKuch shaam aisi hain jo dhal nahi patein\n\nLog toh charo taraf hain\nLekin fir sab me hum ghool meel nahi patein\n\nBahar bheed ka nazaraa hain toh\nUnder jhanka toh sukha kinaara hain\n\nKuch khayal aise hain jo meet nahi patein\nKuch shaam aisi hain jo dhal nahi patein\n\nKabhi aarzoo hoti hain apno ki,\nFir lagta sab thik ho jayegaa\nPar ye toh waqat he batayega, \nLagta hain ye zindgi yuhi, \nTanha kat jayega\n\nSapne toh hazaar hain, \nBahut he besoomar hain \nSapno ko pana hain ya apno ko, \nYe soch ke dil av bhi bekaraar hain\n\nAnshu toh dil me aatein hain, \nAnkho ki aukaat kya hain\nSochata hu ro lu jee bhar ke,\nPar itna v ye aashaan kahan hain\n\nKuch khayal aise hain jo meet nahi patein\nKuch shaam aisi hain jo dhal nahi patein"
-    },
-    {
-      id: "dhool-aur-khamoshi",
-      category: "Poetry",
-      title: "Dhool Aur Khamoshi",
-      date: "October 2026",
-      excerpt: "Hum hawa ke wo columns hain jo yaadon ki frequency par vibrate hote hain. Seene ke andhere mein purane shehar ki aawazein qaid hain...",
-      content: "Dhool Aur Khamoshi\n\nHum hawa ke wo columns hain jo yaadon ki frequency par vibrate hote hain.\nSeene ke andhere mein purani imaarat ki acoustics chhupi hai, jaise khali corridors mein fluorescent battiyon ki dheemi si sarsarahat.\n\nHum aawazon mein baat karte hain — hansi ke wo pal jo drywall aur pardon ki narmi mein foran gayab ho jaate hain.\nHum dhoondhte hain ek aisa kona jahan koi shor na ho, ek bilkul saaf slate, jahan sirf apne saanson ki aawaz sunai de.\n\nLekin kaanon mein shehar ki dhool jam jaati hai, jaise ek purana filter, jo teekhe lafzon ko dheere-dheere gol kar deta hai... aur peeche chhod jaata hai sirf ek halka sa, warm aur meetha sukoon."
-    },
-    {
-      id: "sannate-ki-geometry",
-      category: "Essay",
-      title: "Sannate Ki Geometry",
-      date: "August 2026",
-      excerpt: "Khamoshi aawaz ki gair-maujoodgi nahi hai; yeh toh lafzon ke beech ki deewar hai. Agar pause na ho, toh shayari bas shor ban jaati hai...",
-      content: "Sannate Ki Geometry\n\nKhamoshi aawaz ki gair-maujoodgi nahi hai; yeh toh lafzon ke beech ka wajood hai.\n\nStage par jab ek shayar do line bolne ke baad do second ke liye rukta hai, wahi do second mein audience ka dil dhadakta hai. Agar wo pause na ho, agar wo thehraav na ho, toh shayari bas ek tez shor ki train ban kar nikal jaati hai — kaan tak pahunchti hai, par rooh ko chhoo nahi paati.\n\nHum shehar mein shor se bachne ke liye headphones pehante hain, par dil ke andar ka shor kaise rokein? Shayad isiliye hum likhte hain — taaki jo cheez andar cheekh rahi hai, use kaagaz par thehraav mil sake."
     }
   ];
 
