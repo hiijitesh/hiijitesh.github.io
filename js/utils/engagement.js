@@ -17,11 +17,103 @@ window.App = window.App || {};
   const SESSION_VIEW_PREFIX = 'jk_viewed_';
 
   class EngagementService {
+    constructor() {
+      // Live Google Apps Script Webhook endpoint for logging likes & views directly to Google Sheets
+      this.apiEndpoint = window.ENGAGEMENT_API_URL || 'https://script.google.com/macros/s/AKfycbx4yq-WGnp4bl7tPjaoge6mj-oluJupxcHjZcCKgcX2T_JFpRT5xv8h124azfJ0U7iL/exec';
+      this.onServerSync = null;
+    }
+
+    /**
+     * wConfigure or change the remote server endpoint URL
+     * @param {string} url
+     */
+    setApiEndpoint(url) {
+      this.apiEndpoint = url || null;
+    }
+
+    /**
+     * Send an asynchronous XMLHttpRequest to the server
+     * Uses text/plain to avoid browser CORS preflight (OPTIONS) rejection on Google Apps Script
+     * @param {string} endpoint
+     * @param {Object} payload
+     * @param {Function} [callback]
+     */
+    _sendHttpRequest(endpoint, payload, callback) {
+      if (!endpoint || typeof endpoint !== 'string') {
+        if (typeof callback === 'function') callback(null, null);
+        return;
+      }
+
+      const bodyStr = JSON.stringify(payload);
+
+      // Append query parameters so Google Apps Script e.parameter is always populated even if postData is stripped during 302 redirect
+      let targetUrl = endpoint;
+      try {
+        const urlObj = new URL(endpoint, window.location.href);
+        if (payload.pieceId) urlObj.searchParams.set('pieceId', payload.pieceId);
+        if (payload.action) urlObj.searchParams.set('action', payload.action);
+        if (payload.liked !== undefined) urlObj.searchParams.set('liked', String(payload.liked));
+        targetUrl = urlObj.toString();
+      } catch {
+        const qs = Object.keys(payload).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(payload[k])).join('&');
+        targetUrl = endpoint + (endpoint.indexOf('?') === -1 ? '?' : '&') + qs;
+      }
+
+      try {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', targetUrl, true);
+        // Using text/plain is a CORS simple request, ensuring Google Apps Script accepts it without OPTIONS error
+        xhr.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
+        xhr.timeout = 7000;
+
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status >= 200 && xhr.status < 400) {
+              try {
+                const response = JSON.parse(xhr.responseText);
+                if (typeof callback === 'function') callback(null, response);
+              } catch (parseErr) {
+                // Successful recording even if response was HTML redirect
+                if (typeof callback === 'function') callback(null, { status: 'recorded' });
+              }
+            } else {
+              if (typeof callback === 'function') {
+                callback(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`), null);
+              }
+            }
+          }
+        };
+
+        xhr.ontimeout = () => {
+          if (typeof callback === 'function') callback(new Error('XMLHttpRequest timed out'), null);
+        };
+
+        xhr.onerror = (e) => {
+          // Secondary fallback using navigator.sendBeacon
+          if (navigator.sendBeacon) {
+            try {
+              navigator.sendBeacon(endpoint, new Blob([bodyStr], { type: 'text/plain' }));
+            } catch {}
+          }
+          if (typeof callback === 'function') callback(null, { status: 'beacon_sent' });
+        };
+
+        xhr.send(bodyStr);
+      } catch (err) {
+        if (navigator.sendBeacon) {
+          try {
+            navigator.sendBeacon(endpoint, new Blob([bodyStr], { type: 'text/plain' }));
+          } catch {}
+        }
+        if (typeof callback === 'function') callback(null, { status: 'beacon_sent' });
+      }
+    }
+
     /**
      * Safely read JSON from localStorage
      */
     _getStoredData(id) {
-      if (!id) return { extraViews: 0, extraLikes: 0, userLiked: false };
+      if (!id) return { extraViews: 0, extraLikes: 0, userLiked: false, serverLikes: null, serverViews: null };
       try {
         const raw = localStorage.getItem(STORAGE_PREFIX + id);
         if (raw) {
@@ -29,13 +121,15 @@ window.App = window.App || {};
           return {
             extraViews: Number(parsed.extraViews) || 0,
             extraLikes: Number(parsed.extraLikes) || 0,
-            userLiked: Boolean(parsed.userLiked)
+            userLiked: Boolean(parsed.userLiked),
+            serverLikes: typeof parsed.serverLikes === 'number' ? parsed.serverLikes : null,
+            serverViews: typeof parsed.serverViews === 'number' ? parsed.serverViews : null
           };
         }
       } catch {
         // Fallback for private browsing or disabled storage
       }
-      return { extraViews: 0, extraLikes: 0, userLiked: false };
+      return { extraViews: 0, extraLikes: 0, userLiked: false, serverLikes: null, serverViews: null };
     }
 
     /**
@@ -64,8 +158,9 @@ window.App = window.App || {};
       const baseLikes = Number(piece.likes) || 0;
       const stored = this._getStoredData(piece.id);
 
-      const totalViews = Math.max(0, baseViews + stored.extraViews);
-      const totalLikes = Math.max(0, baseLikes + stored.extraLikes);
+      // If server returned total counts, prioritize them, otherwise base + local delta
+      const totalViews = stored.serverViews !== null ? stored.serverViews : Math.max(0, baseViews + stored.extraViews);
+      const totalLikes = stored.serverLikes !== null ? stored.serverLikes : Math.max(0, baseLikes + stored.extraLikes);
 
       return {
         views: totalViews,
@@ -77,7 +172,7 @@ window.App = window.App || {};
     }
 
     /**
-     * Record a read / view for the piece (session-throttled to keep counts genuine)
+     * Record a read / view for the piece (session-throttled & sends XMLHttpRequest to server)
      * @param {Object} piece
      * @returns {Object} updated stats
      */
@@ -93,6 +188,18 @@ window.App = window.App || {};
           const stored = this._getStoredData(piece.id);
           stored.extraViews += 1;
           this._setStoredData(piece.id, stored);
+
+          // Asynchronous XMLHttpRequest to persist on server
+          this._sendHttpRequest(this.apiEndpoint, {
+            action: 'view',
+            pieceId: piece.id,
+            timestamp: new Date().toISOString()
+          }, (err, res) => {
+            if (!err && res && typeof res.views === 'number') {
+              stored.serverViews = res.views;
+              this._setStoredData(piece.id, stored);
+            }
+          });
         }
       } catch {
         // Session storage failure fallback
@@ -102,7 +209,7 @@ window.App = window.App || {};
     }
 
     /**
-     * Toggle like state for a piece
+     * Toggle like state for a piece and sync via XMLHttpRequest
      * @param {Object} piece
      * @returns {{ userLiked: boolean, stats: Object }}
      */
@@ -114,13 +221,35 @@ window.App = window.App || {};
       if (stored.userLiked) {
         stored.userLiked = false;
         stored.extraLikes = Math.max(0, stored.extraLikes - 1);
+        if (stored.serverLikes !== null) {
+          stored.serverLikes = Math.max(0, stored.serverLikes - 1);
+        }
       } else {
         stored.userLiked = true;
         stored.extraLikes += 1;
+        if (stored.serverLikes !== null) {
+          stored.serverLikes += 1;
+        }
       }
 
       this._setStoredData(piece.id, stored);
       const updatedStats = this.getStats(piece);
+
+      // Asynchronous XMLHttpRequest to store like on server
+      this._sendHttpRequest(this.apiEndpoint, {
+        action: 'like',
+        pieceId: piece.id,
+        liked: stored.userLiked,
+        timestamp: new Date().toISOString()
+      }, (err, serverResponse) => {
+        if (!err && serverResponse && typeof serverResponse.likes === 'number') {
+          stored.serverLikes = serverResponse.likes;
+          this._setStoredData(piece.id, stored);
+          if (typeof this.onServerSync === 'function') {
+            this.onServerSync(piece.id, serverResponse);
+          }
+        }
+      });
 
       return {
         userLiked: stored.userLiked,
