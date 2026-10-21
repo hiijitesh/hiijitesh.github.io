@@ -18,7 +18,7 @@
   <link rel="apple-touch-icon" href="images/favicon.png?v=2">
 
   <!-- Minimal Stylesheet -->
-  <link rel="stylesheet" href="stylesheet.css?v=9">
+  <link rel="stylesheet" href="stylesheet.css?v=10">
 </head>
 <body>
 
@@ -174,7 +174,20 @@
     <button class="modal-close" id="reader-close" aria-label="Band Karo">&times;</button>
     <div class="reader-canvas">
       <div class="reader-header-sticky">
-        <div class="reader-cat" id="reader-cat">Category</div>
+        <div class="reader-header-top">
+          <div class="reader-cat" id="reader-cat">Category</div>
+          <button class="reader-lang-toggle" id="reader-lang-toggle" type="button" title="Hinglish / हिंदी script toggle" aria-label="Toggle language">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m5 8 6 6"/>
+              <path d="m4 14 6-6 2-3"/>
+              <path d="M2 5h12"/>
+              <path d="M7 2h1"/>
+              <path d="m22 22-5-10-5 10"/>
+              <path d="M14 18h6"/>
+            </svg>
+            <span id="reader-lang-label">A / अ</span>
+          </button>
+        </div>
         <h2 class="reader-heading" id="reader-heading">Title</h2>
       </div>
       <div class="reader-text" id="reader-text"></div>
@@ -200,14 +213,15 @@
   </footer>
 
   <!-- Modular Components & Architecture -->
-  <script src="js/data/defaultWritings.js?v=9"></script>
-  <script src="js/utils/validator.js?v=9"></script>
-  <script src="js/components/Toast.js?v=9"></script>
-  <script src="js/components/PoetryCard.js?v=9"></script>
-  <script src="js/components/ReaderModal.js?v=9"></script>
-  <script src="js/components/TicketModal.js?v=9"></script>
-  <script src="js/components/PoetrySection.js?v=9"></script>
-  <script src="js/components/TourSection.js?v=9"></script>
-  <script src="js/main.js?v=9"></script>
+  <script src="js/data/defaultWritings.js?v=11"></script>
+  <script src="js/utils/validator.js?v=11"></script>
+  <script src="js/utils/transliterator.js?v=11"></script>
+  <script src="js/components/Toast.js?v=11"></script>
+  <script src="js/components/PoetryCard.js?v=11"></script>
+  <script src="js/components/ReaderModal.js?v=11"></script>
+  <script src="js/components/TicketModal.js?v=11"></script>
+  <script src="js/components/PoetrySection.js?v=11"></script>
+  <script src="js/components/TourSection.js?v=11"></script>
+  <script src="js/main.js?v=11"></script>
 </body>
 </html>

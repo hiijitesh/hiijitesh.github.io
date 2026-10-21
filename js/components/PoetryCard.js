@@ -1,6 +1,6 @@
 /**
  * PoetryCard Component
- * Generates an elegant, hairline editorial folio row (zero box/square clutter).
+ * Generates an elegant, hairline editorial folio row (zero button/box clutter).
  */
 window.App = window.App || {};
 
