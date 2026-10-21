@@ -392,6 +392,64 @@ section {
 }
 
 /* ==========================================================================
+   POETRY EMPTY STATE CONDITION
+   ========================================================================== */
+.poetry-empty-state {
+  grid-column: 1 / -1;
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-hover);
+  border-radius: 12px;
+  padding: clamp(2.25rem, 5vw, 3.5rem) 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  margin: 0.5rem 0;
+}
+
+.empty-icon-wrap {
+  font-size: 2.25rem;
+  margin-bottom: 0.2rem;
+  opacity: 0.9;
+}
+
+.empty-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3.2vw, 1.85rem);
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.25;
+}
+
+.empty-desc {
+  font-size: 0.95rem;
+  color: var(--ink-secondary);
+  max-width: 460px;
+  line-height: 1.55;
+}
+
+.empty-reset-btn {
+  margin-top: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 1.25rem;
+  border-radius: 9999px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all var(--t-fast);
+}
+
+.empty-reset-btn:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
    TOUR / CITY UPDATES (BUG FIXED: 100% CONTAINED ON MOBILE)
    ========================================================================== */
 .city-updates {

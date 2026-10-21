@@ -1,42 +1,43 @@
 /**
  * JITESH GIRI — Main Application Orchestrator
- * Modular ES Architecture importing isolated components:
- * - Toast: System-wide alerts
- * - ReaderModal: Fullscreen poem reader with title deduplication
- * - TicketModal: Live booking modal
- * - PoetrySectionComponent: Dynamic grid & filtering
- * - TourSectionComponent: City notify & organizer copy
+ * Clean modular initializer working universally on both HTTP and local file:// protocols.
  */
-
-import { Toast } from './components/Toast.js';
-import { ReaderModal } from './components/ReaderModal.js';
-import { TicketModal } from './components/TicketModal.js';
-import { PoetrySectionComponent } from './components/PoetrySection.js';
-import { TourSectionComponent } from './components/TourSection.js';
-import { validateEmail, isValidEmail } from './utils/validator.js';
-
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize UI components
-  new PoetrySectionComponent();
-  new TourSectionComponent();
+  const App = window.App || {};
 
-  // Expose global methods for any inline handlers or external calls
-  window.showToast = (msg) => Toast.show(msg);
-  window.openTicketModal = (city, date, venue, title, price) => {
-    TicketModal.open({ city, date, venue, title, price });
+  // Initialize modular UI components
+  if (App.PoetrySectionComponent) {
+    App.poetrySection = new App.PoetrySectionComponent();
+  }
+  if (App.TourSectionComponent) {
+    App.tourSection = new App.TourSectionComponent();
+  }
+
+  // Global helper bindings for backward compatibility with HTML attributes
+  window.showToast = (msg) => {
+    if (App.Toast) App.Toast.show(msg);
   };
-  window.handleTicketBooking = (e) => TicketModal.handleSubmit(e);
+
+  window.openTicketModal = (city, date, venue, title, price) => {
+    if (App.TicketModal) App.TicketModal.open({ city, date, venue, title, price });
+  };
+
+  window.handleTicketBooking = (e) => {
+    if (App.TicketModal) App.TicketModal.handleSubmit(e);
+  };
+
   window.handleTourNotify = (e) => {
     if (e && e.preventDefault) e.preventDefault();
     const input = e && e.target ? e.target.querySelector('input[type="email"]') : null;
     const email = input ? input.value.trim() : '';
-    const validation = validateEmail(email);
+
+    const validation = App.validateEmail ? App.validateEmail(email) : { valid: true };
     if (!validation.valid) {
-      Toast.show(validation.error);
+      if (App.Toast) App.Toast.show(validation.error);
       if (input) input.focus();
       return;
     }
     if (e && e.target && e.target.reset) e.target.reset();
-    Toast.show('Done bhai! Jaise hi dates final honge pehle message kar dunga.');
+    if (App.Toast) App.Toast.show('Done bhai! Jaise hi dates final honge pehle message kar dunga.');
   };
 });

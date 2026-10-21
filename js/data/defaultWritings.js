@@ -1,8 +1,10 @@
 /**
- * Default fallback writings data
- * Used when data/writings.json is unavailable or fails to load.
+ * Default Writings Data
+ * Fallback poetry data always available offline, locally, and on file:// protocol.
  */
-export const defaultWritings = [
+window.App = window.App || {};
+
+window.App.defaultWritings = [
   {
     id: "mere-soch-pare-bhi",
     category: "Poetry",
