@@ -201,7 +201,13 @@ button {
   color: var(--ink-secondary);
   font-weight: 300;
   line-height: 1.5;
-  max-width: 620px;
+  max-width: 900px;
+}
+
+@media (min-width: 640px) {
+  .ask-sub {
+    white-space: nowrap;
+  }
 }
 
 .choice-link {
@@ -795,4 +801,81 @@ section {
   .city-form {
     max-width: 100%;
   }
+
+  .poetry-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .organizer-simple-line {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }
+
+@media (max-width: 480px) {
+  .header-container {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .brand-name {
+    font-size: 14px;
+  }
+
+  .nav-ticket-btn {
+    font-size: 12px;
+    padding: 0.4rem 0.85rem;
+  }
+
+  .ask-headline {
+    font-size: 1.65rem;
+  }
+
+  .ask-sub {
+    font-size: 0.9rem;
+    white-space: normal;
+  }
+
+  .poetry-card {
+    padding: 1.5rem;
+  }
+
+  .reader-canvas {
+    padding: 1.5rem;
+    border-radius: 12px;
+  }
+
+  .reader-heading {
+    font-size: 28px;
+  }
+
+  .toast {
+    right: 1rem;
+    left: 1rem;
+    bottom: 1rem;
+    text-align: center;
+  }
+}
+
+/* Page load fade-in */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-minimal,
+#poetry,
+#tickets,
+.organizer-strip {
+  animation: fadeUp 0.5s var(--ease) both;
+}
+
+#poetry       { animation-delay: 0.08s; }
+#tickets      { animation-delay: 0.14s; }
+.organizer-strip { animation-delay: 0.18s; }
