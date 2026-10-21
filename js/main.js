@@ -1,38 +1,46 @@
 /* ==========================================================================
-   JITESH GIRI — MINIMAL HUMAN-CRAFTED ENGINE
-   Hinglish microcopy, smooth A/B master switcher, beat dock & gallery
-   Zero bloat, zero AI slop, 100% human logic
+   JITESH GIRI — POET & WRITER JAVASCRIPT ENGINE
+   Inspiration: madhurvirli.com & samayraina.co
+   Zero audio bloat, clean ticket reservations, poetry reader & smooth UI
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
   /* --------------------------------------------------------------------------
-     1. Local Writings Data (Fallback for file:// & fetched for http://)
+     1. Local Writings Data Fallback
      -------------------------------------------------------------------------- */
   const defaultWritings = [
     {
-      id: "vessels-of-dust",
+      id: "dhool-aur-khamoshi",
       category: "Poetry",
-      title: "Vessels of Dust",
-      date: "June 2026",
-      excerpt: "Hum hawa ke wo columns hain jo yaadon ki frequency par vibrate hote hain. Seene ke andhere mein purani imaarat ki acoustics chhupi hai...",
-      content: "Vessels of Dust\n\nHum hawa ke wo columns hain jo yaadon ki frequency par vibrate hote hain. Seene ke andhere mein purani imaarat ki acoustics chhupi hai, jaise khali corridors mein fluorescent battiyon ki dheemi si sarsarahat.\n\nHum waveforms mein baat karte hain — hansi ke wo transient spikes jo drywall aur pardon ki narmi mein foran gayab ho jaate hain. Hum chhaon dhoondhte hain jahan koi resonance na ho, ek bilkul saaf slate, ek aisa kamra jahan sirf apne khoon ki aawaz sunai de.\n\nLekin kaanon mein dhool jam jaati hai, jaise ek low-pass filter, jo purane pachtawon ke teekhe konon ko dheere-dheere gol kar deta hai... peeche chhod jaata hai sirf ek halka sa, warm aur saturated hum."
+      title: "Dhool Aur Khamoshi",
+      date: "October 2026",
+      excerpt: "Hum hawa ke wo columns hain jo yaadon ki frequency par vibrate hote hain. Seene ke andhere mein purane shehar ki aawazein qaid hain...",
+      content: "Dhool Aur Khamoshi\n\nHum hawa ke wo columns hain jo yaadon ki frequency par vibrate hote hain.\nSeene ke andhere mein purani imaarat ki acoustics chhupi hai, jaise khali corridors mein fluorescent battiyon ki dheemi si sarsarahat.\n\nHum aawazon mein baat karte hain — hansi ke wo pal jo drywall aur pardon ki narmi mein foran gayab ho jaate hain.\nHum dhoondhte hain ek aisa kona jahan koi shor na ho, ek bilkul saaf slate, jahan sirf apne saanson ki aawaz sunai de.\n\nLekin kaanon mein shehar ki dhool jam jaati hai, jaise ek purana filter, jo teekhe lafzon ko dheere-dheere gol kar deta hai... aur peeche chhod jaata hai sirf ek halka sa, warm aur meetha sukoon."
     },
     {
-      id: "subwoofer-sins",
-      category: "Lyrics",
-      title: "Subwoofer Sins",
-      date: "May 2026",
-      excerpt: "Kiraye ke kamre ki khidkiyan 45 Hertz par kaanpti hain. Gussa hamesha sub-bass mein hi kyu baithta hai...",
-      content: "Subwoofer Sins\n\nKiraye ke kamre ki khidkiyan 45 Hertz par kaanpti hain. Gussa hamesha sub-bass mein hi kyu baithta hai.\n\nMain low-end itna badha deta hoon ki farsh ki cheekh chhip jaaye, purane fridge ki aawaz chhip jaaye, aur chhip jaaye meri khud ki aawaz jo poochhti hai ki galti kahan hui thi.\n\n250 Hz par mud toh filter kar lete hain, par dimaag ka shor kaise katein? Vocals ko compress karke aage khada kar dete hain, par kuch kahaniyan mix ke pichhle hisse mein dabi hi achhi lagti hain."
+      id: "dilli-ki-raat",
+      category: "Nazm",
+      title: "Dilli Ki Raat, 3:15 AM",
+      date: "September 2026",
+      excerpt: "Kiraye ke kamre ki khidki se jo sadak dikhti hai, wahan ab koi auto nahi rukta. Sirf peeli street lights hain aur ek adhoori diary...",
+      content: "Dilli Ki Raat, 3:15 AM\n\nKiraye ke kamre ki khidki se jo sadak dikhti hai,\nwahan ab koi auto nahi rukta.\n\nSirf peeli street lights hain, flyover ke neeche sote hue kutte,\naur ek adhoori diary jisme teen mahine se ek hi sher atka hua hai.\n\nLog kehte hain ki shayar dukh bechta hai,\npar sach toh yeh hai ki hum bas bheed mein akele pad gaye the.\nChai thandi ho chuki hai, kalam ki siyahi sookhne lagi hai,\npar jab tak agla lafz na mile, neend aane ka koi sawal hi nahi."
     },
     {
-      id: "geometry-of-silence",
+      id: "sannate-ki-geometry",
       category: "Essay",
-      title: "The Geometry of Silence",
-      date: "April 2026",
-      excerpt: "Khamoshi aawaz ki gair-maujoodgi nahi hai; yeh toh structure ki presence hai. Architecture mein negative space hi imaarat banata hai...",
-      content: "The Geometry of Silence\n\nKhamoshi aawaz ki gair-maujoodgi nahi hai; yeh toh structure ki presence hai.\n\nArchitecture mein negative space hi imaarat banata hai. Mixing mein do transients ke beech ka fasla hi dynamics tay karta hai. Agar gehra sannata na ho, toh oonchi aawaz bas ek chipta hua compression ban kar reh jaati hai — ek shor ki deewar jo kaan thaka deti hai.\n\nHum deewarein banate hain taaki kamra bane, aur kamra banate hain taaki aawaz qaid ho sake. Par isolation ek dhokha hai. Low-end hamesha deewar cheer kar nikalta hai. Sadak ka shor hamesha mic mein aa hi jaata hai. Asli art vacuum banana nahi, balki yeh chunna hai ki kaunsa leak bachana hai."
+      title: "Sannate Ki Geometry",
+      date: "August 2026",
+      excerpt: "Khamoshi aawaz ki gair-maujoodgi nahi hai; yeh toh lafzon ke beech ki deewar hai. Agar pause na ho, toh shayari bas shor ban jaati hai...",
+      content: "Sannate Ki Geometry\n\nKhamoshi aawaz ki gair-maujoodgi nahi hai; yeh toh lafzon ke beech ka wajood hai.\n\nStage par jab ek shayar do line bolne ke baad do second ke liye rukta hai, wahi do second mein audience ka dil dhadakta hai. Agar wo pause na ho, agar wo thehraav na ho, toh shayari bas ek tez shor ki train ban kar nikal jaati hai — kaan tak pahunchti hai, par rooh ko chhoo nahi paati.\n\nHum shehar mein shor se bachne ke liye headphones pehante hain, par dil ke andar ka shor kaise rokein? Shayad isiliye hum likhte hain — taaki jo cheez andar cheekh rahi hai, use kaagaz par thehraav mil sake."
+    },
+    {
+      id: "chaar-misre",
+      category: "Shayari",
+      title: "Chaar Misre (Short Couplets)",
+      date: "July 2026",
+      excerpt: "Shehar badla toh pata chala ki makan badle the, log toh wahi the jo muskurakar nikal jaate hain...",
+      content: "Chaar Misre\n\nShehar badla toh pata chala ki makan badle the,\nLog toh wahi the jo muskurakar nikal jaate hain.\n\nKabhi fursat mile toh aana hamare shehar mein,\nYahan baatein kam, aur log khamoshi zyada samajhte hain.\n\nKalam uthayi thi dard ko dafan karne ke liye,\nPata nahi kab yeh dard hi meri pehchan ban gaya."
     }
   ];
 
@@ -42,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const toast = document.getElementById('toast');
   let toastTimer = null;
 
-  function showToast(message) {
+  window.showToast = function(message) {
     if (!toast) return;
     toast.textContent = message;
     toast.classList.add('show');
@@ -50,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     toastTimer = setTimeout(() => {
       toast.classList.remove('show');
     }, 2800);
-  }
+  };
 
   /* --------------------------------------------------------------------------
      3. Email Quick Copy
@@ -78,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
       navMenu.classList.toggle('open');
     });
 
-    // Close mobile nav when clicking a link
     navMenu.querySelectorAll('.nav-link').forEach(link => {
       link.addEventListener('click', () => {
         navMenu.classList.remove('open');
@@ -87,295 +94,45 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* --------------------------------------------------------------------------
-     5. Floating Minimal Audio Dock & Beats Player
+     5. Ticket Booking Modal
      -------------------------------------------------------------------------- */
-  const audioDock = document.getElementById('audio-dock');
-  const dockPlayPauseBtn = document.getElementById('dock-play-pause-btn');
-  const dockPlayIcon = document.getElementById('dock-play-icon');
-  const dockPauseIcon = document.getElementById('dock-pause-icon');
-  const dockTitle = document.getElementById('dock-title');
-  const dockMeta = document.getElementById('dock-meta');
-  const dockScrubber = document.getElementById('dock-scrubber');
-  const dockCloseBtn = document.getElementById('dock-close-btn');
+  const ticketModal = document.getElementById('ticket-modal');
+  const ticketClose = document.getElementById('ticket-close');
+  const tModalTitle = document.getElementById('t-modal-title');
+  const tModalVenue = document.getElementById('t-modal-venue');
+  const tModalDate = document.getElementById('t-modal-date');
+  const tModalPrice = document.getElementById('t-modal-price');
 
-  const beatAudio = new Audio();
-  let currentPlayingRow = null;
+  window.openTicketModal = function(city, date, venue, title, price) {
+    if (tModalTitle) tModalTitle.textContent = title;
+    if (tModalVenue) tModalVenue.textContent = `${venue} • ${city}`;
+    if (tModalDate) tModalDate.textContent = date;
+    if (tModalPrice) tModalPrice.textContent = price;
+    if (ticketModal) ticketModal.classList.add('active');
+  };
 
-  function formatTime(seconds) {
-    if (isNaN(seconds) || seconds < 0) return '0:00';
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60);
-    return `${m}:${s < 10 ? '0' : ''}${s}`;
-  }
-
-  function setDockPlayingState(isPlaying) {
-    if (isPlaying) {
-      dockPlayIcon.style.display = 'none';
-      dockPauseIcon.style.display = 'block';
-    } else {
-      dockPlayIcon.style.display = 'block';
-      dockPauseIcon.style.display = 'none';
-    }
-  }
-
-  function playBeat(row) {
-    // If Sound Lab comparison player is playing, pause it
-    stopLabPlayer();
-
-    if (currentPlayingRow === row && !beatAudio.paused) {
-      beatAudio.pause();
-      row.classList.remove('playing');
-      setDockPlayingState(false);
-      return;
-    }
-
-    if (currentPlayingRow && currentPlayingRow !== row) {
-      currentPlayingRow.classList.remove('playing');
-    }
-
-    currentPlayingRow = row;
-    const src = row.getAttribute('data-src');
-    const title = row.getAttribute('data-title');
-    const bpm = row.getAttribute('data-bpm');
-    const genre = row.getAttribute('data-genre');
-
-    if (beatAudio.src !== window.location.origin + '/' + src && !beatAudio.src.endsWith(src)) {
-      beatAudio.src = src;
-      beatAudio.load();
-    }
-
-    dockTitle.textContent = title;
-    dockMeta.textContent = `${genre} • ${bpm} BPM`;
-    audioDock.classList.add('visible');
-
-    beatAudio.play().then(() => {
-      row.classList.add('playing');
-      setDockPlayingState(true);
-    }).catch(err => {
-      console.warn("Audio play prevented:", err);
+  if (ticketClose) {
+    ticketClose.addEventListener('click', () => {
+      ticketModal.classList.remove('active');
     });
   }
 
-  // Row play buttons
-  document.querySelectorAll('.beat-item').forEach(row => {
-    const playBtn = row.querySelector('.beat-play-btn');
-    playBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      playBeat(row);
-    });
+  window.handleTicketBooking = function(e) {
+    e.preventDefault();
+    const buyerName = document.getElementById('t-buyer-name').value;
+    ticketModal.classList.remove('active');
+    e.target.reset();
+    showToast(`Badhaai ho ${buyerName}! Ticket confirm ho gaya 🎟️`);
+  };
 
-    row.addEventListener('click', (e) => {
-      if (e.target.closest('.beat-cta-btn')) return;
-      playBeat(row);
-    });
-  });
-
-  // Dock Controls
-  if (dockPlayPauseBtn) {
-    dockPlayPauseBtn.addEventListener('click', () => {
-      if (!beatAudio.src) return;
-      if (beatAudio.paused) {
-        stopLabPlayer();
-        beatAudio.play();
-        if (currentPlayingRow) currentPlayingRow.classList.add('playing');
-        setDockPlayingState(true);
-      } else {
-        beatAudio.pause();
-        if (currentPlayingRow) currentPlayingRow.classList.remove('playing');
-        setDockPlayingState(false);
-      }
-    });
-  }
-
-  if (dockCloseBtn) {
-    dockCloseBtn.addEventListener('click', () => {
-      beatAudio.pause();
-      if (currentPlayingRow) currentPlayingRow.classList.remove('playing');
-      audioDock.classList.remove('visible');
-    });
-  }
-
-  // Time & Scrubber Update
-  beatAudio.addEventListener('timeupdate', () => {
-    if (!beatAudio.duration) return;
-    const current = beatAudio.currentTime;
-    const total = beatAudio.duration;
-    dockScrubber.value = (current / total) * 100;
-    dockMeta.textContent = `${formatTime(current)} / ${formatTime(total)}`;
-  });
-
-  beatAudio.addEventListener('ended', () => {
-    if (currentPlayingRow) currentPlayingRow.classList.remove('playing');
-    setDockPlayingState(false);
-    dockScrubber.value = 0;
-  });
-
-  if (dockScrubber) {
-    dockScrubber.addEventListener('input', () => {
-      if (!beatAudio.duration) return;
-      beatAudio.currentTime = (dockScrubber.value / 100) * beatAudio.duration;
-    });
-  }
+  window.handleTourNotify = function(e) {
+    e.preventDefault();
+    e.target.reset();
+    showToast('Shukriya! Naye dates aate hi sabse pehle update aayega.');
+  };
 
   /* --------------------------------------------------------------------------
-     6. Sound Lab: Live A/B Master Comparison Player
-     -------------------------------------------------------------------------- */
-  const labConsole = document.getElementById('lab-console');
-  const comparePlayBtn = document.getElementById('compare-play-btn');
-  const comparePlayIcon = document.getElementById('compare-play-icon');
-  const comparePauseIcon = document.getElementById('compare-pause-icon');
-  const btnToggleRaw = document.getElementById('btn-toggle-raw');
-  const btnToggleMastered = document.getElementById('btn-toggle-mastered');
-  const currentStreamName = document.getElementById('current-stream-name');
-  const visualizerBars = document.querySelectorAll('.meter-bar');
-
-  const rawAudio = new Audio('audio/mix_raw.wav');
-  const masteredAudio = new Audio('audio/mix_mastered.wav');
-
-  rawAudio.loop = true;
-  masteredAudio.loop = true;
-
-  let activeStream = 'raw'; // 'raw' or 'mastered'
-  let isLabPlaying = false;
-  let visualizerInterval = null;
-
-  function stopLabPlayer() {
-    if (!isLabPlaying) return;
-    rawAudio.pause();
-    masteredAudio.pause();
-    isLabPlaying = false;
-    labConsole.classList.remove('playing');
-    comparePlayIcon.style.display = 'block';
-    comparePauseIcon.style.display = 'none';
-    clearInterval(visualizerInterval);
-    resetVisualizer();
-  }
-
-  function resetVisualizer() {
-    visualizerBars.forEach(bar => {
-      bar.style.height = '12%';
-    });
-  }
-
-  function startVisualizer() {
-    clearInterval(visualizerInterval);
-    visualizerInterval = setInterval(() => {
-      if (!isLabPlaying) return;
-      visualizerBars.forEach(bar => {
-        // Humanized dynamic audio meter heights
-        const height = Math.floor(Math.random() * 75) + 18;
-        bar.style.height = `${height}%`;
-      });
-    }, 90);
-  }
-
-  function toggleLabPlayback() {
-    // Stop beat playback when lab plays
-    if (!beatAudio.paused) {
-      beatAudio.pause();
-      if (currentPlayingRow) currentPlayingRow.classList.remove('playing');
-      setDockPlayingState(false);
-    }
-
-    if (isLabPlaying) {
-      stopLabPlayer();
-    } else {
-      isLabPlaying = true;
-      labConsole.classList.add('playing');
-      comparePlayIcon.style.display = 'none';
-      comparePauseIcon.style.display = 'block';
-
-      // Synchronize timeline perfectly
-      const activeAudio = activeStream === 'raw' ? rawAudio : masteredAudio;
-      const inactiveAudio = activeStream === 'raw' ? masteredAudio : rawAudio;
-
-      inactiveAudio.pause();
-      activeAudio.play().then(() => {
-        startVisualizer();
-      }).catch(err => {
-        console.warn("Lab audio error:", err);
-      });
-    }
-  }
-
-  function switchStream(target) {
-    if (activeStream === target) return;
-
-    activeStream = target;
-    btnToggleRaw.classList.toggle('active', target === 'raw');
-    btnToggleMastered.classList.toggle('active', target === 'mastered');
-    currentStreamName.textContent = target === 'raw' ? 'Raw Mix' : 'Mastered';
-
-    if (isLabPlaying) {
-      const fromAudio = target === 'raw' ? masteredAudio : rawAudio;
-      const toAudio = target === 'raw' ? rawAudio : masteredAudio;
-
-      // Keep exact timestamp for seamless A/B cross-switching!
-      toAudio.currentTime = fromAudio.currentTime;
-      fromAudio.pause();
-      toAudio.play().catch(e => console.warn(e));
-    }
-  }
-
-  if (comparePlayBtn) {
-    comparePlayBtn.addEventListener('click', toggleLabPlayback);
-  }
-
-  if (btnToggleRaw) {
-    btnToggleRaw.addEventListener('click', () => switchStream('raw'));
-  }
-
-  if (btnToggleMastered) {
-    btnToggleMastered.addEventListener('click', () => switchStream('mastered'));
-  }
-
-  /* --------------------------------------------------------------------------
-     7. Photography Gallery Filters & Lightbox
-     -------------------------------------------------------------------------- */
-  const photoChips = document.querySelectorAll('.photo-filter-nav .filter-chip');
-  const photoCards = document.querySelectorAll('.photo-card');
-  const lightboxModal = document.getElementById('lightbox-modal');
-  const lightboxImg = document.getElementById('lightbox-img');
-  const lightboxCaption = document.getElementById('lightbox-caption');
-  const lightboxClose = document.getElementById('lightbox-close');
-
-  photoChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      photoChips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-
-      const filter = chip.getAttribute('data-filter');
-      photoCards.forEach(card => {
-        const category = card.getAttribute('data-category');
-        if (filter === 'all' || category === filter) {
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    });
-  });
-
-  photoCards.forEach(card => {
-    card.addEventListener('click', () => {
-      const imgSrc = card.getAttribute('data-img');
-      const title = card.getAttribute('data-title');
-      const category = card.getAttribute('data-category');
-
-      lightboxImg.src = imgSrc;
-      lightboxCaption.textContent = `${title} • ${category}`;
-      lightboxModal.classList.add('active');
-    });
-  });
-
-  if (lightboxClose) {
-    lightboxClose.addEventListener('click', () => {
-      lightboxModal.classList.remove('active');
-    });
-  }
-
-  /* --------------------------------------------------------------------------
-     8. The Written Word (Alfaaz) Loader & Reader Modal
+     6. The Written Word: Reader & Category Filters
      -------------------------------------------------------------------------- */
   const writingGrid = document.getElementById('writing-grid');
   const readerModal = document.getElementById('reader-modal');
@@ -406,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <p class="writing-excerpt">${piece.excerpt}</p>
         </div>
         <div class="writing-read-more">
-          <span>Poora padho</span>
+          <span>Poora padhein</span>
           <span class="arrow">→</span>
         </div>
       `;
@@ -422,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Load from data/writings.json if running with HTTP, fallback gracefully to defaultWritings
   fetch('data/writings.json')
     .then(res => res.json())
     .then(data => {
@@ -432,11 +188,9 @@ document.addEventListener('DOMContentLoaded', () => {
       renderWritings(loadedWritings);
     })
     .catch(() => {
-      // Local file:// protocol fallback
       renderWritings(defaultWritings);
     });
 
-  // Writing Category Filters
   writingChips.forEach(chip => {
     chip.addEventListener('click', () => {
       writingChips.forEach(c => c.classList.remove('active'));
@@ -452,8 +206,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Close modals on overlay click or Escape key
-  [lightboxModal, readerModal].forEach(modal => {
+  // Close modals on backdrop click or ESC key
+  [ticketModal, readerModal].forEach(modal => {
     if (!modal) return;
     modal.addEventListener('click', (e) => {
       if (e.target === modal) {
@@ -464,25 +218,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      if (lightboxModal) lightboxModal.classList.remove('active');
+      if (ticketModal) ticketModal.classList.remove('active');
       if (readerModal) readerModal.classList.remove('active');
     }
   });
 
   /* --------------------------------------------------------------------------
-     9. Global Helpers (License prefill, Form handling)
+     7. Booking Form Handler
      -------------------------------------------------------------------------- */
-  window.prefillLicense = function(trackTitle) {
-    const serviceSelect = document.getElementById('form-service');
-    const messageField = document.getElementById('form-message');
-
-    if (serviceSelect) serviceSelect.value = 'beats';
-    if (messageField) {
-      messageField.value = `Hello Jitesh! Mujhe aapke '${trackTitle}' beat ka license lena hai. Thodi pricing aur commercial rights ke baare mein discuss karna tha.`;
-      messageField.focus();
-    }
-  };
-
   window.handleFormSubmit = function(e) {
     e.preventDefault();
     const btnSubmit = document.getElementById('btn-submit');
@@ -494,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     setTimeout(() => {
-      showToast(`Shukriya ${name}! Message mil gaya, jaldi reply karta hoon.`);
+      showToast(`Shukriya ${name}! Message mil gaya, jaldi baat karte hain.`);
       document.getElementById('booking-form').reset();
       if (btnSubmit) {
         btnSubmit.innerHTML = `<span>Message Bhejo</span><span class="arrow">→</span>`;

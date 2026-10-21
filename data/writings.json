@@ -1,26 +1,34 @@
 [
   {
-    "id": "vessels-of-dust",
+    "id": "dhool-ke-vessels",
     "category": "Poetry",
-    "title": "Vessels of Dust",
-    "date": "2026-06-01",
-    "excerpt": "We are but columns of air vibrating at frequencies we call memory. In the hollows of our chests, we store the echoes of old room acoustics...",
-    "content": "Vessels of Dust\n\nWe are but columns of air vibrating at frequencies we call memory. In the hollows of our chests, we store the echoes of old room acoustics, the hum of fluorescent lighting in empty hallways.\n\nWe speak in waveforms, transient spikes of laughter quickly decayed by the soft absorption of drywall and carpets. We walk through acoustic thresholds, hoping to find a space with zero resonance—a clean slate, an anechoic chamber where the only sound left is the rhythm of our own blood moving.\n\nBut the dust gathers in our ears, acting as a low-pass filter, slowly rounding off the sharp corners of our regrets, leaving only a warm, saturated hum."
+    "title": "Dhool Aur Khamoshi",
+    "date": "October 2026",
+    "excerpt": "Hum hawa ke wo columns hain jo yaadon ki frequency par vibrate hote hain. Seene ke andhere mein purane shehar ki aawazein qaid hain...",
+    "content": "Dhool Aur Khamoshi\n\nHum hawa ke wo columns hain jo yaadon ki frequency par vibrate hote hain.\nSeene ke andhere mein purani imaarat ki acoustics chhupi hai, jaise khali corridors mein fluorescent battiyon ki dheemi si sarsarahat.\n\nHum aawazon mein baat karte hain — hansi ke wo pal jo drywall aur pardon ki narmi mein foran gayab ho jaate hain.\nHum dhoondhte hain ek aisa kona jahan koi shor na ho, ek bilkul saaf slate, jahan sirf apne saanson ki aawaz sunai de.\n\nLekin kaanon mein shehar ki dhool jam jaati hai, jaise ek purana filter, jo teekhe lafzon ko dheere-dheere gol kar deta hai... aur peeche chhod jaata hai sirf ek halka sa, warm aur meetha sukoon."
   },
   {
-    "id": "subwoofer-sins",
-    "category": "Lyrics",
-    "title": "Subwoofer Sins",
-    "date": "2026-05-18",
-    "excerpt": "Low frequency vibrations rattling the windowpanes of this rental flat. 45 Hertz is where the anger sits. I mix the sub-bass so loud...",
-    "content": "Subwoofer Sins\n\nLow frequency vibrations rattling the windowpanes of this rental flat. 45 Hertz is where the anger sits.\n\nI mix the sub-bass so loud it masks the squeak of the hardwood floors, masks the hum of the old refrigerator, masks the sound of my own voice wondering what went wrong.\n\nWe filter out the mud at 250, but we can't filter out the clutter in our heads. We compress the vocals to make them sit upfront, but some stories are meant to stay buried in the back of the mix."
+    "id": "dilli-ki-raat",
+    "category": "Nazm",
+    "title": "Dilli Ki Raat, 3:15 AM",
+    "date": "September 2026",
+    "excerpt": "Kiraye ke kamre ki khidki se jo sadak dikhti hai, wahan ab koi auto nahi rukta. Sirf peeli street lights hain aur ek adhoori diary...",
+    "content": "Dilli Ki Raat, 3:15 AM\n\nKiraye ke kamre ki khidki se jo sadak dikhti hai,\nwahan ab koi auto nahi rukta.\n\nSirf peeli street lights hain, flyover ke neeche sote hue kutte,\naur ek adhoori diary jisme teen mahine se ek hi sher atka hua hai.\n\nLog kehte hain ki shayar dukh bechta hai,\npar sach toh yeh hai ki hum bas bheed mein akele pad gaye the.\nChai thandi ho chuki hai, kalam ki siyahi sookhne lagi hai,\npar jab tak agla lafz na mile, neend aane ka koi sawal hi nahi."
   },
   {
-    "id": "geometry-of-silence",
+    "id": "sannate-ki-geometry",
     "category": "Essay",
-    "title": "The Geometry of Silence",
-    "date": "2026-04-30",
-    "excerpt": "Silence is not the absence of sound; it is the presence of structure. In architectural design, negative space defines the building...",
-    "content": "The Geometry of Silence\n\nSilence is not the absence of sound; it is the presence of structure.\n\nIn architectural design, negative space defines the building. In mixing, the space between transient peaks defines the dynamics. Without the quiet valley, the high peak is just flat compression, a wall of noise that wears down the ear.\n\nWe build walls to create rooms, and we create rooms to isolate sound. But isolation is a myth. The low end always leaks through the walls. The street always creeps into the microphone. True art is not about creating a perfect vacuum; it is about choosing which leaks to keep."
+    "title": "Sannate Ki Geometry",
+    "date": "August 2026",
+    "excerpt": "Khamoshi aawaz ki gair-maujoodgi nahi hai; yeh toh lafzon ke beech ki deewar hai. Agar pause na ho, toh shayari bas shor ban jaati hai...",
+    "content": "Sannate Ki Geometry\n\nKhamoshi aawaz ki gair-maujoodgi nahi hai; yeh toh lafzon ke beech ka wajood hai.\n\nStage par jab ek shayar do line bolne ke baad do second ke liye rukta hai, wahi do second mein audience ka dil dhadakta hai. Agar wo pause na ho, agar wo thehraav na ho, toh shayari bas ek tez shor ki train ban kar nikal jaati hai — kaan tak pahunchti hai, par rooh ko chhoo nahi paati.\n\nHum shehar mein shor se bachne ke liye headphones pehante hain, par dil ke andar ka shor kaise rokein? Shayad isiliye hum likhte hain — taaki jo cheez andar cheekh rahi hai, use kaagaz par thehraav mil sake."
+  },
+  {
+    "id": "chaar-misre",
+    "category": "Shayari",
+    "title": "Chaar Misre (Short Couplets)",
+    "date": "July 2026",
+    "excerpt": "Shehar badla toh pata chala ki makan badle the, log toh wahi the jo muskurakar nikal jaate hain...",
+    "content": "Chaar Misre\n\nShehar badla toh pata chala ki makan badle the,\nLog toh wahi the jo muskurakar nikal jaate hain.\n\nKabhi fursat mile toh aana hamare shehar mein,\nYahan baatein kam, aur log khamoshi zyada samajhte hain.\n\nKalam uthayi thi dard ko dafan karne ke liye,\nPata nahi kab yeh dard hi meri pehchan ban gaya."
   }
 ]
