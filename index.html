@@ -38,105 +38,14 @@
         <h1 class="ask-headline">Aur bhai, sab badhiya?</h1>
         <p class="ask-sub">
           Batao na, kya dhoondh rahe ho?<br>
-          Show ka <a href="#tickets" class="choice-link"><span class="word">Tickets</span></a> chahiye ya meri <a href="#poetry" class="choice-link"><span class="word">Poetry</span></a> padhoge?
+          Meri <a href="#poetry" class="choice-link"><span class="word">Poetry</span></a> padhoge ya show ka <a href="#tickets" class="choice-link"><span class="word">Tickets</span></a> chahiye?
         </p>
       </div>
     </section>
 
-    <!-- Section 1: Tickets (Live Shows & Baithak) -->
-    <section id="tickets">
-      <div class="container">
-        <div class="section-head">
-          <span class="section-tag">Tour & Live Baithak</span>
-          <h2 class="section-title">Bhai, milne aa rahe ho na?</h2>
-          <p class="section-desc">
-            Shehar-shehar ghoom ke live baithak kar rahe hain. Baad mein mat bolna ki ticket khatam ho gaya, seat abhi book kar lo.
-          </p>
-        </div>
-
-        <div class="show-table">
-
-          <!-- Delhi -->
-          <div class="show-row">
-            <div class="show-date">
-              <span class="show-date-primary">15 Nov</span>
-              <span class="show-date-sub">Shanivaar • 7:30 PM</span>
-            </div>
-            <div class="show-details">
-              <span class="show-name">Raat Ke 3 Baje</span>
-              <span class="show-location">The Piano Man, Safdarjung • New Delhi</span>
-            </div>
-            <span class="show-status fast-filling">Jaldi bhar raha hai</span>
-            <button class="ticket-cta-btn" onclick="openTicketModal('New Delhi', '15 Nov 2026', 'The Piano Man, Safdarjung', 'Raat Ke 3 Baje', '₹499')">
-              <span>Seat book karo 🎟️</span>
-            </button>
-          </div>
-
-          <!-- Bangalore -->
-          <div class="show-row">
-            <div class="show-date">
-              <span class="show-date-primary">28 Nov</span>
-              <span class="show-date-sub">Ravivaar • 6:00 PM</span>
-            </div>
-            <div class="show-details">
-              <span class="show-name">Sannate Ki Geometry</span>
-              <span class="show-location">Jagriti Theatre, Whitefield • Bangalore</span>
-            </div>
-            <span class="show-status">Tickets Live</span>
-            <button class="ticket-cta-btn" onclick="openTicketModal('Bangalore', '28 Nov 2026', 'Jagriti Theatre, Whitefield', 'Sannate Ki Geometry', '₹449')">
-              <span>Seat book karo 🎟️</span>
-            </button>
-          </div>
-
-          <!-- Mumbai -->
-          <div class="show-row">
-            <div class="show-date">
-              <span class="show-date-primary">12 Dec</span>
-              <span class="show-date-sub">Shanivaar • 8:00 PM</span>
-            </div>
-            <div class="show-details">
-              <span class="show-name">Diary Ke Khule Panne</span>
-              <span class="show-location">The Habitat, Khar West • Mumbai</span>
-            </div>
-            <span class="show-status">Early Bird</span>
-            <button class="ticket-cta-btn" onclick="openTicketModal('Mumbai', '12 Dec 2026', 'The Habitat, Khar West', 'Diary Ke Khule Panne', '₹549')">
-              <span>Seat book karo 🎟️</span>
-            </button>
-          </div>
-
-          <!-- Jaipur -->
-          <div class="show-row">
-            <div class="show-date">
-              <span class="show-date-primary">20 Dec</span>
-              <span class="show-date-sub">Ravivaar • 5:30 PM</span>
-            </div>
-            <div class="show-details">
-              <span class="show-name">Alfaaz & Dhoop (Open Baithak)</span>
-              <span class="show-location">Jawahar Kala Kendra • Jaipur</span>
-            </div>
-            <span class="show-status">Naam likhwa lo</span>
-            <button class="ticket-cta-btn" onclick="openTicketModal('Jaipur', '20 Dec 2026', 'Jawahar Kala Kendra', 'Alfaaz & Dhoop', '₹399')">
-              <span>RSVP karo 🎟️</span>
-            </button>
-          </div>
-
-        </div>
-
-        <!-- City Updates Box -->
-        <div class="city-updates">
-          <div>
-            <h4>Tumhare shehar mein kab aana hai?</h4>
-            <p>Email daal do yahan, jaise hi dates final honge sabse pehle message kar dunga.</p>
-          </div>
-          <form class="city-form" onsubmit="handleTourNotify(event)">
-            <input type="email" class="city-input" required placeholder="Apna email likho...">
-            <button type="submit" class="city-btn">Bhej do</button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 2: Poetry (Kalam & Alfaaz) -->
+    <!-- ================================================================= -->
+    <!-- SECTION 1: POETRY (Kalam & Alfaaz)                               -->
+    <!-- ================================================================= -->
     <section id="poetry">
       <div class="container">
         <div class="section-head">
@@ -157,6 +66,58 @@
 
         <!-- Dynamic Grid -->
         <div class="poetry-grid" id="poetry-grid"></div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- SECTION 2: TICKETS (Tour & Live Baithak)                         -->
+    <!-- [FUTURE TIP: To move Tickets back to the top, simply swap this   -->
+    <!-- entire section with the #poetry section above!]                  -->
+    <!-- ================================================================= -->
+    <section id="tickets">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-tag">Tour & Live Baithak</span>
+          <h2 class="section-title">Agli baithak ki tayyari chal rahi hai</h2>
+          <p class="section-desc">
+            Shehar-shehar ghoom ke live baithak aur mehfil jamane wale hain. Nayi dates plan ho rahi hain, sabse pehle pata karna hai toh apna email chhod do.
+          </p>
+        </div>
+
+        <!-- City Updates / Early Notification Box -->
+        <div class="city-updates">
+          <div>
+            <h4>Tumhare shehar mein kab aana hai?</h4>
+            <p>Apna email daal do yahan, jaise hi dates final honge sabse pehle tumko bataunga bhai.</p>
+          </div>
+          <form class="city-form" onsubmit="handleTourNotify(event)">
+            <input type="email" class="city-input" required placeholder="Apna email likho...">
+            <button type="submit" class="city-btn">Batao mujhe 🎟️</button>
+          </form>
+        </div>
+
+        <!-- ============================================================= -->
+        <!-- [SHOW DATES TEMPLATE: Jab actual show dates finalize hon,     -->
+        <!-- bas niche wale block ko uncomment karke dates fill kar dena]  -->
+        <!-- ============================================================= -->
+        <!--
+        <div class="show-table" style="margin-top: 2rem;">
+          <div class="show-row">
+            <div class="show-date">
+              <span class="show-date-primary">15 Nov</span>
+              <span class="show-date-sub">Shanivaar • 7:30 PM</span>
+            </div>
+            <div class="show-details">
+              <span class="show-name">Show Ka Naam</span>
+              <span class="show-location">Auditorium / Venue • City</span>
+            </div>
+            <span class="show-status">Tickets Live</span>
+            <button class="ticket-cta-btn" onclick="openTicketModal('City', '15 Nov 2026', 'Venue Name', 'Show Ka Naam', '₹499')">
+              <span>Seat book karo 🎟️</span>
+            </button>
+          </div>
+        </div>
+        -->
       </div>
     </section>
 
@@ -216,6 +177,6 @@
   </footer>
 
   <!-- Script -->
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=2"></script>
 </body>
 </html>
