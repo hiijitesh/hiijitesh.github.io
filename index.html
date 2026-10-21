@@ -18,7 +18,7 @@
   <link rel="apple-touch-icon" href="images/favicon.png?v=2">
 
   <!-- Minimal Stylesheet -->
-  <link rel="stylesheet" href="stylesheet.css?v=5">
+  <link rel="stylesheet" href="stylesheet.css?v=6">
 </head>
 <body>
 
@@ -123,12 +123,26 @@
     <!-- Ultra-Minimal Organizer / Contact Line -->
     <div class="organizer-strip">
       <div class="container">
-        <p class="organizer-simple-line">
-          <span>College fest, lit-fest ya apne yahan baithak rakhni hai? Seedha mail karo:</span>
-          <button class="organizer-email-btn" id="copy-email-btn" title="Email copy karo">beatbyjit@gmail.com</button>
-          <span>•</span>
-          <a href="https://instagram.com/hiijitesh" target="_blank" rel="noopener" style="text-decoration: underline; text-underline-offset: 0.3em;">Instagram @hiijitesh</a>
-        </p>
+        <div class="organizer-content">
+          <p class="organizer-tagline">College fest, lit-fest ya apne yahan baithak rakhni hai?</p>
+          <div class="organizer-links">
+            <button class="organizer-pill-btn" id="copy-email-btn" title="Email copy karo">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+              </svg>
+              <span>beatbyjit@gmail.com</span>
+            </button>
+            <a href="https://instagram.com/hiijitesh" target="_blank" rel="noopener" class="organizer-pill-btn" title="Instagram profile dekho">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+              </svg>
+              <span>@hiijitesh</span>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -172,8 +186,16 @@
 
   <!-- Footer -->
   <footer class="site-footer">
-    <div class="container">
+    <div class="container footer-container">
       <p class="footer-text">&copy; 2026 Jitesh Kumar. Pure dil se likha aur banaya gaya.</p>
+      <a href="https://instagram.com/hiijitesh" target="_blank" rel="noopener" class="footer-insta-link" title="Instagram @hiijitesh">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+        </svg>
+        <span>Instagram</span>
+      </a>
     </div>
   </footer>
 
