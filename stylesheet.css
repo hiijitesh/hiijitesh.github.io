@@ -51,6 +51,7 @@ html {
   scroll-behavior: smooth;
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
+  overscroll-behavior-y: none;
 }
 
 ::selection {
@@ -67,6 +68,7 @@ body {
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+  overscroll-behavior-y: none;
 }
 
 /* Grain texture */
@@ -314,6 +316,9 @@ section {
   justify-content: space-between;
   gap: 0.85rem;
   cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
   transition: all var(--t-fast);
 }
 
@@ -602,6 +607,8 @@ section {
   padding: 1rem;
   opacity: 0;
   pointer-events: none;
+  overscroll-behavior: contain;
+  touch-action: none;
   transition: opacity var(--t-normal);
 }
 
@@ -633,6 +640,10 @@ section {
   width: 100%;
   max-height: 88vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
   padding: 0;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85);
   position: relative;
