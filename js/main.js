@@ -1,623 +1,506 @@
+/* ==========================================================================
+   JITESH GIRI — MINIMAL HUMAN-CRAFTED ENGINE
+   Hinglish microcopy, smooth A/B master switcher, beat dock & gallery
+   Zero bloat, zero AI slop, 100% human logic
+   ========================================================================== */
+
 document.addEventListener('DOMContentLoaded', () => {
-    /* ==========================================================================
-       1. Global Beat Player Logic
-       ========================================================================== */
-    const globalAudio = new Audio();
-    let currentBeatRow = null;
 
-    // UI Elements
-    const playerBar = document.getElementById('global-player-bar');
-    const barPlayPauseBtn = document.getElementById('bar-play-pause');
-    const barPlayIcon = document.getElementById('bar-play-icon');
-    const barPauseIcon = document.getElementById('bar-pause-icon');
-    const progressBar = document.getElementById('player-progress');
-    const timeCurrent = document.getElementById('time-current');
-    const timeTotal = document.getElementById('time-total');
-    const volumeSlider = document.getElementById('volume-slider');
+  /* --------------------------------------------------------------------------
+     1. Local Writings Data (Fallback for file:// & fetched for http://)
+     -------------------------------------------------------------------------- */
+  const defaultWritings = [
+    {
+      id: "vessels-of-dust",
+      category: "Poetry",
+      title: "Vessels of Dust",
+      date: "June 2026",
+      excerpt: "Hum hawa ke wo columns hain jo yaadon ki frequency par vibrate hote hain. Seene ke andhere mein purani imaarat ki acoustics chhupi hai...",
+      content: "Vessels of Dust\n\nHum hawa ke wo columns hain jo yaadon ki frequency par vibrate hote hain. Seene ke andhere mein purani imaarat ki acoustics chhupi hai, jaise khali corridors mein fluorescent battiyon ki dheemi si sarsarahat.\n\nHum waveforms mein baat karte hain — hansi ke wo transient spikes jo drywall aur pardon ki narmi mein foran gayab ho jaate hain. Hum chhaon dhoondhte hain jahan koi resonance na ho, ek bilkul saaf slate, ek aisa kamra jahan sirf apne khoon ki aawaz sunai de.\n\nLekin kaanon mein dhool jam jaati hai, jaise ek low-pass filter, jo purane pachtawon ke teekhe konon ko dheere-dheere gol kar deta hai... peeche chhod jaata hai sirf ek halka sa, warm aur saturated hum."
+    },
+    {
+      id: "subwoofer-sins",
+      category: "Lyrics",
+      title: "Subwoofer Sins",
+      date: "May 2026",
+      excerpt: "Kiraye ke kamre ki khidkiyan 45 Hertz par kaanpti hain. Gussa hamesha sub-bass mein hi kyu baithta hai...",
+      content: "Subwoofer Sins\n\nKiraye ke kamre ki khidkiyan 45 Hertz par kaanpti hain. Gussa hamesha sub-bass mein hi kyu baithta hai.\n\nMain low-end itna badha deta hoon ki farsh ki cheekh chhip jaaye, purane fridge ki aawaz chhip jaaye, aur chhip jaaye meri khud ki aawaz jo poochhti hai ki galti kahan hui thi.\n\n250 Hz par mud toh filter kar lete hain, par dimaag ka shor kaise katein? Vocals ko compress karke aage khada kar dete hain, par kuch kahaniyan mix ke pichhle hisse mein dabi hi achhi lagti hain."
+    },
+    {
+      id: "geometry-of-silence",
+      category: "Essay",
+      title: "The Geometry of Silence",
+      date: "April 2026",
+      excerpt: "Khamoshi aawaz ki gair-maujoodgi nahi hai; yeh toh structure ki presence hai. Architecture mein negative space hi imaarat banata hai...",
+      content: "The Geometry of Silence\n\nKhamoshi aawaz ki gair-maujoodgi nahi hai; yeh toh structure ki presence hai.\n\nArchitecture mein negative space hi imaarat banata hai. Mixing mein do transients ke beech ka fasla hi dynamics tay karta hai. Agar gehra sannata na ho, toh oonchi aawaz bas ek chipta hua compression ban kar reh jaati hai — ek shor ki deewar jo kaan thaka deti hai.\n\nHum deewarein banate hain taaki kamra bane, aur kamra banate hain taaki aawaz qaid ho sake. Par isolation ek dhokha hai. Low-end hamesha deewar cheer kar nikalta hai. Sadak ka shor hamesha mic mein aa hi jaata hai. Asli art vacuum banana nahi, balki yeh chunna hai ki kaunsa leak bachana hai."
+    }
+  ];
 
-    const barTitle = document.getElementById('bar-title');
-    const barSubtitle = document.getElementById('bar-subtitle');
-    const barArtwork = document.getElementById('bar-artwork');
+  /* --------------------------------------------------------------------------
+     2. Toast Notification Helper
+     -------------------------------------------------------------------------- */
+  const toast = document.getElementById('toast');
+  let toastTimer = null;
 
-    const beatRows = document.querySelectorAll('.beat-row');
+  function showToast(message) {
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2800);
+  }
 
-    function formatTime(secs) {
-        if (isNaN(secs)) return '0:00';
-        const minutes = Math.floor(secs / 60);
-        const seconds = Math.floor(secs % 60);
-        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  /* --------------------------------------------------------------------------
+     3. Email Quick Copy
+     -------------------------------------------------------------------------- */
+  const copyEmailBtn = document.getElementById('copy-email-btn');
+  if (copyEmailBtn) {
+    copyEmailBtn.addEventListener('click', () => {
+      const email = 'beatbyjit@gmail.com';
+      navigator.clipboard.writeText(email).then(() => {
+        showToast('Email copy ho gaya! Inbox mein aao.');
+      }).catch(() => {
+        showToast('beatbyjit@gmail.com');
+      });
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     4. Mobile Navigation Toggle
+     -------------------------------------------------------------------------- */
+  const mobileToggle = document.getElementById('mobile-toggle');
+  const navMenu = document.getElementById('nav-menu');
+
+  if (mobileToggle && navMenu) {
+    mobileToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('open');
+    });
+
+    // Close mobile nav when clicking a link
+    navMenu.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('open');
+      });
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     5. Floating Minimal Audio Dock & Beats Player
+     -------------------------------------------------------------------------- */
+  const audioDock = document.getElementById('audio-dock');
+  const dockPlayPauseBtn = document.getElementById('dock-play-pause-btn');
+  const dockPlayIcon = document.getElementById('dock-play-icon');
+  const dockPauseIcon = document.getElementById('dock-pause-icon');
+  const dockTitle = document.getElementById('dock-title');
+  const dockMeta = document.getElementById('dock-meta');
+  const dockScrubber = document.getElementById('dock-scrubber');
+  const dockCloseBtn = document.getElementById('dock-close-btn');
+
+  const beatAudio = new Audio();
+  let currentPlayingRow = null;
+
+  function formatTime(seconds) {
+    if (isNaN(seconds) || seconds < 0) return '0:00';
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  }
+
+  function setDockPlayingState(isPlaying) {
+    if (isPlaying) {
+      dockPlayIcon.style.display = 'none';
+      dockPauseIcon.style.display = 'block';
+    } else {
+      dockPlayIcon.style.display = 'block';
+      dockPauseIcon.style.display = 'none';
+    }
+  }
+
+  function playBeat(row) {
+    // If Sound Lab comparison player is playing, pause it
+    stopLabPlayer();
+
+    if (currentPlayingRow === row && !beatAudio.paused) {
+      beatAudio.pause();
+      row.classList.remove('playing');
+      setDockPlayingState(false);
+      return;
     }
 
-    function updateBeatRowUI(row, isPlaying) {
-        const playBtn = row.querySelector('.beat-play-btn');
-        if (isPlaying) {
-            row.classList.add('active', 'playing');
-            playBtn.innerHTML = `
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <rect x="4" y="4" width="4" height="16" rx="1"></rect>
-                    <rect x="16" y="4" width="4" height="16" rx="1"></rect>
-                </svg>`;
+    if (currentPlayingRow && currentPlayingRow !== row) {
+      currentPlayingRow.classList.remove('playing');
+    }
+
+    currentPlayingRow = row;
+    const src = row.getAttribute('data-src');
+    const title = row.getAttribute('data-title');
+    const bpm = row.getAttribute('data-bpm');
+    const genre = row.getAttribute('data-genre');
+
+    if (beatAudio.src !== window.location.origin + '/' + src && !beatAudio.src.endsWith(src)) {
+      beatAudio.src = src;
+      beatAudio.load();
+    }
+
+    dockTitle.textContent = title;
+    dockMeta.textContent = `${genre} • ${bpm} BPM`;
+    audioDock.classList.add('visible');
+
+    beatAudio.play().then(() => {
+      row.classList.add('playing');
+      setDockPlayingState(true);
+    }).catch(err => {
+      console.warn("Audio play prevented:", err);
+    });
+  }
+
+  // Row play buttons
+  document.querySelectorAll('.beat-item').forEach(row => {
+    const playBtn = row.querySelector('.beat-play-btn');
+    playBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      playBeat(row);
+    });
+
+    row.addEventListener('click', (e) => {
+      if (e.target.closest('.beat-cta-btn')) return;
+      playBeat(row);
+    });
+  });
+
+  // Dock Controls
+  if (dockPlayPauseBtn) {
+    dockPlayPauseBtn.addEventListener('click', () => {
+      if (!beatAudio.src) return;
+      if (beatAudio.paused) {
+        stopLabPlayer();
+        beatAudio.play();
+        if (currentPlayingRow) currentPlayingRow.classList.add('playing');
+        setDockPlayingState(true);
+      } else {
+        beatAudio.pause();
+        if (currentPlayingRow) currentPlayingRow.classList.remove('playing');
+        setDockPlayingState(false);
+      }
+    });
+  }
+
+  if (dockCloseBtn) {
+    dockCloseBtn.addEventListener('click', () => {
+      beatAudio.pause();
+      if (currentPlayingRow) currentPlayingRow.classList.remove('playing');
+      audioDock.classList.remove('visible');
+    });
+  }
+
+  // Time & Scrubber Update
+  beatAudio.addEventListener('timeupdate', () => {
+    if (!beatAudio.duration) return;
+    const current = beatAudio.currentTime;
+    const total = beatAudio.duration;
+    dockScrubber.value = (current / total) * 100;
+    dockMeta.textContent = `${formatTime(current)} / ${formatTime(total)}`;
+  });
+
+  beatAudio.addEventListener('ended', () => {
+    if (currentPlayingRow) currentPlayingRow.classList.remove('playing');
+    setDockPlayingState(false);
+    dockScrubber.value = 0;
+  });
+
+  if (dockScrubber) {
+    dockScrubber.addEventListener('input', () => {
+      if (!beatAudio.duration) return;
+      beatAudio.currentTime = (dockScrubber.value / 100) * beatAudio.duration;
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     6. Sound Lab: Live A/B Master Comparison Player
+     -------------------------------------------------------------------------- */
+  const labConsole = document.getElementById('lab-console');
+  const comparePlayBtn = document.getElementById('compare-play-btn');
+  const comparePlayIcon = document.getElementById('compare-play-icon');
+  const comparePauseIcon = document.getElementById('compare-pause-icon');
+  const btnToggleRaw = document.getElementById('btn-toggle-raw');
+  const btnToggleMastered = document.getElementById('btn-toggle-mastered');
+  const currentStreamName = document.getElementById('current-stream-name');
+  const visualizerBars = document.querySelectorAll('.meter-bar');
+
+  const rawAudio = new Audio('audio/mix_raw.wav');
+  const masteredAudio = new Audio('audio/mix_mastered.wav');
+
+  rawAudio.loop = true;
+  masteredAudio.loop = true;
+
+  let activeStream = 'raw'; // 'raw' or 'mastered'
+  let isLabPlaying = false;
+  let visualizerInterval = null;
+
+  function stopLabPlayer() {
+    if (!isLabPlaying) return;
+    rawAudio.pause();
+    masteredAudio.pause();
+    isLabPlaying = false;
+    labConsole.classList.remove('playing');
+    comparePlayIcon.style.display = 'block';
+    comparePauseIcon.style.display = 'none';
+    clearInterval(visualizerInterval);
+    resetVisualizer();
+  }
+
+  function resetVisualizer() {
+    visualizerBars.forEach(bar => {
+      bar.style.height = '12%';
+    });
+  }
+
+  function startVisualizer() {
+    clearInterval(visualizerInterval);
+    visualizerInterval = setInterval(() => {
+      if (!isLabPlaying) return;
+      visualizerBars.forEach(bar => {
+        // Humanized dynamic audio meter heights
+        const height = Math.floor(Math.random() * 75) + 18;
+        bar.style.height = `${height}%`;
+      });
+    }, 90);
+  }
+
+  function toggleLabPlayback() {
+    // Stop beat playback when lab plays
+    if (!beatAudio.paused) {
+      beatAudio.pause();
+      if (currentPlayingRow) currentPlayingRow.classList.remove('playing');
+      setDockPlayingState(false);
+    }
+
+    if (isLabPlaying) {
+      stopLabPlayer();
+    } else {
+      isLabPlaying = true;
+      labConsole.classList.add('playing');
+      comparePlayIcon.style.display = 'none';
+      comparePauseIcon.style.display = 'block';
+
+      // Synchronize timeline perfectly
+      const activeAudio = activeStream === 'raw' ? rawAudio : masteredAudio;
+      const inactiveAudio = activeStream === 'raw' ? masteredAudio : rawAudio;
+
+      inactiveAudio.pause();
+      activeAudio.play().then(() => {
+        startVisualizer();
+      }).catch(err => {
+        console.warn("Lab audio error:", err);
+      });
+    }
+  }
+
+  function switchStream(target) {
+    if (activeStream === target) return;
+
+    activeStream = target;
+    btnToggleRaw.classList.toggle('active', target === 'raw');
+    btnToggleMastered.classList.toggle('active', target === 'mastered');
+    currentStreamName.textContent = target === 'raw' ? 'Raw Mix' : 'Mastered';
+
+    if (isLabPlaying) {
+      const fromAudio = target === 'raw' ? masteredAudio : rawAudio;
+      const toAudio = target === 'raw' ? rawAudio : masteredAudio;
+
+      // Keep exact timestamp for seamless A/B cross-switching!
+      toAudio.currentTime = fromAudio.currentTime;
+      fromAudio.pause();
+      toAudio.play().catch(e => console.warn(e));
+    }
+  }
+
+  if (comparePlayBtn) {
+    comparePlayBtn.addEventListener('click', toggleLabPlayback);
+  }
+
+  if (btnToggleRaw) {
+    btnToggleRaw.addEventListener('click', () => switchStream('raw'));
+  }
+
+  if (btnToggleMastered) {
+    btnToggleMastered.addEventListener('click', () => switchStream('mastered'));
+  }
+
+  /* --------------------------------------------------------------------------
+     7. Photography Gallery Filters & Lightbox
+     -------------------------------------------------------------------------- */
+  const photoChips = document.querySelectorAll('.photo-filter-nav .filter-chip');
+  const photoCards = document.querySelectorAll('.photo-card');
+  const lightboxModal = document.getElementById('lightbox-modal');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxCaption = document.getElementById('lightbox-caption');
+  const lightboxClose = document.getElementById('lightbox-close');
+
+  photoChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      photoChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+
+      const filter = chip.getAttribute('data-filter');
+      photoCards.forEach(card => {
+        const category = card.getAttribute('data-category');
+        if (filter === 'all' || category === filter) {
+          card.style.display = '';
         } else {
-            row.classList.remove('playing');
-            playBtn.innerHTML = `
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>`;
+          card.style.display = 'none';
         }
-    }
+      });
+    });
+  });
 
-    function selectBeat(row) {
-        // Reset old row
-        if (currentBeatRow && currentBeatRow !== row) {
-            updateBeatRowUI(currentBeatRow, false);
-            currentBeatRow.classList.remove('active');
-        }
+  photoCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const imgSrc = card.getAttribute('data-img');
+      const title = card.getAttribute('data-title');
+      const category = card.getAttribute('data-category');
 
-        currentBeatRow = row;
-        const src = row.getAttribute('data-src');
-        const title = row.getAttribute('data-title');
-        const genre = row.getAttribute('data-genre');
-        const art = row.getAttribute('data-art') || title.charAt(0);
+      lightboxImg.src = imgSrc;
+      lightboxCaption.textContent = `${title} • ${category}`;
+      lightboxModal.classList.add('active');
+    });
+  });
 
-        // Load new source
-        globalAudio.src = src;
-        globalAudio.load();
+  if (lightboxClose) {
+    lightboxClose.addEventListener('click', () => {
+      lightboxModal.classList.remove('active');
+    });
+  }
 
-        // Update Sticky Player Bar Info
-        barTitle.textContent = title;
-        barSubtitle.textContent = genre;
-        barArtwork.textContent = art;
+  /* --------------------------------------------------------------------------
+     8. The Written Word (Alfaaz) Loader & Reader Modal
+     -------------------------------------------------------------------------- */
+  const writingGrid = document.getElementById('writing-grid');
+  const readerModal = document.getElementById('reader-modal');
+  const readerTitle = document.getElementById('reader-title');
+  const readerCategory = document.getElementById('reader-category');
+  const readerBody = document.getElementById('reader-body');
+  const readerClose = document.getElementById('reader-close');
+  const writingChips = document.querySelectorAll('.writing-filters .filter-chip');
 
-        // Show player bar
-        playerBar.classList.add('visible');
-    }
+  let loadedWritings = defaultWritings;
 
-    function togglePlay() {
-        if (!globalAudio.src) return;
+  function renderWritings(list, filter = 'all') {
+    if (!writingGrid) return;
+    writingGrid.innerHTML = '';
 
-        if (globalAudio.paused) {
-            // Pause mix-master compare player if running
-            pauseComparisonPlayer();
+    const filtered = filter === 'all' ? list : list.filter(w => w.category === filter);
 
-            globalAudio
-                .play()
-                .then(() => {
-                    updateBeatRowUI(currentBeatRow, true);
-                    barPlayIcon.style.display = 'none';
-                    barPauseIcon.style.display = 'block';
-                })
-                .catch((err) => console.error('Error playing audio:', err));
-        } else {
-            globalAudio.pause();
-            updateBeatRowUI(currentBeatRow, false);
-            barPlayIcon.style.display = 'block';
-            barPauseIcon.style.display = 'none';
-        }
-    }
+    filtered.forEach(piece => {
+      const card = document.createElement('article');
+      card.className = 'writing-card';
+      card.innerHTML = `
+        <div>
+          <div class="writing-card-header">
+            <span class="writing-tag">${piece.category}</span>
+            <span class="writing-date">${piece.date}</span>
+          </div>
+          <h3 class="writing-title">${piece.title}</h3>
+          <p class="writing-excerpt">${piece.excerpt}</p>
+        </div>
+        <div class="writing-read-more">
+          <span>Poora padho</span>
+          <span class="arrow">→</span>
+        </div>
+      `;
 
-    // Row click listeners
-    beatRows.forEach((row) => {
-        const playBtn = row.querySelector('.beat-play-btn');
-        playBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (currentBeatRow === row) {
-                togglePlay();
-            } else {
-                selectBeat(row);
-                togglePlay();
-            }
-        });
+      card.addEventListener('click', () => {
+        readerCategory.textContent = piece.category;
+        readerTitle.textContent = piece.title;
+        readerBody.textContent = piece.content;
+        readerModal.classList.add('active');
+      });
 
-        // Let row click play as well
-        row.addEventListener('click', () => {
-            if (currentBeatRow === row) {
-                togglePlay();
-            } else {
-                selectBeat(row);
-                togglePlay();
-            }
-        });
+      writingGrid.appendChild(card);
+    });
+  }
+
+  // Load from data/writings.json if running with HTTP, fallback gracefully to defaultWritings
+  fetch('data/writings.json')
+    .then(res => res.json())
+    .then(data => {
+      if (Array.isArray(data) && data.length > 0) {
+        loadedWritings = data;
+      }
+      renderWritings(loadedWritings);
+    })
+    .catch(() => {
+      // Local file:// protocol fallback
+      renderWritings(defaultWritings);
     });
 
-    // Bar controls
-    barPlayPauseBtn.addEventListener('click', togglePlay);
-
-    // Audio Event Listeners
-    globalAudio.addEventListener('timeupdate', () => {
-        if (globalAudio.duration) {
-            const percent =
-                (globalAudio.currentTime / globalAudio.duration) * 100;
-            progressBar.value = percent;
-            timeCurrent.textContent = formatTime(globalAudio.currentTime);
-        }
+  // Writing Category Filters
+  writingChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      writingChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const wfilter = chip.getAttribute('data-wfilter');
+      renderWritings(loadedWritings, wfilter);
     });
+  });
 
-    globalAudio.addEventListener('loadedmetadata', () => {
-        timeTotal.textContent = formatTime(globalAudio.duration);
+  if (readerClose) {
+    readerClose.addEventListener('click', () => {
+      readerModal.classList.remove('active');
     });
+  }
 
-    globalAudio.addEventListener('ended', () => {
-        updateBeatRowUI(currentBeatRow, false);
-        barPlayIcon.style.display = 'block';
-        barPauseIcon.style.display = 'none';
-        progressBar.value = 0;
-        timeCurrent.textContent = '0:00';
+  // Close modals on overlay click or Escape key
+  [lightboxModal, readerModal].forEach(modal => {
+    if (!modal) return;
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+      }
     });
+  });
 
-    // Progress Bar Scrubbing
-    progressBar.addEventListener('input', () => {
-        if (globalAudio.duration) {
-            const time = (progressBar.value / 100) * globalAudio.duration;
-            globalAudio.currentTime = time;
-        }
-    });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (lightboxModal) lightboxModal.classList.remove('active');
+      if (readerModal) readerModal.classList.remove('active');
+    }
+  });
 
-    // Volume Control
-    volumeSlider.addEventListener('input', () => {
-        globalAudio.volume = volumeSlider.value;
-    });
+  /* --------------------------------------------------------------------------
+     9. Global Helpers (License prefill, Form handling)
+     -------------------------------------------------------------------------- */
+  window.prefillLicense = function(trackTitle) {
+    const serviceSelect = document.getElementById('form-service');
+    const messageField = document.getElementById('form-message');
 
-    /* ==========================================================================
-       2. Seamless Mix & Master Comparison Player
-       ========================================================================== */
-    const audioRaw = new Audio('audio/mix_raw.wav');
-    const audioMastered = new Audio('audio/mix_mastered.wav');
+    if (serviceSelect) serviceSelect.value = 'beats';
+    if (messageField) {
+      messageField.value = `Hello Jitesh! Mujhe aapke '${trackTitle}' beat ka license lena hai. Thodi pricing aur commercial rights ke baare mein discuss karna tha.`;
+      messageField.focus();
+    }
+  };
 
-    // Set looping on both
-    audioRaw.loop = true;
-    audioMastered.loop = true;
+  window.handleFormSubmit = function(e) {
+    e.preventDefault();
+    const btnSubmit = document.getElementById('btn-submit');
+    const name = document.getElementById('form-name').value;
 
-    // Set initial volume
-    audioRaw.volume = 0.8;
-    audioMastered.volume = 0.8;
-
-    let isComparisonPlaying = false;
-    let isMasteredSelected = false; // start with raw
-
-    const comparePlayBtn = document.getElementById('compare-play-btn');
-    const comparePlayIcon = document.getElementById('compare-play-icon');
-    const comparePauseIcon = document.getElementById('compare-pause-icon');
-    const compareContainer = document.querySelector('.compare-container');
-    const toggleRawBtn = document.getElementById('toggle-raw');
-    const toggleMasteredBtn = document.getElementById('toggle-mastered');
-
-    function syncMuteState() {
-        if (isMasteredSelected) {
-            audioRaw.muted = true;
-            audioMastered.muted = false;
-            compareContainer.classList.add('mastered');
-            toggleRawBtn.classList.remove('active');
-            toggleMasteredBtn.classList.add('active');
-        } else {
-            audioRaw.muted = false;
-            audioMastered.muted = true;
-            compareContainer.classList.remove('mastered');
-            toggleRawBtn.classList.add('active');
-            toggleMasteredBtn.classList.remove('active');
-        }
+    if (btnSubmit) {
+      btnSubmit.innerHTML = `<span>Bheja ja raha hai...</span>`;
+      btnSubmit.disabled = true;
     }
 
-    function playComparisonPlayer() {
-        // Pause beat player if running
-        if (currentBeatRow && !globalAudio.paused) {
-            togglePlay();
-        }
+    setTimeout(() => {
+      showToast(`Shukriya ${name}! Message mil gaya, jaldi reply karta hoon.`);
+      document.getElementById('booking-form').reset();
+      if (btnSubmit) {
+        btnSubmit.innerHTML = `<span>Message Bhejo</span><span class="arrow">→</span>`;
+        btnSubmit.disabled = false;
+      }
+    }, 700);
+  };
 
-        // Align playback positions
-        const currentTime = Math.max(
-            audioRaw.currentTime,
-            audioMastered.currentTime
-        );
-        audioRaw.currentTime = currentTime;
-        audioMastered.currentTime = currentTime;
-
-        syncMuteState();
-
-        Promise.all([audioRaw.play(), audioMastered.play()])
-            .then(() => {
-                isComparisonPlaying = true;
-                comparePlayBtn.classList.add('playing');
-                comparePlayIcon.style.display = 'none';
-                comparePauseIcon.style.display = 'block';
-
-                // Continuous alignment syncing loop
-                startSyncTimer();
-            })
-            .catch((err) =>
-                console.error('Error playing comparison audio:', err)
-            );
-    }
-
-    function pauseComparisonPlayer() {
-        audioRaw.pause();
-        audioMastered.pause();
-        isComparisonPlaying = false;
-        comparePlayBtn.classList.remove('playing');
-        comparePlayIcon.style.display = 'block';
-        comparePauseIcon.style.display = 'none';
-        stopSyncTimer();
-    }
-
-    function toggleComparisonPlay() {
-        if (isComparisonPlaying) {
-            pauseComparisonPlayer();
-        } else {
-            playComparisonPlayer();
-        }
-    }
-
-    let syncInterval = null;
-    function startSyncTimer() {
-        stopSyncTimer();
-        syncInterval = setInterval(() => {
-            if (isComparisonPlaying) {
-                // Ensure synchronization within ~50ms
-                if (
-                    Math.abs(audioRaw.currentTime - audioMastered.currentTime) >
-                    0.05
-                ) {
-                    audioMastered.currentTime = audioRaw.currentTime;
-                }
-            }
-        }, 1000);
-    }
-
-    function stopSyncTimer() {
-        if (syncInterval) {
-            clearInterval(syncInterval);
-            syncInterval = null;
-        }
-    }
-
-    comparePlayBtn.addEventListener('click', toggleComparisonPlay);
-
-    // Switch buttons
-    toggleRawBtn.addEventListener('click', () => {
-        isMasteredSelected = false;
-        syncMuteState();
-        // Force alignment sync immediately on switch
-        if (isComparisonPlaying) {
-            audioMastered.currentTime = audioRaw.currentTime;
-        }
-    });
-
-    toggleMasteredBtn.addEventListener('click', () => {
-        isMasteredSelected = true;
-        syncMuteState();
-        // Force alignment sync immediately on switch
-        if (isComparisonPlaying) {
-            audioRaw.currentTime = audioMastered.currentTime;
-        }
-    });
-
-    // Initialize mute states
-    syncMuteState();
-
-    /* ==========================================================================
-       3. Photography Gallery & Lightbox
-       ========================================================================== */
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const photoItems = document.querySelectorAll('.photo-item');
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = lightbox.querySelector('.lightbox-img');
-    const lightboxTitle = lightbox.querySelector('.lightbox-title');
-    const lightboxCategory = lightbox.querySelector('.lightbox-category');
-    const lightboxClose = lightbox.querySelector('.lightbox-close');
-    const lightboxPrev = lightbox.querySelector('.lightbox-prev');
-    const lightboxNext = lightbox.querySelector('.lightbox-next');
-
-    let currentPhotoList = [];
-    let currentPhotoIndex = -1;
-
-    // Filters
-    filterButtons.forEach((btn) => {
-        btn.addEventListener('click', () => {
-            filterButtons.forEach((b) => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const category = btn.getAttribute('data-filter');
-
-            photoItems.forEach((item) => {
-                const itemCat = item.getAttribute('data-category');
-                if (category === 'all' || itemCat === category) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        });
-    });
-
-    // Gather currently visible photos in the grid
-    function getVisiblePhotos() {
-        return Array.from(photoItems).filter(
-            (item) => item.style.display !== 'none'
-        );
-    }
-
-    function openLightbox(item) {
-        currentPhotoList = getVisiblePhotos();
-        currentPhotoIndex = currentPhotoList.indexOf(item);
-
-        const imgSrc = item.querySelector('img').src;
-        const title = item.getAttribute('data-title');
-        const category = item.getAttribute('data-category');
-
-        lightboxImg.src = imgSrc;
-        lightboxTitle.textContent = title;
-        lightboxCategory.textContent = category;
-
-        lightbox.classList.add('visible');
-        document.body.style.overflow = 'hidden'; // stop scroll
-    }
-
-    function closeLightbox() {
-        lightbox.classList.remove('visible');
-        document.body.style.overflow = '';
-    }
-
-    function navigateLightbox(direction) {
-        if (currentPhotoList.length === 0) return;
-
-        currentPhotoIndex += direction;
-
-        // Wrap around logic
-        if (currentPhotoIndex < 0) {
-            currentPhotoIndex = currentPhotoList.length - 1;
-        } else if (currentPhotoIndex >= currentPhotoList.length) {
-            currentPhotoIndex = 0;
-        }
-
-        const nextItem = currentPhotoList[currentPhotoIndex];
-
-        const imgSrc = nextItem.querySelector('img').src;
-        const title = nextItem.getAttribute('data-title');
-        const category = nextItem.getAttribute('data-category');
-
-        lightboxImg.src = imgSrc;
-        lightboxTitle.textContent = title;
-        lightboxCategory.textContent = category;
-    }
-
-    photoItems.forEach((item) => {
-        item.addEventListener('click', () => openLightbox(item));
-    });
-
-    lightboxClose.addEventListener('click', closeLightbox);
-    lightboxPrev.addEventListener('click', () => navigateLightbox(-1));
-    lightboxNext.addEventListener('click', () => navigateLightbox(1));
-
-    // Close on click outside
-    lightbox.addEventListener('click', (e) => {
-        if (
-            e.target === lightbox ||
-            e.target.classList.contains('lightbox-content')
-        ) {
-            closeLightbox();
-        }
-    });
-
-    // Keyboard Navigation
-    document.addEventListener('keydown', (e) => {
-        if (!lightbox.classList.contains('visible')) return;
-
-        if (e.key === 'Escape') closeLightbox();
-        if (e.key === 'ArrowLeft') navigateLightbox(-1);
-        if (e.key === 'ArrowRight') navigateLightbox(1);
-    });
-
-    /* ==========================================================================
-       4. Dynamic Writing System — loads from data/writings.json
-       ========================================================================== */
-    const readerModal = document.getElementById('reader-modal');
-    const readerCategory = readerModal.querySelector('.reader-category');
-    const readerTitle = readerModal.querySelector('.reader-title');
-    const readerBody = readerModal.querySelector('.reader-body');
-    const readerClose = readerModal.querySelector('.reader-close');
-
-    const writingGrid = document.getElementById('writing-grid');
-    const writingLoading = document.getElementById('writing-loading');
-    const writingEmpty = document.getElementById('writing-empty');
-    const writingFilterBtns = document.querySelectorAll(
-        '[data-writing-filter]'
-    );
-
-    let allWritings = [];
-    let activeWritingFilter = 'all';
-
-    // Format date e.g. "June 1, 2026"
-    function formatWritingDate(dateStr) {
-        if (!dateStr) return '';
-        const d = new Date(dateStr);
-        return d.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-        });
-    }
-
-    // Build a writing card element from a writing object
-    function buildWritingCard(writing) {
-        const card = document.createElement('div');
-        card.className = 'writing-card';
-        card.setAttribute('data-id', writing.id);
-        card.setAttribute('data-category', writing.category);
-
-        card.innerHTML = `
-            <div>
-                <div class="writing-card-meta">
-                    <span class="writing-category">${writing.category}</span>
-                    <span class="writing-date">${formatWritingDate(
-                        writing.date
-                    )}</span>
-                </div>
-                <h3>${writing.title}</h3>
-                <p class="writing-excerpt">${writing.excerpt}</p>
-            </div>
-            <button class="writing-read-more" aria-label="Read ${
-                writing.title
-            }">Read Full Piece →</button>
-        `;
-
-        // Open reader on button click
-        card.querySelector('.writing-read-more').addEventListener(
-            'click',
-            () => {
-                openWritingReader(writing);
-            }
-        );
-
-        return card;
-    }
-
-    // Render cards filtered by category
-    function renderWritings(filter) {
-        writingGrid.innerHTML = '';
-
-        const filtered =
-            filter === 'all'
-                ? allWritings
-                : allWritings.filter((w) => w.category === filter);
-
-        if (filtered.length === 0) {
-            writingEmpty.style.display = 'flex';
-            return;
-        }
-
-        writingEmpty.style.display = 'none';
-
-        filtered.forEach((writing, i) => {
-            const card = buildWritingCard(writing);
-            // Stagger fade-in
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = `opacity 0.5s ease ${
-                i * 0.08
-            }s, transform 0.5s ease ${i * 0.08}s`;
-            writingGrid.appendChild(card);
-            // Trigger reflow for transition
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                });
-            });
-        });
-    }
-
-    // Fetch writings.json and bootstrap
-    async function loadWritings() {
-        try {
-            const res = await fetch('data/writings.json');
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            allWritings = await res.json();
-            // Sort newest first
-            allWritings.sort((a, b) => new Date(b.date) - new Date(a.date));
-            writingLoading.style.display = 'none';
-            renderWritings(activeWritingFilter);
-        } catch (err) {
-            writingLoading.style.display = 'none';
-            writingEmpty.style.display = 'flex';
-            writingEmpty.querySelector('p').textContent =
-                'Could not load writings. Check data/writings.json.';
-            console.error('Failed to load writings.json:', err);
-        }
-    }
-
-    loadWritings();
-
-    // Writing category filter buttons
-    writingFilterBtns.forEach((btn) => {
-        btn.addEventListener('click', () => {
-            writingFilterBtns.forEach((b) => b.classList.remove('active'));
-            btn.classList.add('active');
-            activeWritingFilter = btn.getAttribute('data-writing-filter');
-            renderWritings(activeWritingFilter);
-        });
-    });
-
-    // Open reader modal with full writing content
-    function openWritingReader(writing) {
-        readerCategory.textContent = writing.category;
-        readerTitle.textContent = writing.title;
-        readerBody.textContent = writing.content;
-        readerModal.classList.add('visible');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeReader() {
-        readerModal.classList.remove('visible');
-        document.body.style.overflow = '';
-    }
-
-    readerClose.addEventListener('click', closeReader);
-    readerModal.addEventListener('click', (e) => {
-        if (e.target === readerModal) closeReader();
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && readerModal.classList.contains('visible'))
-            closeReader();
-    });
-
-    /* ==========================================================================
-       5. Scroll Fade-in Animations (Intersection Observer)
-       ========================================================================== */
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px',
-    };
-
-    const fadeObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
-                fadeObserver.unobserve(entry.target); // run once
-            }
-        });
-    }, observerOptions);
-
-    // Apply basic fade classes to main blocks
-    const animatedElements = document.querySelectorAll(
-        '.stack-card, .beat-row, .mix-showcase-box, .photo-item, .writing-card, .booking-form'
-    );
-    animatedElements.forEach((el) => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition =
-            'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
-        fadeObserver.observe(el);
-    });
-
-    // Style helper for observer triggers
-    const styleSheet = document.createElement('style');
-    styleSheet.type = 'text/css';
-    styleSheet.innerText =
-        '.animate-in { opacity: 1 !important; transform: translateY(0) !important; }';
-    document.head.appendChild(styleSheet);
-
-    /* ==========================================================================
-       6. Navbar Highlight on Scroll
-       ========================================================================== */
-    const navLinks = document.querySelectorAll('nav a');
-    const sections = document.querySelectorAll('section');
-
-    window.addEventListener('scroll', () => {
-        let current = '';
-        const scrollPos = window.scrollY + 100;
-
-        sections.forEach((sec) => {
-            const secTop = sec.offsetTop;
-            const secHeight = sec.clientHeight;
-            if (scrollPos >= secTop && scrollPos < secTop + secHeight) {
-                current = sec.getAttribute('id');
-            }
-        });
-
-        navLinks.forEach((link) => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${current}`) {
-                link.classList.add('active');
-            }
-        });
-    });
 });
