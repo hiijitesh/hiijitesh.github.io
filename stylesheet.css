@@ -172,35 +172,36 @@ button {
 }
 
 /* ==========================================================================
-   HERO: PURE CENTERED MADHUR VIRLI STYLE (Zero Fluff)
+   HERO: COMPACT & MINIMAL
    ========================================================================== */
 .hero-minimal {
-  min-height: calc(82vh - var(--header-height));
+  min-height: auto;
+  padding: clamp(2.25rem, 4.5vw, 3.5rem) 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 4rem 1.5rem;
   border-bottom: 1px solid var(--border);
 }
 
 .ask-headline {
   font-family: var(--font-display);
-  font-size: clamp(2.75rem, 8vw, 5.75rem);
+  font-size: clamp(1.85rem, 4vw, 2.85rem);
   font-weight: 400;
-  line-height: 1.05;
-  letter-spacing: -0.025em;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   color: var(--ink);
-  margin-bottom: 1.75rem;
-  max-width: 800px;
+  margin-bottom: 0.65rem;
+  max-width: 680px;
 }
 
 .ask-sub {
-  font-size: clamp(1.25rem, 2.7vw, 1.85rem);
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
   color: var(--ink-secondary);
   font-weight: 300;
-  line-height: 1.6;
+  line-height: 1.5;
+  max-width: 620px;
 }
 
 .choice-link {
