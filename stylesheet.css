@@ -1,7 +1,8 @@
 /* ==========================================================================
-   JITESH GIRI — ULTRA-MINIMAL EDITORIAL (MADHUR VIRLI & SAMAY RAINA)
-   Radical minimalism: Visitors know him. Only Tickets or Poetry.
-   Warm Obsidian (#10100e) & Ivory (#ffffe3) · Editorial Serif
+   JITESH GIRI — MOBILE-FIRST EDITORIAL STYLESHEET
+   Natural, brotherly, unpretentious tone ('bhai', 'tu', 'tum', raw & warm)
+   Warm Obsidian (#10100e) & Ivory (#ffffe3) · Editorial Serif + Clean UI
+   Mobile-First Architecture: Base styles for phone -> min-width for larger
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap');
@@ -20,12 +21,10 @@
   --border: rgba(255, 255, 227, 0.08);
   --border-hover: rgba(255, 255, 227, 0.25);
 
-  /* User Specified Font Stack */
+  /* Typography Stacks */
   --font-poetry-title: 'Cormorant Garamond', Georgia, serif;
   --font-poetry-body: 'Lora', Georgia, serif;
   --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-
-  /* Aliases for general elements */
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'Inter', ui-monospace, monospace;
@@ -35,9 +34,12 @@
   --t-normal: 280ms var(--ease);
 
   --max-width: 880px;
-  --header-height: 70px;
+  --header-height: 56px;
 }
 
+/* ==========================================================================
+   RESET & GLOBAL BASE (MOBILE-FIRST)
+   ========================================================================== */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -64,9 +66,10 @@ body {
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
   position: relative;
+  overflow-x: hidden;
 }
 
-/* Subtle background grain */
+/* Grain texture */
 body::before {
   content: "";
   position: fixed;
@@ -97,14 +100,14 @@ button {
   max-width: var(--max-width);
   margin-left: auto;
   margin-right: auto;
-  padding-left: clamp(1.25rem, 5vw, 2.5rem);
-  padding-right: clamp(1.25rem, 5vw, 2.5rem);
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
   position: relative;
   z-index: 1;
 }
 
 /* ==========================================================================
-   MINIMAL HEADER: Only Brand & Tickets Pill
+   HEADER (MOBILE BASE)
    ========================================================================== */
 .site-header {
   position: sticky;
@@ -114,7 +117,7 @@ button {
   z-index: 100;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  background: rgba(16, 16, 14, 0.85);
+  background: rgba(16, 16, 14, 0.88);
   border-bottom: 1px solid var(--border);
 }
 
@@ -128,7 +131,7 @@ button {
 .brand-name {
   font-family: var(--font-ui);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink);
@@ -137,12 +140,12 @@ button {
 .header-nav {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 0.85rem;
 }
 
 .nav-link-simple {
   font-family: var(--font-ui);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--ink-secondary);
   font-weight: 400;
   transition: color var(--t-fast);
@@ -155,15 +158,16 @@ button {
 .nav-ticket-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
   background: var(--ink);
   color: var(--bg);
   font-family: var(--font-ui);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  padding: 0.45rem 1.05rem;
+  padding: 0.35rem 0.85rem;
   border-radius: 9999px;
   transition: all var(--t-fast);
+  white-space: nowrap;
 }
 
 .nav-ticket-btn:hover {
@@ -172,11 +176,10 @@ button {
 }
 
 /* ==========================================================================
-   HERO: COMPACT & MINIMAL
+   HERO: COMPACT & MINIMAL (MOBILE BASE)
    ========================================================================== */
 .hero-minimal {
-  min-height: auto;
-  padding: clamp(2.25rem, 4.5vw, 3.5rem) 1.5rem;
+  padding: 2.25rem 1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -187,27 +190,22 @@ button {
 
 .ask-headline {
   font-family: var(--font-display);
-  font-size: clamp(1.85rem, 4vw, 2.85rem);
+  font-size: 1.75rem;
   font-weight: 400;
-  line-height: 1.15;
+  line-height: 1.2;
   letter-spacing: -0.02em;
   color: var(--ink);
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.5rem;
   max-width: 680px;
 }
 
 .ask-sub {
-  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-size: 0.95rem;
   color: var(--ink-secondary);
   font-weight: 300;
-  line-height: 1.5;
+  line-height: 1.55;
   max-width: 900px;
-}
-
-@media (min-width: 640px) {
-  .ask-sub {
-    white-space: nowrap;
-  }
+  white-space: normal;
 }
 
 .choice-link {
@@ -231,10 +229,10 @@ button {
 }
 
 /* ==========================================================================
-   SECTIONS
+   SECTIONS GENERAL (MOBILE BASE)
    ========================================================================== */
 section {
-  padding: clamp(4rem, 8vw, 6.5rem) 0;
+  padding: 3rem 0;
   border-bottom: 1px solid var(--border);
   position: relative;
 }
@@ -242,13 +240,13 @@ section {
 .section-head {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  margin-bottom: clamp(2rem, 5vw, 3.25rem);
+  gap: 0.35rem;
+  margin-bottom: 1.75rem;
 }
 
 .section-tag {
   font-family: var(--font-ui);
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
@@ -256,197 +254,34 @@ section {
 
 .section-title {
   font-family: var(--font-display);
-  font-size: clamp(2.2rem, 5vw, 3.25rem);
+  font-size: 1.85rem;
   font-weight: 400;
-  line-height: 1.15;
+  line-height: 1.2;
   letter-spacing: -0.02em;
 }
 
 .section-desc {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   color: var(--ink-secondary);
+  line-height: 1.55;
   max-width: 580px;
 }
 
 /* ==========================================================================
-   1. TICKETS TABLE
-   ========================================================================== */
-.show-table {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.show-row {
-  display: grid;
-  grid-template-columns: 140px 1fr auto auto;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 1.35rem 1.75rem;
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  transition: all var(--t-fast);
-}
-
-.show-row:hover {
-  background: var(--bg-card);
-  border-color: var(--border-hover);
-  transform: translateY(-2px);
-}
-
-.show-date {
-  display: flex;
-  flex-direction: column;
-}
-
-.show-date-primary {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: var(--ink);
-  line-height: 1.1;
-}
-
-.show-date-sub {
-  font-family: var(--font-ui);
-  font-size: 13px;
-  color: var(--ink-muted);
-}
-
-.show-details {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.show-name {
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.show-location {
-  font-size: 0.875rem;
-  color: var(--ink-secondary);
-}
-
-.show-status {
-  font-family: var(--font-ui);
-  font-size: 13px;
-  padding: 0.35rem 0.75rem;
-  border-radius: 9999px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  color: var(--accent);
-  white-space: nowrap;
-}
-
-.show-status.fast-filling {
-  color: #ff9800;
-  border-color: rgba(255, 152, 0, 0.3);
-}
-
-.ticket-cta-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.65rem 1.45rem;
-  border-radius: 9999px;
-  background: var(--ink);
-  color: var(--bg);
-  font-family: var(--font-ui);
-  font-size: 14px;
-  font-weight: 600;
-  transition: all var(--t-fast);
-  white-space: nowrap;
-}
-
-.ticket-cta-btn:hover {
-  background: #ffffff;
-  transform: scale(1.03);
-  box-shadow: 0 4px 16px rgba(255, 255, 227, 0.2);
-}
-
-/* Tour Newsletter */
-.city-updates {
-  margin-top: 2rem;
-  padding: 1.75rem 2rem;
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1.25rem;
-}
-
-.city-updates h4 {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 500;
-  margin-bottom: 0.2rem;
-}
-
-.city-updates p {
-  font-size: 0.875rem;
-  color: var(--ink-secondary);
-}
-
-.city-form {
-  display: flex;
-  gap: 0.5rem;
-  flex-grow: 1;
-  max-width: 380px;
-}
-
-.city-input {
-  flex: 1;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 0.65rem 0.95rem;
-  color: var(--ink);
-  font-size: 0.875rem;
-  outline: none;
-  transition: border-color var(--t-fast);
-}
-
-.city-input:focus {
-  border-color: var(--ink-secondary);
-}
-
-.city-btn {
-  padding: 0.65rem 1.25rem;
-  border-radius: 8px;
-  background: var(--ink);
-  color: var(--bg);
-  font-size: 0.875rem;
-  font-weight: 600;
-  white-space: nowrap;
-  transition: background-color var(--t-fast);
-}
-
-.city-btn:hover {
-  background: #ffffff;
-}
-
-/* ==========================================================================
-   2. POETRY SECTION
+   POETRY SECTION (MOBILE-FIRST: COMPACT CARDS)
    ========================================================================== */
 .poetry-filters {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
   flex-wrap: wrap;
 }
 
 .p-filter {
-  padding: 0.45rem 1rem;
+  padding: 0.35rem 0.8rem;
   font-family: var(--font-ui);
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 0.03em;
   border-radius: 9999px;
   background: var(--bg-surface);
@@ -464,19 +299,20 @@ section {
 
 .poetry-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: 1fr;
+  gap: 0.95rem;
 }
 
+/* Mobile-first compact poetry card */
 .poetry-card {
   background: var(--bg-surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 2.25rem;
+  border-radius: 10px;
+  padding: 1.15rem 1.25rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 1.5rem;
+  gap: 0.85rem;
   cursor: pointer;
   transition: all var(--t-fast);
 }
@@ -491,50 +327,55 @@ section {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.25rem;
 }
 
 .p-category {
   font-family: var(--font-ui);
-  font-size: 13px;
+  font-size: 11px;
   color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 500;
+  letter-spacing: 0.06em;
+  font-weight: 600;
 }
 
 .p-date {
   font-family: var(--font-ui);
-  font-size: 13px;
+  font-size: 11px;
   color: var(--ink-muted);
 }
 
 .p-title {
   font-family: var(--font-poetry-title);
-  font-size: clamp(36px, 3.5vw, 48px);
+  font-size: 22px;
   font-weight: 600;
-  line-height: 1.15;
+  line-height: 1.22;
   color: var(--ink);
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.35rem;
   letter-spacing: -0.01em;
 }
 
 .p-excerpt {
   font-family: var(--font-poetry-body);
-  font-size: clamp(19px, 1.5vw, 21px);
-  line-height: 1.8;
+  font-size: 14.5px;
+  line-height: 1.6;
   color: var(--ink-secondary);
   font-weight: 400;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .p-read-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.35rem;
   font-family: var(--font-ui);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--ink);
+  padding-top: 0.25rem;
 }
 
 .p-read-btn span.arrow {
@@ -546,22 +387,189 @@ section {
 }
 
 /* ==========================================================================
-   MINIMAL CONTACT / ORGANIZER FOOTPRINT
+   TOUR / CITY UPDATES (BUG FIXED: 100% CONTAINED ON MOBILE)
+   ========================================================================== */
+.city-updates {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.15rem;
+}
+
+.city-updates h4 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  line-height: 1.25;
+}
+
+.city-updates p {
+  font-size: 0.85rem;
+  color: var(--ink-secondary);
+  line-height: 1.5;
+}
+
+.city-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: 100%;
+}
+
+.city-input {
+  width: 100%;
+  min-width: 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.75rem 0.95rem;
+  color: var(--ink);
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color var(--t-fast);
+}
+
+.city-input:focus {
+  border-color: var(--ink-secondary);
+}
+
+.city-btn {
+  width: 100%;
+  min-height: 42px;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: background-color var(--t-fast);
+}
+
+.city-btn:hover {
+  background: #ffffff;
+}
+
+/* Show Row Table Template (if activated later) */
+.show-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-top: 1.5rem;
+}
+
+.show-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 0.85rem;
+  padding: 1.15rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all var(--t-fast);
+}
+
+.show-row:hover {
+  background: var(--bg-card);
+  border-color: var(--border-hover);
+}
+
+.show-date {
+  display: flex;
+  flex-direction: column;
+}
+
+.show-date-primary {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.show-date-sub {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+
+.show-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.show-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.show-location {
+  font-size: 0.85rem;
+  color: var(--ink-secondary);
+}
+
+.show-status {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--accent);
+}
+
+.ticket-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.7rem 1.25rem;
+  border-radius: 9999px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all var(--t-fast);
+}
+
+.ticket-cta-btn:hover {
+  background: #ffffff;
+  transform: scale(1.02);
+}
+
+/* ==========================================================================
+   ORGANIZER STRIP (MOBILE BASE)
    ========================================================================== */
 .organizer-strip {
-  padding: 3.5rem 0;
+  padding: 2.5rem 0;
   text-align: center;
   border-bottom: 1px solid var(--border);
 }
 
 .organizer-simple-line {
-  font-size: 1.05rem;
+  font-size: 0.925rem;
   color: var(--ink-secondary);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
+  gap: 0.5rem;
+  line-height: 1.5;
 }
 
 .organizer-email-btn {
@@ -569,7 +577,7 @@ section {
   color: var(--ink);
   text-decoration: underline;
   text-underline-offset: 0.3em;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 500;
   transition: color var(--t-fast);
 }
@@ -579,19 +587,19 @@ section {
 }
 
 /* ==========================================================================
-   MODALS & TOAST
+   MODALS & TOAST (MOBILE BASE)
    ========================================================================== */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(16, 16, 14, 0.92);
+  background: rgba(16, 16, 14, 0.94);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   z-index: 200;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
+  padding: 1rem;
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--t-normal);
@@ -604,12 +612,13 @@ section {
 
 .modal-close {
   position: absolute;
-  top: 1.5rem;
-  right: 1.75rem;
-  font-size: 2rem;
+  top: 0.85rem;
+  right: 1.1rem;
+  font-size: 1.85rem;
   color: var(--ink-secondary);
   transition: color var(--t-fast);
   z-index: 210;
+  line-height: 1;
 }
 
 .modal-close:hover {
@@ -619,39 +628,39 @@ section {
 .reader-canvas {
   background: var(--bg-surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 12px;
   max-width: 680px;
   width: 100%;
-  max-height: 85vh;
+  max-height: 88vh;
   overflow-y: auto;
-  padding: clamp(2rem, 5vw, 3.5rem);
+  padding: 1.5rem 1.25rem;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
 }
 
 .reader-cat {
   font-family: var(--font-ui);
-  font-size: 13px;
+  font-size: 11px;
   text-transform: uppercase;
   color: var(--accent);
-  letter-spacing: 0.06em;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
 }
 
 .reader-heading {
   font-family: var(--font-poetry-title);
-  font-size: clamp(36px, 4vw, 48px);
+  font-size: 26px;
   font-weight: 600;
-  line-height: 1.15;
-  margin-bottom: 1.75rem;
+  line-height: 1.2;
+  margin-bottom: 1.25rem;
   color: var(--ink);
   letter-spacing: -0.01em;
 }
 
 .reader-text {
   font-family: var(--font-poetry-body);
-  font-size: clamp(19px, 1.6vw, 21px);
-  line-height: 1.8;
+  font-size: 16px;
+  line-height: 1.75;
   color: var(--ink);
   font-weight: 400;
   white-space: pre-line;
@@ -660,24 +669,24 @@ section {
 .ticket-modal-card {
   background: var(--bg-surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 14px;
   max-width: 440px;
   width: 100%;
-  padding: clamp(2rem, 5vw, 2.5rem);
+  padding: 1.5rem 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.15rem;
 }
 
 .ticket-modal-card h3 {
   font-family: var(--font-display);
-  font-size: 1.65rem;
+  font-size: 1.45rem;
   font-weight: 500;
 }
 
 .t-details {
   background: var(--bg-card);
-  padding: 0.95rem 1.15rem;
+  padding: 0.85rem 1rem;
   border-radius: 8px;
   border: 1px solid var(--border);
   display: flex;
@@ -686,14 +695,14 @@ section {
 }
 
 .t-venue {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   color: var(--ink);
   font-weight: 500;
 }
 
 .t-date {
   font-family: var(--font-ui);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--accent);
 }
 
@@ -733,12 +742,12 @@ section {
 }
 
 .t-submit-btn {
-  padding: 0.7rem 1.5rem;
+  padding: 0.65rem 1.25rem;
   border-radius: 9999px;
   background: var(--ink);
   color: var(--bg);
   font-family: var(--font-ui);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   transition: background-color var(--t-fast);
 }
@@ -749,27 +758,29 @@ section {
 
 /* Footer & Toast */
 .site-footer {
-  padding: 3rem 0;
+  padding: 2.5rem 0;
   text-align: center;
   background: var(--bg);
 }
 
 .footer-text {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: var(--ink-muted);
 }
 
 .toast {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
   background: var(--ink);
   color: var(--bg);
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem 1.15rem;
   border-radius: 8px;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   font-weight: 500;
+  text-align: center;
   z-index: 300;
   transform: translateY(100px);
   opacity: 0;
@@ -783,39 +794,17 @@ section {
   opacity: 1;
 }
 
-@media (max-width: 768px) {
-  .show-row {
-    grid-template-columns: 1fr auto;
-    gap: 1rem;
+/* ==========================================================================
+   PROGRESSIVE ENHANCEMENT: TABLET & UP (min-width: 640px)
+   ========================================================================== */
+@media (min-width: 640px) {
+  :root {
+    --header-height: 64px;
   }
 
-  .show-status {
-    display: none;
-  }
-
-  .city-updates {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .city-form {
-    max-width: 100%;
-  }
-
-  .poetry-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .organizer-simple-line {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .header-container {
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 
   .brand-name {
@@ -823,41 +812,228 @@ section {
   }
 
   .nav-ticket-btn {
-    font-size: 12px;
-    padding: 0.4rem 0.85rem;
+    font-size: 13px;
+    padding: 0.45rem 1.05rem;
+  }
+
+  .hero-minimal {
+    padding: 2.75rem 1.5rem;
   }
 
   .ask-headline {
-    font-size: 1.65rem;
+    font-size: 2.25rem;
   }
 
   .ask-sub {
-    font-size: 0.9rem;
-    white-space: normal;
+    font-size: 1.1rem;
+    white-space: nowrap;
+  }
+
+  section {
+    padding: 4.25rem 0;
+  }
+
+  .section-title {
+    font-size: 2.4rem;
+  }
+
+  .section-desc {
+    font-size: 1rem;
+  }
+
+  /* Poetry 2 columns */
+  .poetry-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
   }
 
   .poetry-card {
-    padding: 1.5rem;
+    padding: 1.5rem 1.65rem;
+    border-radius: 12px;
+    gap: 1.1rem;
+  }
+
+  .p-category {
+    font-size: 12px;
+  }
+
+  .p-date {
+    font-size: 12px;
+  }
+
+  .p-title {
+    font-size: 27px;
+    margin-bottom: 0.5rem;
+  }
+
+  .p-excerpt {
+    font-size: 15.5px;
+    line-height: 1.65;
+    -webkit-line-clamp: 4;
+  }
+
+  .poetry-filters {
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .p-filter {
+    font-size: 13px;
+    padding: 0.4rem 1rem;
+  }
+
+  /* Tour Newsletter side-by-side */
+  .city-updates {
+    padding: 1.6rem 1.85rem;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+  }
+
+  .city-updates > div {
+    max-width: 55%;
+  }
+
+  .city-form {
+    flex-direction: row;
+    align-items: center;
+    max-width: 360px;
+    flex-grow: 1;
+  }
+
+  .city-input {
+    flex: 1;
+    padding: 0.65rem 0.95rem;
+    font-size: 0.875rem;
+  }
+
+  .city-btn {
+    width: auto;
+    padding: 0.65rem 1.25rem;
+    white-space: nowrap;
+  }
+
+  .show-row {
+    grid-template-columns: 140px 1fr auto auto;
+    gap: 1.25rem;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .organizer-simple-line {
+    flex-direction: row;
+    gap: 0.85rem;
+    font-size: 1rem;
   }
 
   .reader-canvas {
-    padding: 1.5rem;
-    border-radius: 12px;
+    padding: 2.25rem 2rem;
+    border-radius: 16px;
+  }
+
+  .reader-cat {
+    font-size: 12px;
   }
 
   .reader-heading {
-    font-size: 28px;
+    font-size: 34px;
+    margin-bottom: 1.5rem;
+  }
+
+  .reader-text {
+    font-size: 18px;
+    line-height: 1.8;
   }
 
   .toast {
-    right: 1rem;
-    left: 1rem;
-    bottom: 1rem;
-    text-align: center;
+    left: auto;
+    right: 2rem;
+    bottom: 2rem;
+    width: auto;
   }
 }
 
-/* Page load fade-in */
+/* ==========================================================================
+   PROGRESSIVE ENHANCEMENT: DESKTOP & UP (min-width: 900px)
+   ========================================================================== */
+@media (min-width: 900px) {
+  :root {
+    --header-height: 70px;
+  }
+
+  .hero-minimal {
+    padding: 3.5rem 1.5rem;
+  }
+
+  .ask-headline {
+    font-size: 2.85rem;
+  }
+
+  .ask-sub {
+    font-size: 1.25rem;
+  }
+
+  section {
+    padding: 5.5rem 0;
+  }
+
+  .section-title {
+    font-size: 3.1rem;
+  }
+
+  .section-desc {
+    font-size: 1.05rem;
+  }
+
+  .poetry-card {
+    padding: 2rem 2.25rem;
+    gap: 1.4rem;
+  }
+
+  .p-title {
+    font-size: 34px;
+    line-height: 1.18;
+  }
+
+  .p-excerpt {
+    font-size: 17px;
+    line-height: 1.75;
+    -webkit-line-clamp: 5;
+  }
+
+  .city-updates {
+    padding: 2rem 2.25rem;
+  }
+
+  .city-updates h4 {
+    font-size: 1.3rem;
+  }
+
+  .city-form {
+    max-width: 380px;
+  }
+
+  .organizer-strip {
+    padding: 3.5rem 0;
+  }
+
+  .reader-canvas {
+    padding: 3rem 2.75rem;
+  }
+
+  .reader-heading {
+    font-size: 40px;
+  }
+
+  .reader-text {
+    font-size: 19px;
+  }
+}
+
+/* ==========================================================================
+   PAGE LOAD SUBTLE FADE-IN
+   ========================================================================== */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -876,6 +1052,6 @@ section {
   animation: fadeUp 0.5s var(--ease) both;
 }
 
-#poetry       { animation-delay: 0.08s; }
-#tickets      { animation-delay: 0.14s; }
+#poetry          { animation-delay: 0.08s; }
+#tickets         { animation-delay: 0.14s; }
 .organizer-strip { animation-delay: 0.18s; }
