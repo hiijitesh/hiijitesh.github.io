@@ -1,7 +1,6 @@
 /* ==========================================================================
-   JITESH GIRI — POET & WRITER JAVASCRIPT ENGINE
-   Inspiration: madhurvirli.com & samayraina.co
-   Zero audio bloat, clean ticket reservations, poetry reader & smooth UI
+   JITESH GIRI — POETRY & TICKETS ENGINE
+   Natural, brotherly, unpretentious tone ('bhai', 'tu', 'tum', raw & warm)
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -68,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     copyEmailBtn.addEventListener('click', () => {
       const email = 'beatbyjit@gmail.com';
       navigator.clipboard.writeText(email).then(() => {
-        showToast('Email copy ho gaya! Inbox mein aao.');
+        showToast('Email copy ho gaya bhai, ab message bhej bhi do.');
       }).catch(() => {
         showToast('beatbyjit@gmail.com');
       });
@@ -76,25 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* --------------------------------------------------------------------------
-     4. Mobile Navigation Toggle
-     -------------------------------------------------------------------------- */
-  const mobileToggle = document.getElementById('mobile-toggle');
-  const navMenu = document.getElementById('nav-menu');
-
-  if (mobileToggle && navMenu) {
-    mobileToggle.addEventListener('click', () => {
-      navMenu.classList.toggle('open');
-    });
-
-    navMenu.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', () => {
-        navMenu.classList.remove('open');
-      });
-    });
-  }
-
-  /* --------------------------------------------------------------------------
-     5. Ticket Booking Modal
+     4. Ticket Booking Modal
      -------------------------------------------------------------------------- */
   const ticketModal = document.getElementById('ticket-modal');
   const ticketClose = document.getElementById('ticket-close');
@@ -122,25 +103,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const buyerName = document.getElementById('t-buyer-name').value;
     ticketModal.classList.remove('active');
     e.target.reset();
-    showToast(`Badhaai ho ${buyerName}! Ticket confirm ho gaya 🎟️`);
+    showToast(`Done bhai! ${buyerName}, ticket confirm ho gaya. Milte hain show pe 🎟️`);
   };
 
   window.handleTourNotify = function(e) {
     e.preventDefault();
     e.target.reset();
-    showToast('Shukriya! Naye dates aate hi sabse pehle update aayega.');
+    showToast('Done bhai! Jaise hi dates final honge pehle message kar dunga.');
   };
 
   /* --------------------------------------------------------------------------
-     6. The Written Word: Reader & Category Filters
+     5. Poetry Reader & Filter
      -------------------------------------------------------------------------- */
-  const writingGrid = document.getElementById('writing-grid');
+  const writingGrid = document.getElementById('poetry-grid');
   const readerModal = document.getElementById('reader-modal');
-  const readerTitle = document.getElementById('reader-title');
-  const readerCategory = document.getElementById('reader-category');
-  const readerBody = document.getElementById('reader-body');
+  const readerTitle = document.getElementById('reader-heading');
+  const readerCategory = document.getElementById('reader-cat');
+  const readerBody = document.getElementById('reader-text');
   const readerClose = document.getElementById('reader-close');
-  const writingChips = document.querySelectorAll('.writing-filters .filter-chip');
+  const writingChips = document.querySelectorAll('.poetry-filters .p-filter');
 
   let loadedWritings = defaultWritings;
 
@@ -152,18 +133,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     filtered.forEach(piece => {
       const card = document.createElement('article');
-      card.className = 'writing-card';
+      card.className = 'poetry-card';
       card.innerHTML = `
         <div>
-          <div class="writing-card-header">
-            <span class="writing-tag">${piece.category}</span>
-            <span class="writing-date">${piece.date}</span>
+          <div class="p-card-header">
+            <span class="p-category">${piece.category}</span>
+            <span class="p-date">${piece.date}</span>
           </div>
-          <h3 class="writing-title">${piece.title}</h3>
-          <p class="writing-excerpt">${piece.excerpt}</p>
+          <h3 class="p-title">${piece.title}</h3>
+          <p class="p-excerpt">${piece.excerpt}</p>
         </div>
-        <div class="writing-read-more">
-          <span>Poora padhein</span>
+        <div class="p-read-btn">
+          <span>Poora padho</span>
           <span class="arrow">→</span>
         </div>
       `;
@@ -222,28 +203,5 @@ document.addEventListener('DOMContentLoaded', () => {
       if (readerModal) readerModal.classList.remove('active');
     }
   });
-
-  /* --------------------------------------------------------------------------
-     7. Booking Form Handler
-     -------------------------------------------------------------------------- */
-  window.handleFormSubmit = function(e) {
-    e.preventDefault();
-    const btnSubmit = document.getElementById('btn-submit');
-    const name = document.getElementById('form-name').value;
-
-    if (btnSubmit) {
-      btnSubmit.innerHTML = `<span>Bheja ja raha hai...</span>`;
-      btnSubmit.disabled = true;
-    }
-
-    setTimeout(() => {
-      showToast(`Shukriya ${name}! Message mil gaya, jaldi baat karte hain.`);
-      document.getElementById('booking-form').reset();
-      if (btnSubmit) {
-        btnSubmit.innerHTML = `<span>Message Bhejo</span><span class="arrow">→</span>`;
-        btnSubmit.disabled = false;
-      }
-    }, 700);
-  };
 
 });

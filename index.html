@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jitesh Giri — Tickets & Poetry</title>
+  <title>Jitesh Kumar — Tickets & Poetry</title>
 
   <!-- SEO Meta Tags -->
-  <meta name="description" content="Jitesh Giri — Kavi aur Shayar. Live show tickets, tour dates aur nazmein.">
-  <meta name="keywords" content="Jitesh Giri, Jitesh Kumar, Poetry, Tickets, Live Shows, Spoken Word, Shayari, Nazm">
-  <meta name="author" content="Jitesh Giri">
+  <meta name="description" content="Jitesh Kumar — Kavi aur Shayar. Live show tickets, tour dates aur meri likhi hui nazmein.">
+  <meta name="keywords" content="Jitesh Kumar, Poetry, Tickets, Live Shows, Spoken Word, Shayari, Nazm">
+  <meta name="author" content="Jitesh Kumar">
   <meta name="theme-color" content="#10100e">
 
   <!-- Favicon -->
@@ -20,26 +20,25 @@
 </head>
 <body>
 
-  <!-- Minimal Header: Just Name & 1 Ticket Action -->
+  <!-- Minimal Header: Name & Ticket CTA -->
   <header class="site-header">
     <div class="container header-container">
-      <a href="#" class="brand-name">JITESH GIRI</a>
+      <a href="#" class="brand-name">JITESH KUMAR</a>
       <div class="header-nav">
-        <a href="#tickets" class="nav-ticket-btn">Tickets 🎟️</a>
+        <a href="#tickets" class="nav-ticket-btn">Tickets le lo 🎟️</a>
       </div>
     </div>
   </header>
 
   <main>
 
-    <!-- Ultra-Minimal Hero (Madhur Virli Style) -->
+    <!-- Hero: Jitesh's Signature Conversational Tone -->
     <section class="hero-minimal">
       <div class="container">
-        <h1 class="ask-headline">Aap log theek toh ho na?</h1>
+        <h1 class="ask-headline">Aur bhai, sab badhiya?</h1>
         <p class="ask-sub">
-          Nahi kya? Kya chahiye?<br>
-          <a href="#tickets" class="choice-link"><span class="word">Tickets</span></a>? ya 
-          <a href="#poetry" class="choice-link"><span class="word">Poetry</span></a>?
+          Batao na, kya dhoondh rahe ho?<br>
+          Show ka <a href="#tickets" class="choice-link"><span class="word">Tickets</span></a> chahiye ya meri <a href="#poetry" class="choice-link"><span class="word">Poetry</span></a> padhoge?
         </p>
       </div>
     </section>
@@ -49,9 +48,9 @@
       <div class="container">
         <div class="section-head">
           <span class="section-tag">Tour & Live Baithak</span>
-          <h2 class="section-title">Aap log aa toh rahe ho na?</h2>
+          <h2 class="section-title">Bhai, milne aa rahe ho na?</h2>
           <p class="section-desc">
-            Alag-alag sheharon mein intimate poetry sessions aur baithak. Apni seat reserve kar lo.
+            Shehar-shehar ghoom ke live baithak kar rahe hain. Baad mein mat bolna ki ticket khatam ho gaya, seat abhi book kar lo.
           </p>
         </div>
 
@@ -67,9 +66,9 @@
               <span class="show-name">Raat Ke 3 Baje</span>
               <span class="show-location">The Piano Man, Safdarjung • New Delhi</span>
             </div>
-            <span class="show-status fast-filling">Fast Filling</span>
+            <span class="show-status fast-filling">Jaldi bhar raha hai</span>
             <button class="ticket-cta-btn" onclick="openTicketModal('New Delhi', '15 Nov 2026', 'The Piano Man, Safdarjung', 'Raat Ke 3 Baje', '₹499')">
-              <span>Tickets 🎟️</span>
+              <span>Seat book karo 🎟️</span>
             </button>
           </div>
 
@@ -85,7 +84,7 @@
             </div>
             <span class="show-status">Tickets Live</span>
             <button class="ticket-cta-btn" onclick="openTicketModal('Bangalore', '28 Nov 2026', 'Jagriti Theatre, Whitefield', 'Sannate Ki Geometry', '₹449')">
-              <span>Tickets 🎟️</span>
+              <span>Seat book karo 🎟️</span>
             </button>
           </div>
 
@@ -101,7 +100,7 @@
             </div>
             <span class="show-status">Early Bird</span>
             <button class="ticket-cta-btn" onclick="openTicketModal('Mumbai', '12 Dec 2026', 'The Habitat, Khar West', 'Diary Ke Khule Panne', '₹549')">
-              <span>Tickets 🎟️</span>
+              <span>Seat book karo 🎟️</span>
             </button>
           </div>
 
@@ -115,9 +114,9 @@
               <span class="show-name">Alfaaz & Dhoop (Open Baithak)</span>
               <span class="show-location">Jawahar Kala Kendra • Jaipur</span>
             </div>
-            <span class="show-status">Registrations Open</span>
+            <span class="show-status">Naam likhwa lo</span>
             <button class="ticket-cta-btn" onclick="openTicketModal('Jaipur', '20 Dec 2026', 'Jawahar Kala Kendra', 'Alfaaz & Dhoop', '₹399')">
-              <span>RSVP 🎟️</span>
+              <span>RSVP karo 🎟️</span>
             </button>
           </div>
 
@@ -126,12 +125,12 @@
         <!-- City Updates Box -->
         <div class="city-updates">
           <div>
-            <h4>Aapke shehar mein show kab hoga?</h4>
-            <p>Email daalo — dates aate hi ticket link sabse pehle inbox mein aayega.</p>
+            <h4>Tumhare shehar mein kab aana hai?</h4>
+            <p>Email daal do yahan, jaise hi dates final honge sabse pehle message kar dunga.</p>
           </div>
           <form class="city-form" onsubmit="handleTourNotify(event)">
-            <input type="email" class="city-input" required placeholder="Aapka email...">
-            <button type="submit" class="city-btn">Update Do</button>
+            <input type="email" class="city-input" required placeholder="Apna email likho...">
+            <button type="submit" class="city-btn">Bhej do</button>
           </form>
         </div>
       </div>
@@ -141,19 +140,19 @@
     <section id="poetry">
       <div class="container">
         <div class="section-head">
-          <span class="section-tag">Diary Ke Panne</span>
-          <h2 class="section-title">Kalam & Alfaaz</h2>
+          <span class="section-tag">Meri Kalam</span>
+          <h2 class="section-title">Thoda likha tha, padh lo.</h2>
           <p class="section-desc">
-            Shayari, nazmein aur raat ke sannate mein likhi hui baatein. Click karke sukoon se padhein.
+            Jo dil mein aaya kaagaz pe utaar diya. Kisi bhi piece par click karo aur sukoon se padho.
           </p>
         </div>
 
         <!-- Filter Chips -->
         <div class="poetry-filters">
-          <button class="p-filter active" data-wfilter="all">Sab (All)</button>
+          <button class="p-filter active" data-wfilter="all">Sabhi</button>
           <button class="p-filter" data-wfilter="Poetry">Poetry</button>
           <button class="p-filter" data-wfilter="Nazm">Nazmein</button>
-          <button class="p-filter" data-wfilter="Shayari">Shayari / Ash'aar</button>
+          <button class="p-filter" data-wfilter="Shayari">Shayari</button>
           <button class="p-filter" data-wfilter="Essay">Essays</button>
         </div>
 
@@ -162,14 +161,14 @@
       </div>
     </section>
 
-    <!-- Ultra-Minimal Organizer Line -->
+    <!-- Ultra-Minimal Organizer / Contact Line -->
     <div class="organizer-strip">
       <div class="container">
         <p class="organizer-simple-line">
-          <span>College fest, lit-fest ya private baithak ke liye:</span>
-          <button class="organizer-email-btn" id="copy-email-btn" title="Click to copy email">beatbyjit@gmail.com</button>
+          <span>College fest, lit-fest ya apne yahan baithak rakhni hai? Seedha mail karo:</span>
+          <button class="organizer-email-btn" id="copy-email-btn" title="Email copy karo">beatbyjit@gmail.com</button>
           <span>•</span>
-          <a href="https://instagram.com/jiteshxpro" target="_blank" rel="noopener" style="text-decoration: underline; text-underline-offset: 0.3em;">@jiteshxpro</a>
+          <a href="https://instagram.com/jiteshxpro" target="_blank" rel="noopener" style="text-decoration: underline; text-underline-offset: 0.3em;">Instagram @jiteshxpro</a>
         </p>
       </div>
     </div>
@@ -180,18 +179,18 @@
   <div class="modal-overlay" id="ticket-modal">
     <button class="modal-close" id="ticket-close" aria-label="Band Karo">&times;</button>
     <div class="ticket-modal-card">
-      <span class="reader-cat">Live Show Ticket Reservation</span>
-      <h3 id="t-modal-title">Show Name</h3>
+      <span class="reader-cat">Live Show Ki Seat</span>
+      <h3 id="t-modal-title">Show Ka Naam</h3>
       <div class="t-details">
         <span class="t-venue" id="t-modal-venue">Venue Details</span>
         <span class="t-date" id="t-modal-date">Date & Time</span>
       </div>
       <form class="t-form" onsubmit="handleTicketBooking(event)">
         <input type="text" class="t-input" id="t-buyer-name" required placeholder="Aapka Naam">
-        <input type="email" class="t-input" id="t-buyer-email" required placeholder="Aapka Email">
+        <input type="email" class="t-input" id="t-buyer-email" required placeholder="Aapka Email Address">
         <div class="t-submit-row">
           <span class="t-price" id="t-modal-price">₹499</span>
-          <button type="submit" class="t-submit-btn">Confirm Ticket 🎟️</button>
+          <button type="submit" class="t-submit-btn">Seat pakki karo 🎟️</button>
         </div>
       </form>
     </div>
@@ -208,12 +207,12 @@
   </div>
 
   <!-- Toast -->
-  <div class="toast" id="toast">Email copy ho gaya!</div>
+  <div class="toast" id="toast">Email copy ho gaya bhai!</div>
 
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container">
-      <p class="footer-text">&copy; 2026 Jitesh Giri. Pure dil se likha aur banaya gaya.</p>
+      <p class="footer-text">&copy; 2026 Jitesh Kumar. Pure dil se likha aur banaya gaya.</p>
     </div>
   </footer>
 
