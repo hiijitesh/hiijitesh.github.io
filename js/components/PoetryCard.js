@@ -1,6 +1,6 @@
 /**
  * PoetryCard Component
- * Generates an accessible, interactive card element for a poem/nazm/shayari.
+ * Generates an elegant, compact editorial card for poems, nazms, and shayari.
  */
 window.App = window.App || {};
 
@@ -15,17 +15,22 @@ window.App = window.App || {};
       .replace(/'/g, '&#039;');
   }
 
-  function createPoetryCard(piece, onCardClick) {
+  function createPoetryCard(piece, index = 0, onCardClick) {
     const card = document.createElement('article');
     card.className = 'poetry-card';
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
     card.setAttribute('aria-label', `${piece.title} — ${piece.category}`);
 
+    // Clean index number 01, 02, etc.
+    const num = String(index + 1).padStart(2, '0');
+
     card.innerHTML = `
-      <div>
-        <div class="p-card-header">
+      <div class="p-card-body">
+        <div class="p-card-meta">
+          <span class="p-index">${num}</span>
           <span class="p-category">${escapeHtml(piece.category)}</span>
+          <span class="p-meta-dot">•</span>
           <span class="p-date">${escapeHtml(piece.date)}</span>
         </div>
         <h3 class="p-title">${escapeHtml(piece.title)}</h3>

@@ -64,8 +64,8 @@ window.App = window.App || {};
         return;
       }
 
-      list.forEach(piece => {
-        const card = App.createPoetryCard(piece, (selected) => {
+      list.forEach((piece, index) => {
+        const card = App.createPoetryCard(piece, index, (selected) => {
           if (App.ReaderModal) App.ReaderModal.open(selected);
         });
         this.grid.appendChild(card);

@@ -299,27 +299,32 @@ section {
   border-color: var(--ink);
 }
 
+/* ==========================================================================
+   POETRY SECTION (SLEEK, COMPACT & MINIMAL EDITORIAL)
+   ========================================================================== */
 .poetry-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.95rem;
+  gap: 0.85rem;
 }
 
-/* Mobile-first compact poetry card */
+/* Compact, aesthetic poetry card */
 .poetry-card {
   background: var(--bg-surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 1.15rem 1.25rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 0.85rem;
+  gap: 0.75rem;
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   transition: all var(--t-fast);
+  position: relative;
+  overflow: hidden;
 }
 
 .poetry-card:hover {
@@ -328,46 +333,69 @@ section {
   transform: translateY(-2px);
 }
 
-.p-card-header {
+.p-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.p-card-meta {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.25rem;
+  gap: 0.45rem;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.p-index {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  opacity: 0.9;
 }
 
 .p-category {
-  font-family: var(--font-ui);
-  font-size: 11px;
-  color: var(--accent);
+  color: var(--ink-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
   font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+}
+
+.p-meta-dot {
+  color: var(--ink-muted);
+  font-size: 7px;
 }
 
 .p-date {
-  font-family: var(--font-ui);
-  font-size: 11px;
   color: var(--ink-muted);
+  font-size: 11px;
 }
 
 .p-title {
   font-family: var(--font-poetry-title);
-  font-size: 22px;
+  font-size: 21px;
   font-weight: 600;
-  line-height: 1.22;
+  line-height: 1.2;
   color: var(--ink);
-  margin-bottom: 0.35rem;
   letter-spacing: -0.01em;
+  transition: color var(--t-fast);
+}
+
+.poetry-card:hover .p-title {
+  color: #ffffff;
 }
 
 .p-excerpt {
   font-family: var(--font-poetry-body);
-  font-size: 14.5px;
-  line-height: 1.6;
+  font-size: 13.5px;
+  line-height: 1.5;
   color: var(--ink-secondary);
-  font-weight: 400;
+  font-style: italic;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -377,10 +405,15 @@ section {
   align-items: center;
   gap: 0.35rem;
   font-family: var(--font-ui);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
+  color: var(--ink-secondary);
+  transition: all var(--t-fast);
+  align-self: flex-start;
+}
+
+.poetry-card:hover .p-read-btn {
   color: var(--ink);
-  padding-top: 0.25rem;
 }
 
 .p-read-btn span.arrow {
@@ -389,6 +422,7 @@ section {
 
 .poetry-card:hover .p-read-btn span.arrow {
   transform: translateX(4px);
+  color: var(--accent);
 }
 
 /* ==========================================================================
@@ -979,35 +1013,26 @@ section {
     font-size: 1rem;
   }
 
-  /* Poetry 2 columns */
+  /* Poetry 2 columns - sleek compact cards */
   .poetry-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem;
+    gap: 1rem;
   }
 
   .poetry-card {
-    padding: 1.5rem 1.65rem;
+    padding: 1.25rem 1.4rem;
     border-radius: 12px;
-    gap: 1.1rem;
-  }
-
-  .p-category {
-    font-size: 12px;
-  }
-
-  .p-date {
-    font-size: 12px;
+    gap: 0.75rem;
   }
 
   .p-title {
-    font-size: 27px;
-    margin-bottom: 0.5rem;
+    font-size: 22px;
   }
 
   .p-excerpt {
-    font-size: 15.5px;
-    line-height: 1.65;
-    -webkit-line-clamp: 4;
+    font-size: 13.5px;
+    line-height: 1.55;
+    -webkit-line-clamp: 2;
   }
 
   .poetry-filters {
@@ -1136,20 +1161,24 @@ section {
     font-size: 1.05rem;
   }
 
+  .poetry-grid {
+    gap: 1.15rem;
+  }
+
   .poetry-card {
-    padding: 2rem 2.25rem;
-    gap: 1.4rem;
+    padding: 1.35rem 1.6rem;
+    gap: 0.85rem;
   }
 
   .p-title {
-    font-size: 34px;
-    line-height: 1.18;
+    font-size: 23px;
+    line-height: 1.22;
   }
 
   .p-excerpt {
-    font-size: 17px;
-    line-height: 1.75;
-    -webkit-line-clamp: 5;
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-line-clamp: 2;
   }
 
   .city-updates {
