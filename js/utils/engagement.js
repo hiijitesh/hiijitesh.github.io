@@ -145,6 +145,75 @@ window.App = window.App || {};
     }
 
     /**
+     * Fetch real-time likes and views from Google Sheets via GET XMLHttpRequest
+     * @param {Function} [callback]
+     */
+    fetchServerStats(callback) {
+      if (!this.apiEndpoint || typeof this.apiEndpoint !== 'string') {
+        if (typeof callback === 'function') callback(null, null);
+        return;
+      }
+
+      try {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', this.apiEndpoint, true);
+        xhr.timeout = 8000;
+
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status >= 200 && xhr.status < 400) {
+              try {
+                const res = JSON.parse(xhr.responseText);
+                if (res && res.stats) {
+                  this.syncAllServerStats(res.stats);
+                  if (typeof callback === 'function') callback(null, res.stats);
+                  if (typeof this.onServerSync === 'function') this.onServerSync(res.stats);
+                }
+              } catch (err) {
+                if (typeof callback === 'function') callback(err, null);
+              }
+            } else {
+              if (typeof callback === 'function') callback(new Error(`HTTP ${xhr.status}`), null);
+            }
+          }
+        };
+
+        xhr.ontimeout = () => {
+          if (typeof callback === 'function') callback(new Error('Timeout'), null);
+        };
+
+        xhr.onerror = (e) => {
+          if (typeof callback === 'function') callback(e, null);
+        };
+
+        xhr.send();
+      } catch (err) {
+        if (typeof callback === 'function') callback(err, null);
+      }
+    }
+
+    /**
+     * Sync and persist all stats fetched from the server into localStorage
+     * @param {Object} statsMap
+     */
+    syncAllServerStats(statsMap) {
+      if (!statsMap || typeof statsMap !== 'object') return;
+      Object.keys(statsMap).forEach(pieceId => {
+        const serverData = statsMap[pieceId];
+        if (serverData && typeof serverData === 'object') {
+          const stored = this._getStoredData(pieceId);
+          if (typeof serverData.views === 'number') {
+            stored.serverViews = serverData.views;
+          }
+          if (typeof serverData.likes === 'number') {
+            stored.serverLikes = serverData.likes;
+          }
+          this._setStoredData(pieceId, stored);
+        }
+      });
+    }
+
+    /**
      * Get computed total stats for a poetry piece
      * @param {Object} piece
      * @returns {{ views: number, likes: number, userLiked: boolean, formattedViews: string, formattedLikes: string }}
@@ -158,9 +227,12 @@ window.App = window.App || {};
       const baseLikes = Number(piece.likes) || 0;
       const stored = this._getStoredData(piece.id);
 
-      // If server returned total counts, prioritize them, otherwise base + local delta
-      const totalViews = stored.serverViews !== null ? stored.serverViews : Math.max(0, baseViews + stored.extraViews);
-      const totalLikes = stored.serverLikes !== null ? stored.serverLikes : Math.max(0, baseLikes + stored.extraLikes);
+      // Server stats from Google Sheets added to static baseline
+      const serverDeltaViews = stored.serverViews !== null ? stored.serverViews : stored.extraViews;
+      const serverDeltaLikes = stored.serverLikes !== null ? stored.serverLikes : stored.extraLikes;
+
+      const totalViews = Math.max(0, baseViews + serverDeltaViews);
+      const totalLikes = Math.max(0, baseLikes + serverDeltaLikes);
 
       return {
         views: totalViews,

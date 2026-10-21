@@ -21,6 +21,15 @@ window.App = window.App || {};
     async init() {
       this.setupFilters();
       this.setupSorting();
+
+      // Hook real-time Google Sheets sync
+      if (App.Engagement) {
+        App.Engagement.onServerSync = () => {
+          this.render();
+        };
+        App.Engagement.fetchServerStats();
+      }
+
       // Render immediate default writings so page is never empty
       this.render();
       // Try to load any updated writings from JSON
