@@ -32,13 +32,13 @@ window.App = window.App || {};
     }
 
     /**
-     * Send an asynchronous XMLHttpRequest to the server
-     * Uses text/plain to avoid browser CORS preflight (OPTIONS) rejection on Google Apps Script
+     * Send an asynchronous HTTP request to the server
+     * Uses fetch with redirect: 'follow' and text/plain to handle Google Apps Script 302 redirects seamlessly
      * @param {string} endpoint
      * @param {Object} payload
      * @param {Function} [callback]
      */
-    _sendHttpRequest(endpoint, payload, callback) {
+    async _sendHttpRequest(endpoint, payload, callback) {
       if (!endpoint || typeof endpoint !== 'string') {
         if (typeof callback === 'function') callback(null, null);
         return;
@@ -46,7 +46,7 @@ window.App = window.App || {};
 
       const bodyStr = JSON.stringify(payload);
 
-      // Append query parameters so Google Apps Script e.parameter is always populated even if postData is stripped during 302 redirect
+      // Append query parameters so Google Apps Script e.parameter is always populated even during 302 redirect
       let targetUrl = endpoint;
       try {
         const urlObj = new URL(endpoint, window.location.href);
@@ -60,53 +60,33 @@ window.App = window.App || {};
       }
 
       try {
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', targetUrl, true);
-        // Using text/plain is a CORS simple request, ensuring Google Apps Script accepts it without OPTIONS error
-        xhr.setRequestHeader('Content-Type', 'text/plain;charset=UTF-8');
-        xhr.timeout = 7000;
+        const res = await fetch(targetUrl, {
+          method: 'POST',
+          body: bodyStr,
+          headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+          redirect: 'follow'
+        });
 
-        xhr.onreadystatechange = () => {
-          if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status >= 200 && xhr.status < 400) {
-              try {
-                const response = JSON.parse(xhr.responseText);
-                if (typeof callback === 'function') callback(null, response);
-              } catch (parseErr) {
-                // Successful recording even if response was HTML redirect
-                if (typeof callback === 'function') callback(null, { status: 'recorded' });
-              }
-            } else {
-              if (typeof callback === 'function') {
-                callback(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`), null);
-              }
-            }
+        if (res.ok) {
+          try {
+            const data = await res.json();
+            if (typeof callback === 'function') callback(null, data);
+            return;
+          } catch {
+            if (typeof callback === 'function') callback(null, { status: 'recorded' });
+            return;
           }
-        };
-
-        xhr.ontimeout = () => {
-          if (typeof callback === 'function') callback(new Error('XMLHttpRequest timed out'), null);
-        };
-
-        xhr.onerror = (e) => {
-          // Secondary fallback using navigator.sendBeacon
-          if (navigator.sendBeacon) {
-            try {
-              navigator.sendBeacon(endpoint, new Blob([bodyStr], { type: 'text/plain' }));
-            } catch {}
-          }
-          if (typeof callback === 'function') callback(null, { status: 'beacon_sent' });
-        };
-
-        xhr.send(bodyStr);
+        }
       } catch (err) {
+        // Fallback using navigator.sendBeacon
         if (navigator.sendBeacon) {
           try {
-            navigator.sendBeacon(endpoint, new Blob([bodyStr], { type: 'text/plain' }));
+            navigator.sendBeacon(targetUrl, new Blob([bodyStr], { type: 'text/plain' }));
           } catch {}
         }
-        if (typeof callback === 'function') callback(null, { status: 'beacon_sent' });
       }
+
+      if (typeof callback === 'function') callback(null, { status: 'recorded' });
     }
 
     /**
@@ -145,49 +125,33 @@ window.App = window.App || {};
     }
 
     /**
-     * Fetch real-time likes and views from Google Sheets via GET XMLHttpRequest
+     * Fetch real-time likes and views from Google Sheets via GET fetch with redirect follow
      * @param {Function} [callback]
      */
-    fetchServerStats(callback) {
+    async fetchServerStats(callback) {
       if (!this.apiEndpoint || typeof this.apiEndpoint !== 'string') {
         if (typeof callback === 'function') callback(null, null);
         return;
       }
 
       try {
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', this.apiEndpoint, true);
-        xhr.timeout = 8000;
+        const res = await fetch(this.apiEndpoint, {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' },
+          redirect: 'follow'
+        });
 
-        xhr.onreadystatechange = () => {
-          if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status >= 200 && xhr.status < 400) {
-              try {
-                const res = JSON.parse(xhr.responseText);
-                if (res && res.stats) {
-                  this.syncAllServerStats(res.stats);
-                  if (typeof callback === 'function') callback(null, res.stats);
-                  if (typeof this.onServerSync === 'function') this.onServerSync(res.stats);
-                }
-              } catch (err) {
-                if (typeof callback === 'function') callback(err, null);
-              }
-            } else {
-              if (typeof callback === 'function') callback(new Error(`HTTP ${xhr.status}`), null);
-            }
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.stats) {
+            this.syncAllServerStats(data.stats);
+            if (typeof callback === 'function') callback(null, data.stats);
+            if (typeof this.onServerSync === 'function') this.onServerSync(data.stats);
+            return;
           }
-        };
-
-        xhr.ontimeout = () => {
-          if (typeof callback === 'function') callback(new Error('Timeout'), null);
-        };
-
-        xhr.onerror = (e) => {
-          if (typeof callback === 'function') callback(e, null);
-        };
-
-        xhr.send();
+        }
       } catch (err) {
+        // Fallback gracefully
         if (typeof callback === 'function') callback(err, null);
       }
     }
@@ -244,38 +208,28 @@ window.App = window.App || {};
     }
 
     /**
-     * Record a read / view for the piece (session-throttled & sends XMLHttpRequest to server)
+     * Record a read / view for the piece: increments count and persists to Google Sheets
      * @param {Object} piece
      * @returns {Object} updated stats
      */
     recordView(piece) {
       if (!piece || !piece.id) return this.getStats(piece);
 
-      try {
-        const sessionKey = SESSION_VIEW_PREFIX + piece.id;
-        const alreadyViewed = sessionStorage.getItem(sessionKey);
+      const stored = this._getStoredData(piece.id);
+      stored.extraViews = (stored.extraViews || 0) + 1;
+      this._setStoredData(piece.id, stored);
 
-        if (!alreadyViewed) {
-          sessionStorage.setItem(sessionKey, '1');
-          const stored = this._getStoredData(piece.id);
-          stored.extraViews += 1;
-          this._setStoredData(piece.id, stored);
-
-          // Asynchronous XMLHttpRequest to persist on server
-          this._sendHttpRequest(this.apiEndpoint, {
-            action: 'view',
-            pieceId: piece.id,
-            timestamp: new Date().toISOString()
-          }, (err, res) => {
-            if (!err && res && typeof res.views === 'number') {
-              stored.serverViews = res.views;
-              this._setStoredData(piece.id, stored);
-            }
-          });
+      // Send view event to Google Sheets immediately
+      this._sendHttpRequest(this.apiEndpoint, {
+        action: 'view',
+        pieceId: piece.id,
+        timestamp: new Date().toISOString()
+      }, (err, res) => {
+        if (!err && res && res.stats) {
+          this.syncAllServerStats(res.stats);
+          if (typeof this.onServerSync === 'function') this.onServerSync(res.stats);
         }
-      } catch {
-        // Session storage failure fallback
-      }
+      });
 
       return this.getStats(piece);
     }
@@ -293,33 +247,24 @@ window.App = window.App || {};
       if (stored.userLiked) {
         stored.userLiked = false;
         stored.extraLikes = Math.max(0, stored.extraLikes - 1);
-        if (stored.serverLikes !== null) {
-          stored.serverLikes = Math.max(0, stored.serverLikes - 1);
-        }
       } else {
         stored.userLiked = true;
         stored.extraLikes += 1;
-        if (stored.serverLikes !== null) {
-          stored.serverLikes += 1;
-        }
       }
 
       this._setStoredData(piece.id, stored);
       const updatedStats = this.getStats(piece);
 
-      // Asynchronous XMLHttpRequest to store like on server
+      // Asynchronous call to store like on Google Sheets
       this._sendHttpRequest(this.apiEndpoint, {
         action: 'like',
         pieceId: piece.id,
         liked: stored.userLiked,
         timestamp: new Date().toISOString()
-      }, (err, serverResponse) => {
-        if (!err && serverResponse && typeof serverResponse.likes === 'number') {
-          stored.serverLikes = serverResponse.likes;
-          this._setStoredData(piece.id, stored);
-          if (typeof this.onServerSync === 'function') {
-            this.onServerSync(piece.id, serverResponse);
-          }
+      }, (err, res) => {
+        if (!err && res && res.stats) {
+          this.syncAllServerStats(res.stats);
+          if (typeof this.onServerSync === 'function') this.onServerSync(res.stats);
         }
       });
 
