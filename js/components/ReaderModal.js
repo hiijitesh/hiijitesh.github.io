@@ -64,6 +64,11 @@ window.App = window.App || {};
           this.close();
         }
       });
+      window.addEventListener('popstate', () => {
+        if (this.isOpen()) {
+          this.close();
+        }
+      });
 
       // Update active reader modal live when server sync arrives
       if (App.Engagement && typeof App.Engagement.addSyncListener === 'function') {
@@ -264,6 +269,15 @@ window.App = window.App || {};
         this.onUpdate();
       }
 
+      // Seamless URL deep-link update without page reload
+      try {
+        if (window.history && window.history.pushState && piece && piece.id) {
+          const path = window.location.pathname;
+          const basePath = path.endsWith('/') ? path : path.substring(0, path.lastIndexOf('/') + 1);
+          window.history.pushState({ pieceId: piece.id }, piece.title, `${basePath}poetry/${piece.id}/`);
+        }
+      } catch {}
+
       this.modal.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
@@ -272,6 +286,14 @@ window.App = window.App || {};
       if (!this.modal) return;
       this.modal.classList.remove('active');
       document.body.style.overflow = '';
+
+      // Revert URL to root without page reload
+      try {
+        if (window.history && window.history.pushState && window.location.pathname.includes('/poetry/')) {
+          const rootUrl = window.location.pathname.replace(/\/poetry\/[^\/]+\/?$/, '/') || '/';
+          window.history.pushState(null, '', rootUrl);
+        }
+      } catch {}
     }
 
     isOpen() {

@@ -1525,3 +1525,171 @@ section {
 #poetry          { animation-delay: 0.08s; }
 #tickets         { animation-delay: 0.14s; }
 .organizer-strip { animation-delay: 0.18s; }
+
+/* ==========================================================================
+   STANDALONE POEM PAGES (SEO ARCHITECTURE)
+   ========================================================================== */
+.poem-standalone-body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.poem-page-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(18, 18, 16, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.85rem 0;
+}
+
+.poem-nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.poem-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ink-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  transition: color var(--t-fast);
+}
+
+.poem-back-link strong {
+  color: var(--ink);
+}
+
+.poem-back-link:hover {
+  color: var(--ink);
+}
+
+.poem-back-link .back-arrow {
+  transition: transform var(--t-fast);
+}
+
+.poem-back-link:hover .back-arrow {
+  transform: translateX(-3px);
+}
+
+.poem-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.poem-views-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  padding: 0.35rem 0.65rem;
+  border-radius: 9999px;
+}
+
+.poem-page-main {
+  flex: 1;
+  padding-top: 3.5rem;
+  padding-bottom: 5rem;
+  max-width: 760px;
+  width: 100%;
+}
+
+.poem-meta-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.poem-category-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  background: rgba(212, 163, 115, 0.08);
+  border: 1px solid rgba(212, 163, 115, 0.25);
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+}
+
+.poem-date-tag {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+
+.poem-title {
+  font-family: var(--font-poetry-title);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 2rem;
+}
+
+.poem-content {
+  font-family: var(--font-poetry-body);
+  font-size: 1.15rem;
+  line-height: 1.95;
+  color: var(--ink);
+  white-space: pre-line;
+  margin-bottom: 3.5rem;
+  letter-spacing: 0.01em;
+}
+
+.poem-footer-cta {
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.poem-author-card {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.poem-author-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+
+.poem-author-info h4 {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0;
+}
+
+.poem-author-info p {
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  margin: 0.2rem 0 0 0;
+}
+
