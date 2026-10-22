@@ -156,6 +156,7 @@ window.App = window.App || {};
 
     /**
      * Fetch real-time likes and views from Google Sheets via GET fetch with redirect follow
+     * Always appends unique timestamp query param and cache: 'no-store' so refresh always calls API
      * @param {Function} [callback]
      */
     async fetchServerStats(callback) {
@@ -165,8 +166,12 @@ window.App = window.App || {};
       }
 
       try {
-        const res = await fetch(this.apiEndpoint, {
+        const separator = this.apiEndpoint.includes('?') ? '&' : '?';
+        const targetUrl = `${this.apiEndpoint}${separator}_t=${Date.now()}`;
+
+        const res = await fetch(targetUrl, {
           method: 'GET',
+          cache: 'no-store',
           headers: { 'Accept': 'application/json' },
           redirect: 'follow'
         });
@@ -175,8 +180,8 @@ window.App = window.App || {};
           const data = await res.json();
           if (data && data.stats) {
             this.syncAllServerStats(data.stats);
+            this.notifySyncListeners(data.stats);
             if (typeof callback === 'function') callback(null, data.stats);
-            if (typeof this.onServerSync === 'function') this.onServerSync(data.stats);
             return;
           }
         }
@@ -222,8 +227,8 @@ window.App = window.App || {};
       const stored = this._getStoredData(piece.id);
 
       // Server stats from Google Sheets added to static baseline
-      const serverDeltaViews = stored.serverViews !== null ? stored.serverViews : stored.extraViews;
-      const serverDeltaLikes = stored.serverLikes !== null ? stored.serverLikes : stored.extraLikes;
+      const serverDeltaViews = typeof stored.serverViews === 'number' ? stored.serverViews : stored.extraViews;
+      const serverDeltaLikes = typeof stored.serverLikes === 'number' ? stored.serverLikes : stored.extraLikes;
 
       const totalViews = Math.max(0, baseViews + serverDeltaViews);
       const totalLikes = Math.max(0, baseLikes + serverDeltaLikes);
@@ -238,7 +243,7 @@ window.App = window.App || {};
     }
 
     /**
-     * Record a read / view for the piece: increments count and persists to Google Sheets
+     * Record a read / view for the piece: immediately increments count locally and persists to Google Sheets
      * @param {Object} piece
      * @returns {Object} updated stats
      */
@@ -247,6 +252,11 @@ window.App = window.App || {};
 
       const stored = this._getStoredData(piece.id);
       stored.extraViews = (stored.extraViews || 0) + 1;
+      if (typeof stored.serverViews === 'number') {
+        stored.serverViews += 1;
+      } else {
+        stored.serverViews = stored.extraViews;
+      }
       this._setStoredData(piece.id, stored);
 
       // Send view event to Google Sheets immediately
@@ -257,7 +267,7 @@ window.App = window.App || {};
       }, (err, res) => {
         if (!err && res && res.stats) {
           this.syncAllServerStats(res.stats);
-          if (typeof this.onServerSync === 'function') this.onServerSync(res.stats);
+          this.notifySyncListeners(res.stats);
         }
       });
 
@@ -265,7 +275,7 @@ window.App = window.App || {};
     }
 
     /**
-     * Toggle like state for a piece and sync via XMLHttpRequest
+     * Toggle like state for a piece: immediately increments or decrements locally and syncs to Google Sheets
      * @param {Object} piece
      * @returns {{ userLiked: boolean, stats: Object }}
      */
@@ -276,10 +286,18 @@ window.App = window.App || {};
 
       if (stored.userLiked) {
         stored.userLiked = false;
-        stored.extraLikes = Math.max(0, stored.extraLikes - 1);
+        stored.extraLikes = Math.max(0, (stored.extraLikes || 0) - 1);
+        if (typeof stored.serverLikes === 'number') {
+          stored.serverLikes = Math.max(0, stored.serverLikes - 1);
+        }
       } else {
         stored.userLiked = true;
-        stored.extraLikes += 1;
+        stored.extraLikes = (stored.extraLikes || 0) + 1;
+        if (typeof stored.serverLikes === 'number') {
+          stored.serverLikes += 1;
+        } else {
+          stored.serverLikes = stored.extraLikes;
+        }
       }
 
       this._setStoredData(piece.id, stored);
@@ -294,7 +312,7 @@ window.App = window.App || {};
       }, (err, res) => {
         if (!err && res && res.stats) {
           this.syncAllServerStats(res.stats);
-          if (typeof this.onServerSync === 'function') this.onServerSync(res.stats);
+          this.notifySyncListeners(res.stats);
         }
       });
 
@@ -320,5 +338,19 @@ window.App = window.App || {};
 
   App.Engagement = new EngagementService();
   window.Engagement = App.Engagement;
+
+  // Automatically trigger API call on page load or refresh to fetch latest views & likes
+  if (typeof window !== 'undefined') {
+    const triggerFetch = () => {
+      if (App.Engagement && typeof App.Engagement.fetchServerStats === 'function') {
+        App.Engagement.fetchServerStats();
+      }
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', triggerFetch);
+    } else {
+      triggerFetch();
+    }
+  }
 
 })(window.App);

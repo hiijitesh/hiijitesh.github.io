@@ -66,16 +66,14 @@ window.App = window.App || {};
       });
 
       // Update active reader modal live when server sync arrives
-      if (App.Engagement) {
-        const prevSync = App.Engagement.onServerSync;
-        App.Engagement.onServerSync = (stats) => {
+      if (App.Engagement && typeof App.Engagement.addSyncListener === 'function') {
+        App.Engagement.addSyncListener(() => {
           if (this.isOpen() && this.currentPiece) {
             const currentStats = App.Engagement.getStats(this.currentPiece);
             if (this.viewsCount) this.viewsCount.textContent = currentStats.formattedViews;
             if (this.likesCount) this.likesCount.textContent = currentStats.formattedLikes;
           }
-          if (typeof prevSync === 'function') prevSync(stats);
-        };
+        });
       }
 
       this.initialized = true;

@@ -23,10 +23,10 @@ window.App = window.App || {};
       this.setupSorting();
 
       // Hook real-time Google Sheets sync
-      if (App.Engagement) {
-        App.Engagement.onServerSync = () => {
+      if (App.Engagement && typeof App.Engagement.addSyncListener === 'function') {
+        App.Engagement.addSyncListener(() => {
           this.render();
-        };
+        });
         App.Engagement.fetchServerStats();
       }
 
