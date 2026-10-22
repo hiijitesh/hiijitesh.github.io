@@ -9,25 +9,59 @@ window.App = window.App || {};
 (function(App) {
   'use strict';
 
-  // Cache user IP in memory/sessionStorage to minimize external requests
-  let cachedIP = null;
+  // Cache user network info in memory/sessionStorage to minimize external requests
+  let cachedNetworkInfo = null;
 
   /**
-   * Fast, privacy-friendly public IP resolver with strict timeout & multi-provider fallback.
-   * Never blocks UI if IP providers are unreachable or blocked by privacy extensions.
-   * @returns {Promise<string>}
+   * Fast, privacy-friendly IP and Geolocation resolver with strict timeout & fallback.
+   * Resolves IP and City/Region/Country without blocking UI.
+   * @returns {Promise<{ ip: string, location: string }>}
    */
-  async function getUserIP() {
-    if (cachedIP) return cachedIP;
+  async function getUserNetworkInfo() {
+    if (cachedNetworkInfo) return cachedNetworkInfo;
 
     try {
-      const stored = sessionStorage.getItem('app_user_ip');
+      const stored = sessionStorage.getItem('app_user_network_info');
       if (stored) {
-        cachedIP = stored;
-        return stored;
+        cachedNetworkInfo = JSON.parse(stored);
+        return cachedNetworkInfo;
       }
     } catch {}
 
+    // Primary: ipwho.is provides IP and City/State/Country in one fast call
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
+
+      const response = await fetch('https://ipwho.is/', {
+        method: 'GET',
+        signal: controller.signal,
+        cache: 'no-store'
+      });
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.success !== false) {
+          const locParts = [data.city, data.region, data.country].filter(Boolean);
+          const locString = locParts.length ? locParts.join(', ') : (data.timezone ? data.timezone.id : 'Unavailable');
+
+          cachedNetworkInfo = {
+            ip: data.ip ? String(data.ip).trim() : 'Unavailable',
+            location: locString
+          };
+
+          try {
+            sessionStorage.setItem('app_user_network_info', JSON.stringify(cachedNetworkInfo));
+          } catch {}
+
+          return cachedNetworkInfo;
+        }
+      }
+    } catch {}
+
+    // Fallback 1: ipify for IP + browser timezone for location
+    let fallbackIP = 'Unavailable';
     const endpoints = [
       'https://api.ipify.org?format=json',
       'https://api64.ipify.org?format=json'
@@ -36,39 +70,78 @@ window.App = window.App || {};
     for (const url of endpoints) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2500);
-
-        const response = await fetch(url, {
-          method: 'GET',
-          signal: controller.signal,
-          cache: 'no-store'
-        });
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
+        const res = await fetch(url, { signal: controller.signal });
         clearTimeout(timeoutId);
-
-        if (response.ok) {
-          const data = await response.json();
-          if (data && data.ip) {
-            cachedIP = String(data.ip).trim();
-            try {
-              sessionStorage.setItem('app_user_ip', cachedIP);
-            } catch {}
-            return cachedIP;
+        if (res.ok) {
+          const d = await res.json();
+          if (d && d.ip) {
+            fallbackIP = String(d.ip).trim();
+            break;
           }
         }
-      } catch {
-        // Continue to fallback endpoint
-      }
+      } catch {}
     }
 
-    return 'Unavailable';
+    let fallbackLoc = 'Unavailable';
+    try {
+      fallbackLoc = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unavailable';
+    } catch {}
+
+    cachedNetworkInfo = {
+      ip: fallbackIP,
+      location: fallbackLoc
+    };
+
+    try {
+      sessionStorage.setItem('app_user_network_info', JSON.stringify(cachedNetworkInfo));
+    } catch {}
+
+    return cachedNetworkInfo;
+  }
+
+  async function getUserIP() {
+    const info = await getUserNetworkInfo();
+    return info.ip;
+  }
+
+  function getSubscribedEmails() {
+    try {
+      const raw = localStorage.getItem('app_subscribed_emails');
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function markEmailSubscribed(email) {
+    if (!email) return;
+    try {
+      const list = getSubscribedEmails();
+      const lower = email.toLowerCase().trim();
+      if (!list.includes(lower)) {
+        list.push(lower);
+        localStorage.setItem('app_subscribed_emails', JSON.stringify(list));
+      }
+    } catch {}
+  }
+
+  function isEmailAlreadySubscribedLocally(email) {
+    if (!email) return false;
+    try {
+      const list = getSubscribedEmails();
+      return list.includes(email.toLowerCase().trim());
+    } catch {
+      return false;
+    }
   }
 
   /**
-   * Stores user email into Google Sheets with Date, Email, and IP.
-   * 
+   * Stores user email into Google Sheets with Date, Email, IP, and Location.
+   *
    * @param {string} email - The user's email address
    * @param {Object} [options] - Optional metadata (e.g. { source: 'tour_section' })
-   * @returns {Promise<{ success: boolean, date: string, email: string, ip: string, error?: string }>}
+   * @returns {Promise<{ success: boolean, date: string, email: string, ip: string, location: string, alreadySubscribed?: boolean, message?: string, error?: string }>}
    */
   async function storeUserEmail(email, options = {}) {
     if (!email || typeof email !== 'string') {
@@ -85,10 +158,23 @@ window.App = window.App || {};
       }
     }
 
-    // Capture Date & IP concurrently
-    const [ip] = await Promise.all([
-      getUserIP()
+    // Immediate local duplicate check: if user already subscribed in this browser
+    if (isEmailAlreadySubscribedLocally(trimmedEmail)) {
+      return {
+        success: true,
+        alreadySubscribed: true,
+        message: 'Tu na already list me hain chill kr',
+        email: trimmedEmail
+      };
+    }
+
+    // Capture Date, IP & Location concurrently
+    const [netInfo] = await Promise.all([
+      getUserNetworkInfo()
     ]);
+
+    const ip = netInfo.ip;
+    const location = netInfo.location;
 
     const now = new Date();
     const isoDate = now.toISOString();
@@ -104,6 +190,7 @@ window.App = window.App || {};
       date: isoDate,
       formattedDate: formattedDate,
       ip: ip,
+      location: location,
       source: options.source || 'general',
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : ''
     };
@@ -121,6 +208,7 @@ window.App = window.App || {};
       urlObj.searchParams.set('date', payload.date);
       urlObj.searchParams.set('formattedDate', payload.formattedDate);
       urlObj.searchParams.set('ip', payload.ip);
+      urlObj.searchParams.set('location', payload.location);
       urlObj.searchParams.set('source', payload.source);
       targetUrl = urlObj.toString();
     } catch {
@@ -145,8 +233,21 @@ window.App = window.App || {};
       if (res.ok) {
         try {
           const data = await res.json();
+          markEmailSubscribed(trimmedEmail);
+
+          if (data && (data.alreadySubscribed || data.status === 'already_subscribed')) {
+            return {
+              success: true,
+              alreadySubscribed: true,
+              message: data.message || 'Tu na  already list me hain chill kr',
+              email: trimmedEmail,
+              ip: ip
+            };
+          }
+
           return { success: true, date: isoDate, email: trimmedEmail, ip: ip, serverResponse: data };
         } catch {
+          markEmailSubscribed(trimmedEmail);
           return { success: true, date: isoDate, email: trimmedEmail, ip: ip };
         }
       }
@@ -158,6 +259,7 @@ window.App = window.App || {};
           redirect: 'follow',
           mode: 'no-cors'
         });
+        markEmailSubscribed(trimmedEmail);
         return { success: true, date: isoDate, email: trimmedEmail, ip: ip, fallback: 'get' };
       } catch {}
 

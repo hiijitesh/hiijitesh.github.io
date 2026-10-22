@@ -60,6 +60,7 @@
       if (action === 'subscribe_email' || action === 'subscribe' || params.email) {
         const email = (params.email || '').trim();
         const ip = (params.ip || 'Unavailable').trim();
+        const location = (params.location || 'Unavailable').trim();
         const date = (params.date || new Date().toISOString()).trim();
         const formattedDate = (params.formattedDate || new Date().toLocaleString()).trim();
         const source = (params.source || 'website').trim();
@@ -70,11 +71,11 @@
 
         const ss = SpreadsheetApp.getActiveSpreadsheet();
         let subSheet = ss.getSheetByName(SUBSCRIBERS_SHEET_NAME);
+        const headers = ["Date", "Email", "IP", "Location", "Local Time", "Source"];
 
         // Create "Subscribers" sheet if it does not exist
         if (!subSheet) {
           subSheet = ss.insertSheet(SUBSCRIBERS_SHEET_NAME);
-          const headers = ["Date", "Email", "IP", "Local Time", "Source"];
           subSheet.appendRow(headers);
 
           // Style header row
@@ -84,15 +85,43 @@
           headerRange.setFontColor("#f9fafb");
           subSheet.setFrozenRows(1);
           subSheet.autoResizeColumns(1, headers.length);
+        } else {
+          // If sheet exists but header is missing Location, update headers
+          const headerRow = subSheet.getRange(1, 1, 1, Math.max(1, subSheet.getLastColumn())).getValues()[0];
+          const hasLocation = headerRow.some(function(h) { return String(h).toLowerCase() === 'location'; });
+          if (!hasLocation) {
+            subSheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+          }
         }
 
-        // Append subscriber row: [Date, Email, IP, Local Time, Source]
-        subSheet.appendRow([date, email, ip, formattedDate, source]);
+        // Check if email already exists in Subscribers sheet
+        const data = subSheet.getDataRange().getValues();
+        const lowerEmail = email.toLowerCase();
+        let alreadyExists = false;
+
+        for (let i = 1; i < data.length; i++) {
+          if (String(data[i][1]).trim().toLowerCase() === lowerEmail) {
+            alreadyExists = true;
+            break;
+          }
+        }
+
+        if (alreadyExists) {
+          return createJsonResponse({
+            status: 'already_subscribed',
+            alreadySubscribed: true,
+            message: 'Tu na already list me hain chill kr',
+            data: { email: email }
+          });
+        }
+
+        // Append subscriber row: [Date, Email, IP, Location, Local Time, Source]
+        subSheet.appendRow([date, email, ip, location, formattedDate, source]);
 
         return createJsonResponse({
           status: 'success',
           message: 'Email stored successfully',
-          data: { email: email, date: date, ip: ip }
+          data: { email: email, date: date, ip: ip, location: location }
         });
       }
 
