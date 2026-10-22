@@ -24,7 +24,7 @@ window.App = window.App || {};
       }
     }
 
-    handleTourNotify(e) {
+    async handleTourNotify(e) {
       if (e && e.preventDefault) e.preventDefault();
       const email = this.emailInput ? this.emailInput.value.trim() : '';
 
@@ -41,9 +41,33 @@ window.App = window.App || {};
         return;
       }
 
-      if (this.cityForm) this.cityForm.reset();
-      if (App.Toast) {
-        App.Toast.show('Done bhai! Jaise hi dates final honge pehle message kar dunga.');
+      const submitBtn = this.cityForm ? this.cityForm.querySelector('button[type="submit"], .city-btn') : null;
+      const originalText = submitBtn ? submitBtn.textContent : '';
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Saving... ⏳';
+      }
+
+      try {
+        if (typeof App.storeUserEmail === 'function') {
+          await App.storeUserEmail(email, { source: 'tour_section' });
+        }
+        if (this.cityForm) this.cityForm.reset();
+        if (App.Toast) {
+          App.Toast.show('Done bhai! Jaise hi dates final honge pehle message kar dunga.');
+        }
+      } catch (err) {
+        console.error('Failed to store email:', err);
+        if (this.cityForm) this.cityForm.reset();
+        if (App.Toast) {
+          App.Toast.show('Done bhai! Jaise hi dates final honge pehle message kar dunga.');
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }
       }
     }
 

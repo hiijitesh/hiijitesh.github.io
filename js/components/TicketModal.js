@@ -88,6 +88,9 @@ window.App = window.App || {};
       }
 
       this.close();
+      if (typeof App.storeUserEmail === 'function') {
+        App.storeUserEmail(buyerEmail, { source: 'ticket_booking', buyerName }).catch(() => {});
+      }
       if (this.form) this.form.reset();
       if (App.Toast) {
         App.Toast.show(`Done bhai! ${buyerName}, ticket confirm ho gaya. Milte hain show pe 🎟️`);
