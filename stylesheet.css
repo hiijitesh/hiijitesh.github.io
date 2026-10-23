@@ -1003,12 +1003,12 @@ section {
 .reader-canvas {
   background: var(--bg-surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  max-width: 680px;
+  border-radius: 20px;
+  max-width: 620px;
   width: 100%;
-  max-height: 90vh;
-  max-height: 90dvh;
-  max-height: calc(90dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  max-height: min(88vh, 88dvh);
+  max-height: calc(min(88vh, 88dvh) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  height: auto;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -1045,20 +1045,24 @@ section {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(22, 22, 19, 0.95);
+  background: rgba(22, 22, 19, 0.96);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  padding: 0.85rem 1.15rem 0.75rem 1.15rem;
-  border-bottom: 1px solid rgba(255, 255, 227, 0.05);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  padding: 0.95rem 1.25rem 0.8rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 227, 0.07);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
+  border-top-left-radius: 19px;
+  border-top-right-radius: 19px;
+  flex-shrink: 0;
 }
 
 .reader-header-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 0.35rem;
+  gap: 0.65rem;
+  margin-bottom: 0.45rem;
+  min-height: 34px;
 }
 
 .reader-cat {
@@ -1066,8 +1070,10 @@ section {
   font-size: 11px;
   text-transform: uppercase;
   color: var(--accent);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   font-weight: 600;
+  line-height: 1;
+  flex-shrink: 0;
 }
 
 .reader-actions {
@@ -1125,31 +1131,37 @@ section {
 .reader-stat {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.28rem 0.6rem;
+  gap: 0.4rem;
+  min-height: 32px;
+  padding: 0.32rem 0.72rem;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--border);
-  color: var(--ink-muted);
+  background: rgba(255, 255, 227, 0.05);
+  border: 1px solid rgba(255, 255, 227, 0.12);
+  color: rgba(255, 255, 227, 0.78);
   font-family: var(--font-ui);
-  font-size: 11px;
+  font-size: 11.5px;
+  font-weight: 500;
   letter-spacing: 0.02em;
   user-select: none;
+  line-height: 1;
 }
 
 .reader-stat svg {
-  opacity: 0.75;
+  opacity: 0.9;
+  stroke: currentColor;
+  flex-shrink: 0;
 }
 
 .reader-like-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.38rem;
-  padding: 0.28rem 0.68rem;
+  gap: 0.4rem;
+  min-height: 32px;
+  padding: 0.32rem 0.78rem;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border);
-  color: var(--ink-secondary);
+  background: rgba(255, 59, 92, 0.09);
+  border: 1px solid rgba(255, 59, 92, 0.3);
+  color: #ff5277;
   font-family: var(--font-ui);
   font-size: 11.5px;
   font-weight: 500;
@@ -1160,9 +1172,18 @@ section {
   position: relative;
 }
 
+.reader-like-btn::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  left: -6px;
+  right: -6px;
+}
+
 .reader-like-btn:hover {
-  background: rgba(255, 59, 92, 0.08);
-  border-color: rgba(255, 59, 92, 0.35);
+  background: rgba(255, 59, 92, 0.15);
+  border-color: rgba(255, 59, 92, 0.45);
   color: #ff3b5c;
   transform: translateY(-1px);
 }
@@ -1321,16 +1342,18 @@ section {
 
 .reader-heading {
   font-family: var(--font-poetry-title);
-  font-size: clamp(21px, 5.2vw, 25px);
+  font-size: clamp(20px, 4.8vw, 24px);
   font-weight: 600;
-  line-height: 1.22;
+  line-height: 1.25;
   color: var(--ink);
   letter-spacing: -0.01em;
   margin: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .reader-text {
-  flex: 1;
+  flex-shrink: 0;
   font-family: var(--font-poetry-body);
   font-size: 15px;
   line-height: 1.72;
@@ -1340,7 +1363,7 @@ section {
   overflow-wrap: break-word;
   word-break: break-word;
   letter-spacing: 0.01em;
-  padding: 1.15rem 1.15rem 1.75rem 1.15rem;
+  padding: 1.25rem 1.25rem 0.65rem 1.25rem;
 }
 
 .ticket-modal-card {
@@ -1800,26 +1823,28 @@ section {
   }
 
   .reader-canvas {
-    border-radius: 16px;
+    border-radius: 22px;
     padding: 0;
   }
 
   .reader-header-sticky {
-    padding: 1.25rem 1.75rem 0.9rem 1.75rem;
+    padding: 1.15rem 1.75rem 0.85rem 1.75rem;
+    border-top-left-radius: 21px;
+    border-top-right-radius: 21px;
   }
 
   .reader-cat {
-    font-size: 12px;
+    font-size: 11.5px;
   }
 
   .reader-heading {
-    font-size: 30px;
+    font-size: 28px;
   }
 
   .reader-text {
-    font-size: 17px;
+    font-size: 16.5px;
     line-height: 1.76;
-    padding: 1.5rem 1.75rem 2.25rem 1.75rem;
+    padding: 1.35rem 1.75rem 0.85rem 1.75rem;
   }
 
   .toast {
@@ -1909,21 +1934,24 @@ section {
   }
 
   .reader-canvas {
+    border-radius: 24px;
     padding: 0;
   }
 
   .reader-header-sticky {
-    padding: 1.5rem 2.25rem 1.05rem 2.25rem;
+    padding: 1.35rem 2.25rem 1rem 2.25rem;
+    border-top-left-radius: 23px;
+    border-top-right-radius: 23px;
   }
 
   .reader-heading {
-    font-size: 34px;
+    font-size: 32px;
   }
 
   .reader-text {
-    font-size: 18px;
+    font-size: 17.5px;
     line-height: 1.76;
-    padding: 1.75rem 2.25rem 2.75rem 2.25rem;
+    padding: 1.5rem 2.25rem 1rem 2.25rem;
   }
 }
 
@@ -2105,33 +2133,48 @@ section {
   display: flex;
   align-items: center;
   gap: 0.85rem;
+  min-width: 0;
 }
 
 .poem-author-avatar {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
   object-position: center top;
-  border: 1.5px solid var(--border-medium, rgba(255, 255, 255, 0.15));
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1.5px solid rgba(255, 255, 227, 0.16);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
   display: block;
   flex-shrink: 0;
+}
+
+.poem-author-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
 }
 
 .poem-author-info h4 {
   font-family: var(--font-sans);
   font-size: 0.95rem;
-  font-weight: 500;
+  font-weight: 600;
+  line-height: 1.25;
   color: var(--ink);
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .poem-author-info p {
-  font-size: 0.82rem;
+  font-size: 0.81rem;
+  line-height: 1.38;
   color: var(--ink-muted);
   margin: 0.2rem 0 0 0;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 /* Standalone Poem Page: Bottom Actions Bar */
@@ -2149,29 +2192,28 @@ section {
 
 /* Reader Modal: Bottom Actions Bar (Views & Likes at the bottom of poem text) */
 .reader-bottom-actions {
-  margin-top: auto;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1.25rem 1.25rem 1.25rem 1.25rem;
+  gap: 0.65rem;
+  padding: 0.5rem 1.25rem 0.85rem 1.25rem;
   flex-wrap: wrap;
 }
 
 /* Reader Modal: Bottom Author Signature (Below Subtle Divider Line) */
 .reader-footer-author {
-  margin: 0 1.25rem 2rem 1.25rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 227, 0.06);
+  margin: 0 1.25rem 1.35rem 1.25rem;
+  padding-top: 0.95rem;
+  border-top: 1px solid rgba(255, 255, 227, 0.08);
 }
 
 @media (min-width: 640px) {
   .reader-bottom-actions {
-    padding: 1rem 2.25rem 1.5rem 2.25rem;
+    padding: 0.65rem 1.75rem 1rem 1.75rem;
   }
 
   .reader-footer-author {
-    margin: 0 2.25rem 2.5rem 2.25rem;
-    padding-top: 1.75rem;
+    margin: 0 1.75rem 1.75rem 1.75rem;
+    padding-top: 1.15rem;
   }
 }
 
