@@ -1136,7 +1136,7 @@ section {
   color: var(--ink);
   font-weight: 400;
   white-space: pre-line;
-  padding: 1.25rem 1.25rem 2.25rem 1.25rem;
+  padding: 1.25rem 1.25rem 1.25rem 1.25rem;
 }
 
 .ticket-modal-card {
@@ -1924,29 +1924,29 @@ section {
   flex-wrap: wrap;
 }
 
-/* Reader Modal: Bottom Actions Bar (Views & Likes at the bottom) */
-.reader-bottom-actions {
+/* Reader Modal: Bottom Author Signature & Actions Footer */
+.reader-footer-author {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0 1.25rem 1.25rem 1.25rem;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin: 1.25rem 1.25rem 2rem 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
   flex-wrap: wrap;
 }
 
-/* Reader Modal: Bottom Author Signature */
-.reader-footer-author {
-  margin: 0 1.25rem 2rem 1.25rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+.reader-bottom-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
 }
 
 @media (min-width: 640px) {
-  .reader-bottom-actions {
-    padding: 0 2.75rem 1.5rem 2.75rem;
-  }
-
   .reader-footer-author {
-    margin: 0 2.75rem 2.75rem 2.75rem;
+    margin: 1.5rem 2.75rem 2.75rem 2.75rem;
+    padding-top: 1.5rem;
   }
 }
+
 

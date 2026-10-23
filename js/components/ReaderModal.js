@@ -113,7 +113,7 @@ window.App = window.App || {};
 
       if (this.isHindi) {
         if (this.langBtn) this.langBtn.classList.add('active');
-        if (this.langLabel) this.langLabel.textContent = 'हिं';
+        if (this.langLabel) this.langLabel.textContent = 'Hindi / English';
 
         // 1. Prioritize authentic author-written Hindi title
         if (!this.hindiTitle) {
@@ -148,7 +148,7 @@ window.App = window.App || {};
         if (this.text) this.text.textContent = this.hindiBody;
       } else {
         if (this.langBtn) this.langBtn.classList.remove('active');
-        if (this.langLabel) this.langLabel.textContent = 'Eng';
+        if (this.langLabel) this.langLabel.textContent = 'Hindi / English';
 
         if (this.heading) this.heading.textContent = this.currentPiece.title;
         if (this.text) this.text.textContent = this.cleanPoemBody(this.currentPiece.content, this.currentPiece.title);
@@ -257,7 +257,7 @@ window.App = window.App || {};
 
       if (this.langBtn) {
         this.langBtn.classList.remove('active');
-        this.langLabel.textContent = 'A / अ';
+        this.langLabel.textContent = 'Hindi / English';
       }
 
       if (startHindi) {
