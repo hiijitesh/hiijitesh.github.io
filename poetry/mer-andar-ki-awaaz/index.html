@@ -89,7 +89,6 @@
         <span class="back-arrow" aria-hidden="true">←</span>
         <span class="back-text"><strong>Jitesh Bharti</strong> / All Writings</span>
       </a>
-      <a href="../../#tickets" class="nav-ticket-btn">Tickets le lo 🎟️</a>
     </div>
   </header>
 
@@ -97,8 +96,23 @@
   <main class="container poem-page-main">
     <article class="poem-article">
       <div class="poem-meta-bar">
-        <span class="poem-category-tag">Poetry</span>
-        <span class="poem-date-tag">Oct 2026</span>
+        <div class="poem-meta-left">
+          <span class="poem-category-tag">Poetry</span>
+          <span class="poem-date-tag">Oct 2026</span>
+        </div>
+
+        <!-- Translate Button on the Top Right of Nazm / Date -->
+        <button class="reader-lang-toggle" id="poem-lang-toggle" type="button" title="Switch Hindi / English" aria-label="Toggle language">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m5 8 6 6"/>
+            <path d="m4 14 6-6 2-3"/>
+            <path d="M2 5h12"/>
+            <path d="M7 2h1"/>
+            <path d="m22 22-5-10-5 10"/>
+            <path d="M14 18h6"/>
+          </svg>
+          <span id="poem-lang-label">Hindi / English</span>
+        </button>
       </div>
 
       <h1 class="poem-title" id="poem-title">Mere Andar Ki Awaaz</h1>
@@ -122,7 +136,7 @@ fir ye mujhko koshati hain
 chupa chap main rahu toh
 kuch toh mere se bolti hain</div>
 
-      <!-- Bottom Interaction / Engagement Bar -->
+      <!-- Bottom Interaction / Engagement Bar (Views & Likes) -->
       <div class="poem-bottom-actions">
         <!-- Views Count Pill -->
         <span class="poem-views-pill" title="Total reads">
@@ -142,19 +156,6 @@ kuch toh mere se bolti hain</div>
           </span>
           <span class="like-count" id="reader-likes-count">0</span>
           <span class="heart-bubble-container" id="heart-bubble-container" aria-hidden="true"></span>
-        </button>
-
-        <!-- Language Toggle Button -->
-        <button class="reader-lang-toggle" id="poem-lang-toggle" type="button" title="Hinglish / हिंदी script toggle" aria-label="Toggle language">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="m5 8 6 6"/>
-            <path d="m4 14 6-6 2-3"/>
-            <path d="M2 5h12"/>
-            <path d="M7 2h1"/>
-            <path d="m22 22-5-10-5 10"/>
-            <path d="M14 18h6"/>
-          </svg>
-          <span id="poem-lang-label">A / अ</span>
         </button>
       </div>
     </article>
@@ -190,7 +191,7 @@ kuch toh mere se bolti hain</div>
   <!-- Scripts -->
   <script>
     window.ENGAGEMENT_API_URL = "https://script.google.com/macros/s/AKfycbx4yq-WGnp4bl7tPjaoge6mj-oluJupxcHjZcCKgcX2T_JFpRT5xv8h124azfJ0U7iL/exec";
-    window.CURRENT_PIECE = {"id":"mer-andar-ki-awaaz","category":"Poetry","title":"Mere Andar Ki Awaaz","title_hi":"","date":"Thu Oct 01 2026 00:00:00 GMT+0530 (India Standard Time)","excerpt":"mere andar ki awaj kuch kahati hain","content":"mere andar ki awaj kuch kahati hain\nmain sun raha hu sab,\nye mujh se kuch puchhati hain\n\nja raha hun kaha main, \nye mujhko tatol’ti hain\n\nkaha galat kaha sahi\nye bina dare bolti  hain\n\nmain kar saka na, kar paya kya\nuss soch me dhakelti hain\n\nagr bata doon yuhi taal matol ke\nfir ye mujhko koshati hain\n\nchupa chap main rahu toh\nkuch toh mere se bolti hain","content_hi":"","views":0,"likes":0};
+    window.CURRENT_PIECE = {"id":"mer-andar-ki-awaaz","category":"Poetry","title":"Mere Andar Ki Awaaz","title_hi":"","date":"Thu Oct 01 2026 00:00:00 GMT+0530 (India Standard Time)","excerpt":"mere andar ki awaj kuch kahati hain","content":"mere andar ki awaj kuch kahati hain\nmain sun raha hu sab,\nye mujh se kuch puchhati hain\n\nja raha hun kaha main, \nye mujhko tatol’ti hain\n\nkaha galat kaha sahi\nye bina dare bolti  hain\n\nmain kar saka na, kar paya kya\nuss soch me dhakelti hain\n\nagr bata doon yuhi taal matol ke\nfir ye mujhko koshati hain\n\nchupa chap main rahu toh\nkuch toh mere se bolti hain","content_hi":"मेरे अंदर की आवाज़ कुछ कहती है,\nमैं सुन रहा हूँ सब, ये मुझसे कुछ पूछती हैं।\n\nजा रहा हूँ कहाँ मैं, ये मुझको टटोलती हैं।\nकहाँ गलत, कहाँ सही, ये बिना डरे बोलती हैं।\n\nमैं कर सका ना, कर पाया क्या, उस सोच में धकेलती हैं।\nअगर बता दूँ यूँ ही टाल-मटोल के, फिर ये मुझको कोसती हैं।\n\nचुपचाप मैं रहूँ तो, कुछ तो मुझसे बोलती हैं।","views":0,"likes":0};
   </script>
   <script src="../../js/utils/engagement.js?v=14"></script>
   <script src="../../js/poem-page.js?v=14"></script>

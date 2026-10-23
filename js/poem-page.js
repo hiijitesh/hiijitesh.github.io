@@ -2,8 +2,7 @@
  * Standalone Poem Page Interactivity Controller
  * Handles view tracking, like toggling, heart animations, and Hindi/Hinglish switching.
  */
-document.addEventListener('DOMContentLoaded', () => {
-  const piece = window.CURRENT_PIECE;
+function initPoemPage(piece) {
   if (!piece) return;
 
   const viewsCountEl = document.getElementById('poem-views-count');
@@ -13,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const bubbleContainer = document.getElementById('heart-bubble-container');
   const langToggleBtn = document.getElementById('poem-lang-toggle');
   const langLabel = document.getElementById('poem-lang-label');
-  const titleEl = document.getElementById('poem-title');
-  const contentEl = document.getElementById('poem-content');
+  const titleEl = document.getElementById('poem-title') || document.getElementById('dyn-title');
+  const contentEl = document.getElementById('poem-content') || document.getElementById('dyn-content');
 
   let isHindi = false;
 
@@ -99,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 3. Handle Like Button Click
   if (likeBtn && window.App && window.App.Engagement) {
-    likeBtn.addEventListener('click', () => {
+    likeBtn.onclick = () => {
       const res = window.App.Engagement.toggleLike(piece);
       if (likesCountEl) likesCountEl.textContent = res.stats.formattedLikes;
       if (res.userLiked) {
@@ -108,17 +107,16 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         likeBtn.classList.remove('liked');
       }
-    });
+    };
   }
 
   // 4. Handle Language Toggle (Hinglish <-> Hindi)
   if (langToggleBtn) {
-    langToggleBtn.addEventListener('click', () => {
+    langToggleBtn.onclick = () => {
       isHindi = !isHindi;
 
       if (isHindi) {
         langToggleBtn.classList.add('active');
-        if (langLabel) langLabel.textContent = 'हिं';
         if (titleEl) titleEl.textContent = piece.title_hi || piece.title;
         if (contentEl) {
           const hindiContent = piece.content_hi ? cleanPoemBody(piece.content_hi, piece.title_hi) : cleanPoemBody(piece.content, piece.title);
@@ -126,10 +124,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } else {
         langToggleBtn.classList.remove('active');
-        if (langLabel) langLabel.textContent = 'Eng';
         if (titleEl) titleEl.textContent = piece.title;
         if (contentEl) contentEl.textContent = cleanPoemBody(piece.content, piece.title);
       }
-    });
+    };
+  }
+}
+
+window.initPoemPage = initPoemPage;
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.CURRENT_PIECE) {
+    initPoemPage(window.CURRENT_PIECE);
   }
 });
+

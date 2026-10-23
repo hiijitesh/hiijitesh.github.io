@@ -182,7 +182,6 @@ ${JSON.stringify(schemaJson, null, 2)}
         <span class="back-arrow" aria-hidden="true">←</span>
         <span class="back-text"><strong>${escapeHtml(AUTHOR_NAME)}</strong> / All Writings</span>
       </a>
-      <a href="../../#tickets" class="nav-ticket-btn">Tickets le lo 🎟️</a>
     </div>
   </header>
 
@@ -190,15 +189,30 @@ ${JSON.stringify(schemaJson, null, 2)}
   <main class="container poem-page-main">
     <article class="poem-article">
       <div class="poem-meta-bar">
-        <span class="poem-category-tag">${escapeHtml(piece.category)}</span>
-        <span class="poem-date-tag">${escapeHtml(formatPoetryDate(piece.date))}</span>
+        <div class="poem-meta-left">
+          <span class="poem-category-tag">${escapeHtml(piece.category)}</span>
+          <span class="poem-date-tag">${escapeHtml(formatPoetryDate(piece.date))}</span>
+        </div>
+
+        <!-- Translate Button on the Top Right of Nazm / Date -->
+        <button class="reader-lang-toggle" id="poem-lang-toggle" type="button" title="Switch Hindi / English" aria-label="Toggle language">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m5 8 6 6"/>
+            <path d="m4 14 6-6 2-3"/>
+            <path d="M2 5h12"/>
+            <path d="M7 2h1"/>
+            <path d="m22 22-5-10-5 10"/>
+            <path d="M14 18h6"/>
+          </svg>
+          <span id="poem-lang-label">Hindi / English</span>
+        </button>
       </div>
 
       <h1 class="poem-title" id="poem-title">${escapeHtml(piece.title)}</h1>
 
       <div class="poem-content" id="poem-content">${escapeHtml(cleanBody)}</div>
 
-      <!-- Bottom Interaction / Engagement Bar -->
+      <!-- Bottom Interaction / Engagement Bar (Views & Likes) -->
       <div class="poem-bottom-actions">
         <!-- Views Count Pill -->
         <span class="poem-views-pill" title="Total reads">
@@ -218,19 +232,6 @@ ${JSON.stringify(schemaJson, null, 2)}
           </span>
           <span class="like-count" id="reader-likes-count">${piece.likes || 0}</span>
           <span class="heart-bubble-container" id="heart-bubble-container" aria-hidden="true"></span>
-        </button>
-
-        <!-- Language Toggle Button -->
-        <button class="reader-lang-toggle" id="poem-lang-toggle" type="button" title="Hinglish / हिंदी script toggle" aria-label="Toggle language">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="m5 8 6 6"/>
-            <path d="m4 14 6-6 2-3"/>
-            <path d="M2 5h12"/>
-            <path d="M7 2h1"/>
-            <path d="m22 22-5-10-5 10"/>
-            <path d="M14 18h6"/>
-          </svg>
-          <span id="poem-lang-label">A / अ</span>
         </button>
       </div>
     </article>
