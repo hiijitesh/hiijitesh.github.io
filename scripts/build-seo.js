@@ -166,7 +166,7 @@ function generatePoemHtml(piece) {
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Rozha+One&display=swap" rel="stylesheet">
 
   <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="../../stylesheet.css?v=20">
+  <link rel="stylesheet" href="../../stylesheet.css?v=25">
 
   <!-- Schema.org Structured Data -->
   <script type="application/ld+json">
@@ -269,8 +269,9 @@ ${JSON.stringify(schemaJson, null, 2)}
     window.ENGAGEMENT_API_URL = "https://script.google.com/macros/s/AKfycbx4yq-WGnp4bl7tPjaoge6mj-oluJupxcHjZcCKgcX2T_JFpRT5xv8h124azfJ0U7iL/exec";
     window.CURRENT_PIECE = ${JSON.stringify(piece)};
   </script>
-  <script src="../../js/utils/engagement.js?v=14"></script>
-  <script src="../../js/poem-page.js?v=14"></script>
+  <script src="../../js/utils/transliterator.js?v=25"></script>
+  <script src="../../js/utils/engagement.js?v=25"></script>
+  <script src="../../js/poem-page.js?v=25"></script>
 </body>
 </html>
 `;

@@ -12,6 +12,18 @@
     "likes": 0
   },
   {
+    "id": "lahare",
+    "category": "Poetry",
+    "title": "Lahare",
+    "title_hi": "लहरें",
+    "date": "Fri Oct 23 2026 00:00:00 GMT+0530 (India Standard Time)",
+    "excerpt": "ye jo lahare uthi main mere under tak",
+    "content": "ye jo lahare uthi main mere under tak\njaa fekegi mujhe samandar tak\n\nbheed me v ek tufaan umarati hain mere under\nsochata hu ki kya sochu ki sochana band krdu\n\npar ye mahaj soch nahi, dil ki laihar hain\ntu khud ko na tarash raha, baitha tu udaas rahaa",
+    "content_hi": "ये जो लहरें उठी हैं मेरे अंदर तक,\nजा फेंकेंगी मुझे समंदर तक।\n\nभीड़ में भी एक तूफान उमड़ती हैं मेरे अंदर,\nसोचता हूँ कि क्या सोचूँ कि सोचना बंद कर दूँ।\n\nपर ये महज सोच नहीं, दिल की लहर हैं,\nतू खुद को ना तराश रहा, बैठा तू उदास रहा।",
+    "views": 0,
+    "likes": 0
+  },
+  {
     "id": "mere-soch-pare-bhi",
     "category": "Poetry",
     "title": "Mere Soch Pare Bhi, Kuch Hona Hain",

@@ -36,7 +36,7 @@
   <link rel="apple-touch-icon" href="images/favicon.png?v=2">
 
   <!-- Minimal Stylesheet -->
-  <link rel="stylesheet" href="stylesheet.css?v=20">
+  <link rel="stylesheet" href="stylesheet.css?v=25">
 </head>
 <body>
 
@@ -225,7 +225,30 @@
       </div>
       <div class="reader-text" id="reader-text"></div>
 
-      <!-- Author Signature & Bottom Engagement Footer -->
+      <!-- Bottom Interaction / Engagement Bar (Views & Likes) -->
+      <div class="reader-bottom-actions">
+        <!-- Total View / Read Count -->
+        <div class="reader-stat" id="reader-views" title="Total Reads">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <span id="reader-views-count">0</span>
+        </div>
+
+        <!-- Like (Heart) Button with Bubble Animation -->
+        <button class="reader-like-btn" id="reader-like-btn" type="button" aria-label="Like this poem" title="Dil se like karein">
+          <span class="like-heart-icon" id="like-heart-icon" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            </svg>
+          </span>
+          <span class="like-count" id="reader-likes-count">0</span>
+          <span class="heart-bubble-container" id="heart-bubble-container" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <!-- Author Signature Card (Below Divider Line) -->
       <div class="reader-footer-author">
         <div class="poem-author-card">
           <img src="images/jitesh.jpg" alt="Jitesh Bharti" class="poem-author-avatar" width="48" height="48" loading="lazy">
@@ -233,28 +256,6 @@
             <h4>Jitesh Bharti</h4>
             <p>Poet & Storyteller &bull; Pure dil se likha hua</p>
           </div>
-        </div>
-
-        <div class="reader-bottom-actions">
-          <!-- Total View / Read Count -->
-          <div class="reader-stat" id="reader-views" title="Total Reads">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
-              <circle cx="12" cy="12" r="3"/>
-            </svg>
-            <span id="reader-views-count">0</span>
-          </div>
-
-          <!-- Like (Heart) Button with Bubble Animation -->
-          <button class="reader-like-btn" id="reader-like-btn" type="button" aria-label="Like this poem" title="Dil se like karein">
-            <span class="like-heart-icon" id="like-heart-icon" aria-hidden="true">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-              </svg>
-            </span>
-            <span class="like-count" id="reader-likes-count">0</span>
-            <span class="heart-bubble-container" id="heart-bubble-container" aria-hidden="true"></span>
-          </button>
         </div>
       </div>
     </div>
@@ -298,19 +299,19 @@
   </script>
 
   <!-- Modular Components & Architecture -->
-  <script src="js/data/defaultWritings.js?v=17"></script>
-  <script src="js/utils/validator.js?v=17"></script>
-  <script src="js/utils/transliterator.js?v=17"></script>
-  <script src="js/utils/subscriber.js?v=17"></script>
-  <script src="js/utils/engagement.js?v=17"></script>
-  <script src="js/utils/poetryLoader.js?v=19"></script>
-  <script src="js/components/Toast.js?v=17"></script>
-  <script src="js/components/PoetryCard.js?v=19"></script>
-  <script src="js/components/ReaderModal.js?v=17"></script>
-  <script src="js/components/TicketModal.js?v=17"></script>
-  <script src="js/components/ThankYouView.js?v=17"></script>
-  <script src="js/components/PoetrySection.js?v=17"></script>
-  <script src="js/components/TourSection.js?v=17"></script>
-  <script src="js/main.js?v=17"></script>
+  <script src="js/data/defaultWritings.js?v=25"></script>
+  <script src="js/utils/validator.js?v=25"></script>
+  <script src="js/utils/transliterator.js?v=25"></script>
+  <script src="js/utils/subscriber.js?v=25"></script>
+  <script src="js/utils/engagement.js?v=25"></script>
+  <script src="js/utils/poetryLoader.js?v=25"></script>
+  <script src="js/components/Toast.js?v=25"></script>
+  <script src="js/components/PoetryCard.js?v=25"></script>
+  <script src="js/components/ReaderModal.js?v=25"></script>
+  <script src="js/components/TicketModal.js?v=25"></script>
+  <script src="js/components/ThankYouView.js?v=25"></script>
+  <script src="js/components/PoetrySection.js?v=25"></script>
+  <script src="js/components/TourSection.js?v=25"></script>
+  <script src="js/main.js?v=25"></script>
 </body>
 </html>
