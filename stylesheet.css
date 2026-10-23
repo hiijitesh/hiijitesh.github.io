@@ -68,6 +68,9 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   position: relative;
   overflow-x: hidden;
   overscroll-behavior-y: none;
@@ -894,7 +897,10 @@ section {
   border-radius: 14px;
   max-width: 680px;
   width: 100%;
+  min-height: 65vh;
   max-height: 88vh;
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
   overscroll-behavior: contain;
   overscroll-behavior-y: contain;
@@ -1130,6 +1136,7 @@ section {
 }
 
 .reader-text {
+  flex: 1;
   font-family: var(--font-poetry-body);
   font-size: 16px;
   line-height: 1.75;
@@ -1231,6 +1238,7 @@ section {
 
 /* Footer & Toast */
 .site-footer {
+  margin-top: auto;
   padding: 2.25rem 0;
   background: var(--bg);
 }
@@ -1926,10 +1934,11 @@ section {
 
 /* Reader Modal: Bottom Actions Bar (Views & Likes at the bottom of poem text) */
 .reader-bottom-actions {
+  margin-top: auto;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 1.25rem 1.25rem 1.25rem;
+  padding: 1.25rem 1.25rem 1.25rem 1.25rem;
   flex-wrap: wrap;
 }
 
