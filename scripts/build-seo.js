@@ -149,7 +149,24 @@ ${JSON.stringify(schemaJson, null, 2)}
         <span class="back-arrow" aria-hidden="true">←</span>
         <span class="back-text"><strong>${escapeHtml(AUTHOR_NAME)}</strong> / All Writings</span>
       </a>
-      <div class="poem-header-actions">
+      <a href="../../#tickets" class="nav-ticket-btn">Tickets le lo 🎟️</a>
+    </div>
+  </header>
+
+  <!-- Main Poem Content -->
+  <main class="container poem-page-main">
+    <article class="poem-article">
+      <div class="poem-meta-bar">
+        <span class="poem-category-tag">${escapeHtml(piece.category)}</span>
+        <span class="poem-date-tag">${escapeHtml(piece.date)}</span>
+      </div>
+
+      <h1 class="poem-title" id="poem-title">${escapeHtml(piece.title)}</h1>
+
+      <div class="poem-content" id="poem-content">${escapeHtml(cleanBody)}</div>
+
+      <!-- Bottom Interaction / Engagement Bar -->
+      <div class="poem-bottom-actions">
         <!-- Views Count Pill -->
         <span class="poem-views-pill" title="Total reads">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -183,20 +200,6 @@ ${JSON.stringify(schemaJson, null, 2)}
           <span id="poem-lang-label">A / अ</span>
         </button>
       </div>
-    </div>
-  </header>
-
-  <!-- Main Poem Content -->
-  <main class="container poem-page-main">
-    <article class="poem-article">
-      <div class="poem-meta-bar">
-        <span class="poem-category-tag">${escapeHtml(piece.category)}</span>
-        <span class="poem-date-tag">${escapeHtml(piece.date)}</span>
-      </div>
-
-      <h1 class="poem-title" id="poem-title">${escapeHtml(piece.title)}</h1>
-
-      <div class="poem-content" id="poem-content">${escapeHtml(cleanBody)}</div>
     </article>
 
     <!-- Footer Author / Navigation Card -->
