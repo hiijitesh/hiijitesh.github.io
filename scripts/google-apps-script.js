@@ -14,13 +14,6 @@
  *    - Who has access: "Anyone"
  * 7. Click "Deploy".
  *
- * HOW TO ADD DEFAULT POEMS TO YOUR SHEET:
- * Option A (One-click in Apps Script):
- *   In the function dropdown at the top of Apps Script, select "seedDefaultPoetry"
- *   and click the "Run" button. It will add all default poems into your Poetry tab!
- * Option B (Via Browser URL):
- *   Visit: <YOUR_APPS_SCRIPT_URL>?action=seed_defaults
- *
  * SHEETS STRUCTURE:
  * ─────────────────
  * Tab: "Stats"        → Auto-managed. Columns: pieceId | Views | Likes
@@ -44,67 +37,6 @@
 const SUBSCRIBERS_SHEET_NAME = "Subscribers";
 const STATS_SHEET_NAME = "Stats";
 const POETRY_SHEET_NAME = "Poetry";
-
-/**
- * Default poems library for seeding and populating the Google Sheet
- */
-const DEFAULT_POETRY = [
-  {
-    id: "mere-soch-pare-bhi",
-    category: "Poetry",
-    title: "Mere Soch Pare Bhi, Kuch Hona Hain",
-    title_hi: "मेरे सोच परे भी, कुछ होना हैं",
-    date: "Aug 2024",
-    excerpt: "Ek samay tha jahan sab kuch naa paane ka bhay tha, ek aaj waqt hain jaha sab kuch hoke bhi jindgi lagti kamwaqt hain...",
-    content: "Ek samay tha jahan,\nSab kuch naa paane ka bhay tha\n\nEk aaj waqt hain, jaha sab kuch hoke bhi\nJindgi, lagti kamwaqt hain!!!\n\nKuch paya, toh kuch khoya hu\nKuch paya, toh kuch khoya hu\nDil jab jab na laga, tab tab roya hu.\n\nSapne dekhe bade udaan ke hain,\nPar main toh yunhi soya hu.\nDil jab jab na laga, tab tab roya hu.\n\nPata hota agar, kuch paane ko, kuch khona hain!\nMere सोच pare bhi, kuch hona hain.\n\nSambhaal ke rakhata uss pal ko, jo khaas the\nJab pata hota isko bhi, ek din khona hain.\nMere soch pare bhi, kuch hona hain.",
-    content_hi: "एक समय था जहाँ,\nसब कुछ ना पाने का भय था\n\nएक आज वक़्त हैं, जहाँ सब कुछ होके भी\nजिंदगी, लगती कमबख्त हैं!!!\n\nकुछ पाया, तोह कुछ खोया हूँ\nकुछ पाया, तोह कुछ खोया हूँ\nदिल जब जब ना लगा, तब तब रोया हूँ।\n\nसपने देखे बड़े उड़ान के हैं,\nपर मैं तोह यूँही सोया हूँ।\nदिल जब जब ना लगा, तब तब रोया हूँ।\n\nपता होता अगर, कुछ पाने को, कुछ खोना हैं!\nमेरे सोच परे भी, कुछ होना हैं।\n\nसंभाल के रखता उस पल को, जो ख़ास थे\nजब पता होता इसको भी, एक दिन खोना हैं।\nमेरे सोच परे भी, कुछ होना हैं।",
-    status: "Published"
-  },
-  {
-    id: "kuch-khayaal-aise-hain",
-    category: "Nazm",
-    title: "Kuch Khayaal Aise Hain",
-    title_hi: "कुछ ख़्याल ऐसे हैं",
-    date: "Oct 2026",
-    excerpt: "Kuch khayal aise hain jo meet nahi patein, kuch shaam aisi hain jo dhal nahi patein. Log toh charo taraf hain lekin fir sab me hum ghool meel nahi patein...",
-    content: "Kuch khayal aise hain jo meet nahi patein\nKuch shaam aisi hain jo dhal nahi patein\n\nLog toh charo taraf hain\nLekin fir sab me hum ghool meel nahi patein\n\nBahar bheed ka nazaraa hain toh\nUnder jhanka toh sukha kinaara hain\n\nKuch khayal aise hain jo meet nahi patein\nKuch shaam aisi hain jo dhal nahi patein\n\nKabhi aarzoo hoti hain apno ki,\nFir lagta sab thik ho jayegaa\nPar ye toh waqat he batayega, \nLagta hain ye zindgi yuhi, \nTanha kat jayega\n\nSapne toh hazaar hain, \nBahut he besoomar hain \nSapno ko pana hain ya apno ko, \nYe सोच ke dil av bhi bekaraar hain\n\nAnshu toh dil me aatein hain, \nAnkho ki aukaat kya hain\nSochata hu ro lu jee bhar ke,\nPar itna v ye aashaan kahan hain\n\nKuch khayal aise hain jo meet nahi patein\nKuch shaam aisi hain jo dhal nahi patein",
-    content_hi: "कुछ ख़्याल ऐसे हैं जो मिट नहीं पाते\nकुछ शाम ऐसी हैं जो ढल नहीं पाते\n\nलोग तो चारों तरफ हैं\nलेकिन फिर सब में हम घुल मिल नहीं पाते\n\nबाहर भीड़ का नज़ारा हैं तो\nअंदर झाँका तो सूखा किनारा हैं\n\nकुछ ख़्याल ऐसे हैं जो मिट नहीं पाते\nकुछ शाम ऐसी हैं जो ढल नहीं पाते\n\nकभी आरज़ू होती हैं अपनों की,\nफिर लगता सब ठीक हो जाएगा\nपर ये तो वक़्त ही बताएगा,\nलगता हैं ये ज़िंदगी यूँही,\nतन्हा कट जाएगी\n\nसपने तो हज़ार हैं,\nबहुत ही बेशुमार हैं\nसपनों को पाना हैं या अपनों को,\nये सोच के दिल अब भी बेक़रार हैं\n\nआँसू तो दिल में आते हैं,\nआँखों की औक़ात क्या हैं\nसोचता हूँ रो लूँ जी भर के,\nपर इतना भी ये आसान कहाँ हैं\n\nकुछ ख़्याल ऐसे हैं जो मिट नहीं पाते\nकुछ शाम ऐसी हैं जो ढल नहीं पाते",
-    status: "Published"
-  },
-  {
-    id: "kahani-me-kuch-khaas-nahi",
-    category: "Shayari",
-    title: "Kahani Me Kuch Khaas Nahi",
-    title_hi: "कहानी में कुछ ख़ास नहीं",
-    date: "Oct 2026",
-    excerpt: "kahani me ab kuch khaas nahi, ab woh pahale wali baat nahi. phone pe hoti baat sahi, par hoti koi ab mulakaat nahi...",
-    content: "kahani me ab kuch khaas nahi\nab woh pahale wali baat nahi\nphone pe hoti baat sahi\npar hoti koi ab mulakaat nahi\n\nab pahale wale jazbaat nahi\nJeevan me ab koi raas nahi\npta chalta din raat nahi\nkahani me ab kuch khaas nahi",
-    content_hi: "कहानी में अब कुछ ख़ास नहीं\nअब वो पहले वाली बात नहीं\nफ़ोन पे होती बात सही\nपर होती कोई अब मुलाक़ात नहीं\n\nअब पहले वाले जज़्बात नहीं\nजीवन में अब कोई रास नहीं\nपता चलता दिन रात नहीं\nकहानी में अब कुछ ख़ास नहीं",
-    status: "Published"
-  },
-  {
-    id: "tum-woh-ehsaas-ho",
-    category: "Nazm",
-    title: "Tum Woh Ehsaas Ho",
-    title_hi: "तुम वो एहसास हो",
-    date: "Oct 2026",
-    excerpt: "Tum woh ehsaas ho jo pal pal mere saath ho. Kabhi sochta hu ek din kaise katega tum bin, magar sach toh ye hain ki ek pal bhi sadiyo sa lagega...",
-    content: "Tum woh ehsaas ho\njo pal pal mere saath ho\n\nkabhi sochta hu ek din\nkaise katega tum bin,\nmagar sach toh ye hain ki\nek pal bhi sadiyo sa lagea\n7 janam sa ek ek din\n\ntum woh aadat ban gayi ho\njisko main gum me khushi me\njeev jantu sab me dhudhata hun\n\nguzaara nahi hota mera\ntum bin ek pal, kyuki\nsahaaraa ho tum mere pal pal ka\n\nlikhana chahatu bahut kuch tumhare baare me\nmagar keh du kya tumhe dundha nahi main Chand sitaaro me\nek chhoti si aarzu hain, tum hamesha raho meri baaho me\n\nkalaa ki kami hain, nahi toh likh du tumpe\nwoh nazam, shayri aur kitaab\nmagar tumhe dekh ke sab bhool jata hu\nkuchh iss tarah pyaar hua hain aap se janbab",
-    content_hi: "तुम वो एहसास हो\nजो पल पल मेरे साथ हो\n\nकभी सोचता हूँ एक दिन\nकैसे कटेगा तुम बिन,\nमगर सच तो ये हैं कि\nएक पल भी सदियों सा लगेगा\nसात जनम सा एक एक दिन\n\nतुम वो आदत बन गयी हो\nजिसको मैं ग़म में ख़ुशी में\nजीव जंतु सब में ढूँढता हूँ\n\nगुज़ारा नहीं होता मेरा\nतुम बिन एक पल, क्योंकि\nसहारा हो तुम मेरे पल पल का\n\nलिखना चाहता हूँ बहुत कुछ तुम्हारे बारे में\nमगर कह दूँ क्या तुम्हें ढूँढा नहीं मैंने चाँद सितारों में\nएक छोटी सी आरज़ू हैं, तुम हमेशा रहो मेरी बाहों में\n\nकला की कमी हैं, नहीं तो लिख दूँ तुमपे\nवो नज़्म, शायरी और किताब\nमगर तुम्हें देख के सब भूल जाता हूँ\nकुछ इस तरह प्यार हुआ हैं आप से जनाब",
-    status: "Published"
-  },
-  {
-    id: "lahare",
-    category: "Poetry",
-    title: "Lahare",
-    title_hi: "लहरें",
-    date: "Oct 2026",
-    excerpt: "ye jo lahare uthi main mere under tak, jaa fekegi mujhe samandar tak...",
-    content: "ye jo lahare uthi main mere under tak\njaa fekegi mujhe samandar tak\n\nbheed me v ek tufaan umarati hain mere under\nsochata hu ki kya sochu ki sochana band krdu\n\npar ye mahaj soch nahi, dil ki laihar hain\ntu khud ko na tarash raha, baitha tu udaas rahaa",
-    content_hi: "ये जो लहरें उठी हैं मेरे अंदर तक,\nजा फेंकेंगी मुझे समंदर तक।\n\nभीड़ में भी एक तूफान उमड़ती हैं मेरे अंदर,\nसोचता हूँ कि क्या सोचूँ कि सोचना बंद कर दूँ।\n\nपर ये महज सोच नहीं, दिल की लहर हैं,\nतू खुद को ना तराश रहा, बैठा तू उदास रहा।",
-    status: "Published"
-  }
-];
 
 function doPost(e) {
   return handleRequest(e);
@@ -140,11 +72,13 @@ function handleRequest(e) {
     const action = (params.action || '').trim().toLowerCase();
 
     // --------------------------------------------------------------------------
-    // ACTION: SEED DEFAULT POEMS (Appends default poems if missing from Poetry tab)
+    // ACTION: SEED DEFAULT POEMS (Deprecated: poems managed manually in sheet)
     // --------------------------------------------------------------------------
     if (action === 'seed_defaults' || action === 'seed_poetry') {
-      const result = seedDefaultPoetry();
-      return createJsonResponse(result);
+      return createJsonResponse({
+        status: 'success',
+        message: 'Default poems removed. All poetry is managed directly in your Google Sheet.'
+      });
     }
 
     // --------------------------------------------------------------------------
@@ -284,10 +218,10 @@ function handleRequest(e) {
 }
 
 // =============================================================================
-// POETRY SEEDER: Adds default poems to "Poetry" sheet without duplicating
+// POETRY SHEET SETUP: Ensures "Poetry" sheet exists with correct headers
 // =============================================================================
-function seedDefaultPoetry() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+function ensurePoetrySheet(ss) {
+  ss = ss || SpreadsheetApp.getActiveSpreadsheet();
   let poetrySheet = ss.getSheetByName(POETRY_SHEET_NAME);
 
   // Auto-create "Poetry" sheet with headers if missing
@@ -317,52 +251,7 @@ function seedDefaultPoetry() {
     poetrySheet.setColumnWidth(11, 80);  // likes
   }
 
-  // Read existing headers to find the ID column dynamically
-  const existingData = poetrySheet.getDataRange().getValues();
-  const headerRow = existingData.length > 0 
-    ? existingData[0].map(function(h) { return String(h || '').trim().toLowerCase(); })
-    : [];
-  let idColIndex = headerRow.indexOf('id');
-  if (idColIndex === -1) idColIndex = 2; // Default to Col C (index 2) in new layout
-
-  const existingIds = {};
-  for (let i = 1; i < existingData.length; i++) {
-    const existingId = String(existingData[i][idColIndex] || '').trim().toLowerCase();
-    if (existingId) {
-      existingIds[existingId] = true;
-    }
-  }
-
-  let addedCount = 0;
-  for (let j = 0; j < DEFAULT_POETRY.length; j++) {
-    const p = DEFAULT_POETRY[j];
-    if (!existingIds[p.id.toLowerCase()]) {
-      poetrySheet.appendRow([
-        p.content,
-        p.content_hi,
-        p.id,
-        p.category,
-        p.title,
-        p.title_hi,
-        p.date,
-        p.excerpt,
-        p.status || 'Published',
-        p.views || 0,
-        p.likes || 0
-      ]);
-      existingIds[p.id.toLowerCase()] = true;
-      addedCount++;
-    }
-  }
-
-  return {
-    status: 'success',
-    added: addedCount,
-    totalExisting: Object.keys(existingIds).length,
-    message: addedCount > 0 
-      ? ("Successfully added " + addedCount + " default poem(s) to Poetry sheet!")
-      : "All default poems are already present in Poetry sheet."
-  };
+  return poetrySheet;
 }
 
 // =============================================================================
@@ -371,13 +260,7 @@ function seedDefaultPoetry() {
 // =============================================================================
 function handleGetPoetry() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  let poetrySheet = ss.getSheetByName(POETRY_SHEET_NAME);
-
-  // If sheet doesn't exist, create it and seed defaults
-  if (!poetrySheet) {
-    seedDefaultPoetry();
-    poetrySheet = ss.getSheetByName(POETRY_SHEET_NAME);
-  }
+  let poetrySheet = ensurePoetrySheet(ss);
 
   const allData = poetrySheet.getDataRange().getValues();
   if (allData.length < 2) {

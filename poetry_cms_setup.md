@@ -64,25 +64,11 @@ On the first `get_poetry` API call, the script **auto-creates** a `Poetry` tab w
 - **No stale defaults re-injected**: When the sheet is fetched, poems come strictly from the sheet. If you edit words, fix typos, change titles, or draft/remove pieces in Google Sheets, your changes are immediately live.
 - **No hardcoded defaults**: Hardcoded writing fallbacks have been eliminated. All poetry is fetched directly from Google Sheets with skeleton loaders on first load.
 
-## How to Add Default Poems to Your Google Sheet
-
-### Option A: 1-Click via Apps Script (Recommended)
-1. Open Google Sheets → **Extensions > Apps Script**
-2. Paste the updated [`scripts/google-apps-script.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/scripts/google-apps-script.js) into `Code.gs`
-3. In the function dropdown at the top, select **`seedDefaultPoetry`** and click **Run**
-4. Deploy → Manage deployments → Edit → New version → Deploy
-All default poems will be automatically added into your `Poetry` tab with full Hindi & Hinglish text, categories, dates, and Published status!
-
-### Option B: One-Click via Browser Link
-After redeploying your Apps Script, visit:
-`<YOUR_APPS_SCRIPT_URL>?action=seed_defaults`
-This will automatically append all missing default poems into your sheet.
-
 ## Files Changed
 
 | File | What Changed |
 |------|-------------|
-| [`scripts/google-apps-script.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/scripts/google-apps-script.js) | Added `seedDefaultPoetry`, `action=seed_defaults`, and auto-seeder |
+| [`scripts/google-apps-script.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/scripts/google-apps-script.js) | Dynamic header mapping for custom column layout; all default poems removed |
 | [`js/utils/poetryLoader.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/js/utils/poetryLoader.js) | Google Sheet is authoritative single source of truth + `localStorage` cache |
 | [`js/components/PoetrySection.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/js/components/PoetrySection.js) | Renders cached sheet data first without flashing defaults |
 | [`js/data/defaultWritings.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/js/data/defaultWritings.js) | Deprecated; removed from runtime bundle |
