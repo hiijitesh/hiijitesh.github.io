@@ -82,26 +82,16 @@
 </head>
 <body class="poem-standalone-body">
 
-  <!-- Navigation Bar -->
+  <!-- Navigation Bar (Sticky with Back Link on left & Translate on right) -->
   <header class="poem-page-nav">
     <div class="container poem-nav-container">
       <a href="../../" class="poem-back-link" title="Return to home archive">
         <span class="back-arrow" aria-hidden="true">←</span>
         <span class="back-text"><strong>Jitesh Bharti</strong> / All Writings</span>
       </a>
-    </div>
-  </header>
 
-  <!-- Main Poem Content -->
-  <main class="container poem-page-main">
-    <article class="poem-article">
-      <div class="poem-meta-bar">
-        <div class="poem-meta-left">
-          <span class="poem-category-tag">Poetry</span>
-          <span class="poem-date-tag">Oct 2026</span>
-        </div>
-
-        <!-- Translate Button on the Top Right of Nazm / Date -->
+      <!-- Translate Button on Top Right (Sticky Navbar) -->
+      <div class="poem-header-actions">
         <button class="reader-lang-toggle" id="poem-lang-toggle" type="button" title="Switch Hindi / English" aria-label="Toggle language">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="m5 8 6 6"/>
@@ -113,6 +103,16 @@
           </svg>
           <span id="poem-lang-label">Hindi / English</span>
         </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Poem Content -->
+  <main class="container poem-page-main">
+    <article class="poem-article">
+      <div class="poem-meta-bar">
+        <span class="poem-category-tag">Poetry</span>
+        <span class="poem-date-tag">Oct 2026</span>
       </div>
 
       <h1 class="poem-title" id="poem-title">Mere Andar Ki Awaaz</h1>
