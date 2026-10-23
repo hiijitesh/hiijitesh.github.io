@@ -2047,21 +2047,32 @@ section {
 .poem-views-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-  color: var(--ink-muted);
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  padding: 0.35rem 0.65rem;
+  gap: 0.4rem;
+  min-height: 32px;
+  padding: 0.32rem 0.72rem;
   border-radius: 9999px;
+  background: rgba(255, 255, 227, 0.05);
+  border: 1px solid rgba(255, 255, 227, 0.12);
+  color: rgba(255, 255, 227, 0.78);
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  user-select: none;
+  line-height: 1;
+}
+
+.poem-views-pill svg {
+  opacity: 0.9;
+  stroke: currentColor;
+  flex-shrink: 0;
 }
 
 .poem-page-main {
   flex: 1;
-  padding-top: 3.5rem;
-  padding-bottom: 5rem;
-  max-width: 760px;
+  padding-top: 2.25rem;
+  padding-bottom: 3.5rem;
+  max-width: 680px;
   width: 100%;
 }
 
@@ -2070,7 +2081,7 @@ section {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
   flex-wrap: wrap;
 }
 
@@ -2101,32 +2112,50 @@ section {
 
 .poem-title {
   font-family: var(--font-poetry-title);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2rem, 4vw, 2.75rem);
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: var(--ink);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .poem-content {
   font-family: var(--font-poetry-body);
-  font-size: 1.15rem;
-  line-height: 1.95;
+  font-size: 1.12rem;
+  line-height: 1.76;
   color: var(--ink);
   white-space: pre-line;
-  margin-bottom: 3.5rem;
+  margin-bottom: 1.25rem;
   letter-spacing: 0.01em;
 }
 
 .poem-footer-cta {
-  padding-top: 2rem;
-  border-top: 1px solid var(--border);
+  padding-top: 1.15rem;
+  border-top: 1px solid rgba(255, 255, 227, 0.08);
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.poem-footer-cta .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-secondary);
+  transition: all var(--t-fast);
+  text-decoration: none;
+}
+
+.poem-footer-cta .btn-secondary:hover {
+  color: var(--ink);
+  transform: translateX(2px);
 }
 
 .poem-author-card {
@@ -2182,11 +2211,11 @@ section {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 0.75rem;
-  margin-top: 2.25rem;
-  margin-bottom: 2.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px dashed var(--border);
+  gap: 0.65rem;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0 0 1.15rem 0;
+  border-top: none;
   flex-wrap: wrap;
 }
 
