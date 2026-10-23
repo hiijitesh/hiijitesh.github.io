@@ -21,6 +21,39 @@ const ROBOTS_PATH = path.join(ROOT_DIR, 'robots.txt');
 const BASE_URL = 'https://jiteshkumar.in';
 const AUTHOR_NAME = 'Jitesh Bharti';
 
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTH_MAP = {
+  jan: 0, january: 0, feb: 1, february: 1, mar: 2, march: 2, apr: 3, april: 3,
+  may: 4, jun: 5, june: 5, jul: 6, july: 6, aug: 7, august: 7,
+  sep: 8, sept: 8, september: 8, oct: 9, october: 9, nov: 10, november: 10, dec: 11, december: 11
+};
+
+function formatPoetryDate(rawDate) {
+  if (!rawDate) {
+    const now = new Date();
+    return `${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+  }
+  const str = String(rawDate).trim();
+  const mNamed = str.match(/^([a-zA-Z]{3,9})\s+(\d{4})$/);
+  if (mNamed && MONTH_MAP[mNamed[1].toLowerCase()] !== undefined) {
+    return `${MONTHS[MONTH_MAP[mNamed[1].toLowerCase()]]} ${mNamed[2]}`;
+  }
+  const mSheets = str.match(/[a-zA-Z]{3}\s+([a-zA-Z]{3})\s+\d{1,2}\s+(\d{4})/);
+  if (mSheets && MONTH_MAP[mSheets[1].toLowerCase()] !== undefined) {
+    return `${MONTHS[MONTH_MAP[mSheets[1].toLowerCase()]]} ${mSheets[2]}`;
+  }
+  const mIso = str.match(/^(\d{4})[-/](\d{1,2})/);
+  if (mIso) {
+    const mIdx = parseInt(mIso[2], 10) - 1;
+    if (mIdx >= 0 && mIdx < 12) return `${MONTHS[mIdx]} ${mIso[1]}`;
+  }
+  const d = new Date(str);
+  if (!isNaN(d.getTime())) {
+    return `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+  }
+  return str;
+}
+
 function escapeHtml(str) {
   if (!str) return '';
   return String(str)
@@ -81,7 +114,7 @@ function generatePoemHtml(piece) {
     },
     "genre": piece.category,
     "inLanguage": ["hi", "hi-Latn", "en"],
-    "datePublished": piece.date,
+    "datePublished": formatPoetryDate(piece.date),
     "mainEntityOfPage": canonicalUrl,
     "publisher": {
       "@type": "Person",
@@ -158,7 +191,7 @@ ${JSON.stringify(schemaJson, null, 2)}
     <article class="poem-article">
       <div class="poem-meta-bar">
         <span class="poem-category-tag">${escapeHtml(piece.category)}</span>
-        <span class="poem-date-tag">${escapeHtml(piece.date)}</span>
+        <span class="poem-date-tag">${escapeHtml(formatPoetryDate(piece.date))}</span>
       </div>
 
       <h1 class="poem-title" id="poem-title">${escapeHtml(piece.title)}</h1>
@@ -277,19 +310,55 @@ Sitemap: ${BASE_URL}/sitemap.xml
 `;
 }
 
-function main() {
+async function fetchLivePoetry() {
+  const apiUrl = "https://script.google.com/macros/s/AKfycbx4yq-WGnp4bl7tPjaoge6mj-oluJupxcHjZcCKgcX2T_JFpRT5xv8h124azfJ0U7iL/exec?action=get_poetry";
+  try {
+    const res = await fetch(apiUrl, { method: 'GET', redirect: 'follow' });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.status === 'success' && Array.isArray(data.poetry)) {
+        return data.poetry;
+      }
+    }
+  } catch (err) {
+    console.warn('  ⚠️ Could not fetch live Google Sheets poetry during build, using local writings:', err.message);
+  }
+  return [];
+}
+
+async function main() {
   console.log('🚀 Starting SEO build...');
 
-  if (!fs.existsSync(WRITINGS_PATH)) {
-    console.error('Error: writings.json not found at', WRITINGS_PATH);
-    process.exit(1);
+  let writings = [];
+  if (fs.existsSync(WRITINGS_PATH)) {
+    try {
+      writings = JSON.parse(fs.readFileSync(WRITINGS_PATH, 'utf-8'));
+    } catch {}
   }
 
-  const rawData = fs.readFileSync(WRITINGS_PATH, 'utf-8');
-  const writings = JSON.parse(rawData);
+  // Fetch live poems from Google Sheets
+  const livePoems = await fetchLivePoetry();
+  if (livePoems.length > 0) {
+    const map = new Map();
+    livePoems.forEach(p => {
+      if (p.id) map.set(p.id.toLowerCase().trim(), p);
+    });
 
-  if (!Array.isArray(writings)) {
-    console.error('Error: writings.json must contain an array of pieces');
+    const merged = [...livePoems];
+    writings.forEach(p => {
+      if (p.id && !map.has(p.id.toLowerCase().trim())) {
+        merged.push(p);
+      }
+    });
+    writings = merged;
+
+    // Update data/writings.json cache
+    fs.writeFileSync(WRITINGS_PATH, JSON.stringify(writings, null, 2), 'utf-8');
+    console.log(`  ✓ Synced ${livePoems.length} live poems from Google Sheet into data/writings.json`);
+  }
+
+  if (!Array.isArray(writings) || writings.length === 0) {
+    console.error('Error: No writings found to build');
     process.exit(1);
   }
 
@@ -323,4 +392,7 @@ function main() {
   console.log('✨ SEO build completed successfully!');
 }
 
-main();
+main().catch(err => {
+  console.error('Build failed:', err);
+  process.exit(1);
+});
