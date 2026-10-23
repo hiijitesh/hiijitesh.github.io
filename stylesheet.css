@@ -542,6 +542,45 @@ section {
 }
 
 /* ==========================================================================
+   POETRY LOADING SKELETON
+   ========================================================================== */
+.skeleton-row {
+  opacity: 0.6;
+  pointer-events: none;
+  cursor: default;
+}
+
+.skeleton-pill,
+.skeleton-title,
+.skeleton-excerpt {
+  display: block;
+  background: rgba(255, 255, 227, 0.06);
+  border-radius: 4px;
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-pill {
+  width: 48px;
+  height: 14px;
+}
+
+.skeleton-title {
+  width: 50%;
+  height: 22px;
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-excerpt {
+  width: 80%;
+  height: 14px;
+}
+
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.75; }
+}
+
+/* ==========================================================================
    POETRY EMPTY STATE CONDITION
    ========================================================================== */
 .poetry-empty-state {

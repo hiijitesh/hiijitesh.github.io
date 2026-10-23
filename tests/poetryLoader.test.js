@@ -70,30 +70,36 @@ describe('Poetry CMS & Loader Unit Test Suite', () => {
     let loader;
 
     beforeEach(() => {
-      // Setup fresh default writings
-      App.defaultWritings = [
-        { id: 'def-1', title: 'Default One', date: 'Aug 2024', views: 100 },
-        { id: 'def-2', title: 'Default Two', date: 'Sep 2024', views: 200 }
-      ];
+      // Clear localStorage mock if present
+      if (global.localStorage && typeof global.localStorage.clear === 'function') {
+        global.localStorage.clear();
+      }
+      delete global.localStorage;
 
       // Re-instantiate service
       loader = new App.PoetryLoader.constructor();
     });
 
-    it('should initialize with default writings immediately', () => {
+    it('should initialize with empty poems array when no cache exists', () => {
       loader.init();
       const poems = loader.getPoems();
-      assert.equal(poems.length, 2);
-      assert.equal(poems[0].id, 'def-1');
-      assert.equal(poems[0].date, 'Aug 2024');
+      assert.deepEqual(poems, []);
     });
 
-    it('should format default writings dates on init', () => {
-      App.defaultWritings = [
-        { id: 'raw-date-1', title: 'Raw Date Poem', date: '2026-10-01' }
+    it('should restore cached poems from localStorage on init and format dates', () => {
+      const cached = [
+        { id: 'cached-1', title: 'Cached Poem', date: '2026-10-01' }
       ];
+      global.localStorage = {
+        getItem: (k) => k === 'jb_poetry_cache' ? JSON.stringify(cached) : null,
+        setItem: () => {}
+      };
+
       loader.init();
-      assert.equal(loader.getPoems()[0].date, 'Oct 2026');
+      const poems = loader.getPoems();
+      assert.equal(poems.length, 1);
+      assert.equal(poems[0].id, 'cached-1');
+      assert.equal(poems[0].date, 'Oct 2026');
     });
 
     it('should set server poems as authoritative and format their dates', () => {
@@ -110,7 +116,7 @@ describe('Poetry CMS & Loader Unit Test Suite', () => {
       loader._mergeAndUpdate(rawServerPoems);
       const result = loader.getPoems();
 
-      // Server poems are authoritative — no old defaults appended
+      // Server poems are authoritative — single source of truth
       assert.equal(result.length, 1);
       assert.equal(result[0].id, 'mer-andar-ki-awaaz');
       assert.equal(result[0].date, 'Oct 2026');
@@ -132,7 +138,14 @@ describe('Poetry CMS & Loader Unit Test Suite', () => {
       assert.equal(result[0].date, 'Oct 2026');
     });
 
-    it('should replace initial defaults with server poems as source of truth', () => {
+    it('should set server poems as source of truth and update cache', () => {
+      let savedKey = null;
+      let savedVal = null;
+      global.localStorage = {
+        getItem: () => null,
+        setItem: (k, v) => { savedKey = k; savedVal = v; }
+      };
+
       loader.init();
       const rawServerPoems = [
         {
@@ -149,6 +162,8 @@ describe('Poetry CMS & Loader Unit Test Suite', () => {
       assert.equal(result[0].id, 'sheet-poem-1');
       assert.equal(result[0].title, 'Updated Content From Sheet');
       assert.equal(result[0].date, 'Oct 2026');
+      assert.equal(savedKey, 'jb_poetry_cache');
+      assert.ok(savedVal.includes('sheet-poem-1'));
     });
 
     it('should notify registered listeners when poems are fetched', () => {

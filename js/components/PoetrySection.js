@@ -11,7 +11,7 @@ window.App = window.App || {};
       this.grid = document.getElementById('poetry-grid');
       this.filterChips = document.querySelectorAll('.poetry-filters .p-filter');
       this.sortButtons = document.querySelectorAll('.poetry-sort .p-sort-btn');
-      this.writings = App.defaultWritings || [];
+      this.writings = [];
       this.activeFilter = 'all';
       this.activeSort = 'views'; // Default sort by views
 
@@ -34,9 +34,13 @@ window.App = window.App || {};
       if (App.PoetryLoader) {
         App.PoetryLoader.init();
 
-        // Use cached or loader poems immediately
+        // Use cached sheet poems immediately if available, otherwise show subtle skeleton
         this.writings = App.PoetryLoader.getPoems();
-        this.render();
+        if (this.writings.length > 0) {
+          this.render();
+        } else {
+          this.renderSkeleton();
+        }
 
         // Listen for live updates from sheet
         App.PoetryLoader.addListener((poems) => {
@@ -135,6 +139,27 @@ window.App = window.App || {};
       }
 
       this.grid.appendChild(emptyDiv);
+    }
+
+    renderSkeleton() {
+      if (!this.grid) return;
+      this.grid.innerHTML = `
+        <div class="poetry-row skeleton-row" aria-hidden="true">
+          <div class="row-left"><span class="skeleton-pill"></span></div>
+          <div class="row-main"><span class="skeleton-title"></span><span class="skeleton-excerpt"></span></div>
+          <div class="row-right"><span class="skeleton-pill"></span></div>
+        </div>
+        <div class="poetry-row skeleton-row" aria-hidden="true">
+          <div class="row-left"><span class="skeleton-pill"></span></div>
+          <div class="row-main"><span class="skeleton-title" style="width: 65%;"></span><span class="skeleton-excerpt"></span></div>
+          <div class="row-right"><span class="skeleton-pill"></span></div>
+        </div>
+        <div class="poetry-row skeleton-row" aria-hidden="true">
+          <div class="row-left"><span class="skeleton-pill"></span></div>
+          <div class="row-main"><span class="skeleton-title" style="width: 80%;"></span><span class="skeleton-excerpt"></span></div>
+          <div class="row-right"><span class="skeleton-pill"></span></div>
+        </div>
+      `;
     }
   }
 

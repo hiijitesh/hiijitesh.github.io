@@ -10,9 +10,9 @@ Your poetry is now managed through a **"Poetry" tab** in your Google Sheet. The 
 graph LR
   A["You write in<br/>Google Sheet"] --> B["Poetry Tab"]
   B --> C["Apps Script API<br/>(get_poetry)"]
-  C --> D["poetryLoader.js<br/>fetches poems"]
+  C --> D["poetryLoader.js<br/>(fetches 100% from sheet)"]
   D --> E["PoetrySection<br/>renders live"]
-  F["defaultWritings.js"] --> D
+  D -.-> F["localStorage cache<br/>(instant repeat loads)"]
   style A fill:#1e293b,stroke:#ffffe3,color:#ffffe3
   style B fill:#1e293b,stroke:#f0a030,color:#f0a030
   style E fill:#1e293b,stroke:#ffffe3,color:#ffffe3
@@ -60,8 +60,7 @@ On the first `get_poetry` API call, the script **auto-creates** a `Poetry` tab w
 
 - **Google Sheets is 100% authoritative**: The website displays exclusively what is in your Google Sheet.
 - **No stale defaults re-injected**: When the sheet is fetched, poems come strictly from the sheet. If you edit words, fix typos, change titles, or draft/remove pieces in Google Sheets, your changes are immediately live.
-- **Instant load with localStorage cache**: The latest sheet data is cached in `localStorage` so repeat visits load instantly without waiting for the network.
-- [`defaultWritings.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/js/data/defaultWritings.js) is used **only** as an emergency offline fallback on first visit or when offline on `file://`.
+- **No hardcoded defaults**: Hardcoded writing fallbacks have been eliminated. All poetry is fetched directly from Google Sheets with skeleton loaders on first load.
 
 ## How to Add Default Poems to Your Google Sheet
 
@@ -84,5 +83,5 @@ This will automatically append all missing default poems into your sheet.
 | [`scripts/google-apps-script.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/scripts/google-apps-script.js) | Added `seedDefaultPoetry`, `action=seed_defaults`, and auto-seeder |
 | [`js/utils/poetryLoader.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/js/utils/poetryLoader.js) | Google Sheet is authoritative single source of truth + `localStorage` cache |
 | [`js/components/PoetrySection.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/js/components/PoetrySection.js) | Renders cached sheet data first without flashing defaults |
-| [`js/data/defaultWritings.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/js/data/defaultWritings.js) | Synced offline fallback library |
+| [`js/data/defaultWritings.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/js/data/defaultWritings.js) | Deprecated; removed from runtime bundle |
 | [`scripts/build-seo.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/scripts/build-seo.js) | Live Google Sheet is source of truth for SEO builds |

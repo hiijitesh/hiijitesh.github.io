@@ -1,7 +1,7 @@
 /**
  * Poetry Loader Service
- * Fetches poetry from Google Sheets (Poetry tab) via the Apps Script API.
- * Falls back gracefully to defaultWritings.js when offline or on file:// protocol.
+ * Fetches poetry exclusively from Google Sheets (Poetry tab) via the Apps Script API.
+ * Uses localStorage caching for instant load and revalidates live against the sheet.
  *
  * Automatically formats sheet date entries into "Oct 2026" (Mon YYYY) format.
  */
@@ -125,7 +125,7 @@ window.App = window.App || {};
     init(customEndpoint) {
       this.apiEndpoint = customEndpoint || this.apiEndpoint || window.ENGAGEMENT_API_URL || null;
 
-      // 1. Try reading from localStorage cache first so returning visitors see latest sheet poems instantly
+      // Try reading from localStorage cache first so returning visitors see latest sheet poems instantly
       if (!this.hasFetched && this.poems.length === 0) {
         try {
           if (typeof localStorage !== 'undefined') {
@@ -141,16 +141,6 @@ window.App = window.App || {};
             }
           }
         } catch (e) {}
-      }
-
-      // 2. Only seed with default writings as offline emergency fallback if no cache and no poems yet
-      if (!this.hasFetched && this.poems.length === 0) {
-        if (App.defaultWritings && Array.isArray(App.defaultWritings)) {
-          this.poems = App.defaultWritings.map(p => ({
-            ...p,
-            date: formatPoetryDate(p.date)
-          }));
-        }
       }
     }
 
@@ -216,7 +206,7 @@ window.App = window.App || {};
 
       // Don't attempt fetch on file:// protocol
       if (typeof window !== 'undefined' && window.location && window.location.protocol === 'file:') {
-        console.info('[PoetryLoader] Running on file:// protocol, using defaults only.');
+        console.info('[PoetryLoader] Running on file:// protocol.');
         return this.poems;
       }
 
@@ -266,7 +256,7 @@ window.App = window.App || {};
           }
         } catch (err) {
           this.fetchError = err;
-          console.warn('[PoetryLoader] Fallback also failed, using defaults:', err.message || err);
+          console.warn('[PoetryLoader] Fetch from sheet failed:', err.message || err);
         }
 
         return this.poems;
