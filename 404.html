@@ -18,25 +18,36 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Rozha+One&display=swap" rel="stylesheet">
 
   <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="/stylesheet.css?v=26">
+  <link rel="stylesheet" href="/stylesheet.css?v=28">
 
   <style>
-    /* Dynamic resolver loader styling - fills available height to keep footer at the bottom */
+    html, body {
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+    body.poem-standalone-body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Dynamic resolver loader styling - centered in the viewport */
     .poem-resolver-loading {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 65vh;
       text-align: center;
       color: var(--ink-secondary);
-      padding: 4rem 1.5rem;
+      padding: 3rem 1.5rem;
+      width: 100%;
+      margin: 0 auto;
     }
     .poem-resolver-spinner {
       width: 32px;
       height: 32px;
-      border: 2px solid rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 227, 0.15);
       border-top-color: var(--accent);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
@@ -48,9 +59,13 @@
     .general-404-wrap {
       flex: 1;
       display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      padding: 5rem 1.5rem;
-      max-width: 580px;
+      padding: 3rem 1.5rem;
+      max-width: 620px;
+      width: 100%;
       margin: 0 auto;
     }
     #dynamic-poem-view {
@@ -79,6 +94,9 @@
       color: var(--ink-secondary);
       line-height: 1.6;
       margin-bottom: 2.25rem;
+    }
+    .site-footer {
+      margin-top: auto;
     }
   </style>
 </head>
@@ -196,25 +214,44 @@
   <script>
     window.ENGAGEMENT_API_URL = "https://script.google.com/macros/s/AKfycbx4yq-WGnp4bl7tPjaoge6mj-oluJupxcHjZcCKgcX2T_JFpRT5xv8h124azfJ0U7iL/exec";
   </script>
-  <script src="/js/data/defaultWritings.js?v=25"></script>
-  <script src="/js/utils/poetryLoader.js?v=25"></script>
-  <script src="/js/utils/transliterator.js?v=25"></script>
-  <script src="/js/utils/engagement.js?v=25"></script>
-  <script src="/js/poem-page.js?v=25"></script>
+  <script src="/js/data/defaultWritings.js?v=28"></script>
+  <script src="/js/utils/poetryLoader.js?v=28"></script>
+  <script src="/js/utils/transliterator.js?v=28"></script>
+  <script src="/js/utils/engagement.js?v=28"></script>
+  <script src="/js/poem-page.js?v=28"></script>
 
   <script>
     (async function resolveDynamicPoem() {
-      const path = window.location.pathname || '';
-      // Match /poetry/<slug> or /poetry/<slug>/
-      const match = path.match(/\/poetry\/([^\/]+)\/?$/i);
+      const search = window.location.search || '';
+      const params = new URLSearchParams(search);
 
       const loadingEl = document.getElementById('resolver-loading');
       const poemViewEl = document.getElementById('dynamic-poem-view');
       const general404El = document.getElementById('general-404');
 
+      // Test Mode 1: Directly inspect and test the loader state via ?loader or ?preview=loader
+      if (params.has('loader') || params.has('loading') || params.get('preview') === 'loader') {
+        if (loadingEl) loadingEl.style.display = 'flex';
+        if (general404El) general404El.style.display = 'none';
+        if (poemViewEl) poemViewEl.style.display = 'none';
+        return;
+      }
+
+      // Test Mode 2: Directly inspect the centered 404 state via ?404 or ?preview=404
+      if (params.has('404') || params.get('preview') === '404') {
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (general404El) general404El.style.display = 'flex';
+        if (poemViewEl) poemViewEl.style.display = 'none';
+        return;
+      }
+
+      const path = window.location.pathname || '';
+      // Match /poetry/<slug> or /poetry/<slug>/
+      const match = path.match(/\/poetry\/([^\/]+)\/?$/i);
+
       if (!match) {
         if (loadingEl) loadingEl.style.display = 'none';
-        if (general404El) general404El.style.display = 'block';
+        if (general404El) general404El.style.display = 'flex';
         return;
       }
 
@@ -266,7 +303,7 @@
 
       // If poem not found in sheet or defaults
       if (loadingEl) loadingEl.style.display = 'none';
-      if (general404El) general404El.style.display = 'block';
+      if (general404El) general404El.style.display = 'flex';
     })();
   </script>
 </body>
