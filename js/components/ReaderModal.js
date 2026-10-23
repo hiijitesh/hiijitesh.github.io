@@ -52,6 +52,28 @@ window.App = window.App || {};
         this.modal.addEventListener('click', (e) => {
           if (e.target === this.modal) this.close();
         });
+
+        // Accessible focus trapping within modal dialog
+        this.modal.addEventListener('keydown', (e) => {
+          if (e.key === 'Tab') {
+            const focusables = this.modal.querySelectorAll('button:not([disabled]), [tabindex]:not([tabindex="-1"])');
+            if (!focusables || focusables.length === 0) return;
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+
+            if (e.shiftKey) {
+              if (document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+              }
+            } else {
+              if (document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+              }
+            }
+          }
+        });
       }
       if (this.langBtn) {
         this.langBtn.addEventListener('click', () => this.toggleLanguage());
@@ -109,11 +131,21 @@ window.App = window.App || {};
 
     async toggleLanguage() {
       if (!this.currentPiece) return;
+
+      // Preserve reader's scroll position proportionately
+      const canvas = this.canvas;
+      const prevScrollTop = canvas ? canvas.scrollTop : 0;
+      const prevScrollHeight = canvas ? canvas.scrollHeight : 0;
+      const scrollRatio = prevScrollHeight > 0 ? (prevScrollTop / prevScrollHeight) : 0;
+
       this.isHindi = !this.isHindi;
 
       if (this.isHindi) {
-        if (this.langBtn) this.langBtn.classList.add('active');
-        if (this.langLabel) this.langLabel.textContent = 'Hindi / English';
+        if (this.langBtn) {
+          this.langBtn.classList.add('active');
+          this.langBtn.setAttribute('aria-checked', 'true');
+        }
+        if (this.langLabel) this.langLabel.textContent = 'Hinglish / हिंदी';
 
         // 1. Prioritize authentic author-written Hindi title
         if (!this.hindiTitle) {
@@ -147,11 +179,21 @@ window.App = window.App || {};
         if (this.heading) this.heading.textContent = this.hindiTitle;
         if (this.text) this.text.textContent = this.hindiBody;
       } else {
-        if (this.langBtn) this.langBtn.classList.remove('active');
-        if (this.langLabel) this.langLabel.textContent = 'Hindi / English';
+        if (this.langBtn) {
+          this.langBtn.classList.remove('active');
+          this.langBtn.setAttribute('aria-checked', 'false');
+        }
+        if (this.langLabel) this.langLabel.textContent = 'Hinglish / हिंदी';
 
         if (this.heading) this.heading.textContent = this.currentPiece.title;
         if (this.text) this.text.textContent = this.cleanPoemBody(this.currentPiece.content, this.currentPiece.title);
+      }
+
+      // Restore scroll position after content switch
+      if (canvas && prevScrollTop > 0) {
+        requestAnimationFrame(() => {
+          canvas.scrollTop = Math.round(scrollRatio * canvas.scrollHeight);
+        });
       }
     }
 
@@ -257,7 +299,8 @@ window.App = window.App || {};
 
       if (this.langBtn) {
         this.langBtn.classList.remove('active');
-        this.langLabel.textContent = 'Hindi / English';
+        this.langBtn.setAttribute('aria-checked', 'false');
+        this.langLabel.textContent = 'Hinglish / हिंदी';
       }
 
       if (startHindi) {
@@ -278,14 +321,29 @@ window.App = window.App || {};
         }
       } catch {}
 
+      this.previousActiveElement = document.activeElement;
       this.modal.classList.add('active');
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+
+      // Move focus inside the modal for accessibility
+      if (this.closeBtn) {
+        setTimeout(() => {
+          try { this.closeBtn.focus(); } catch (e) {}
+        }, 60);
+      }
     }
 
     close() {
       if (!this.modal) return;
       this.modal.classList.remove('active');
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+
+      // Return focus to triggering card
+      if (this.previousActiveElement && typeof this.previousActiveElement.focus === 'function') {
+        try { this.previousActiveElement.focus(); } catch (e) {}
+      }
 
       // Revert URL to root without page reload
       try {

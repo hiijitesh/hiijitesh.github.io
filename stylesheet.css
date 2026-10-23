@@ -856,18 +856,21 @@ section {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(16, 16, 14, 0.94);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(16, 16, 14, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   z-index: 200;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: clamp(0.6rem, 2.5vw, 1.25rem);
+  padding-top: max(clamp(0.6rem, 2.5vw, 1.25rem), env(safe-area-inset-top, 0px));
+  padding-bottom: max(clamp(0.6rem, 2.5vw, 1.25rem), env(safe-area-inset-bottom, 0px));
+  padding-left: max(clamp(0.6rem, 2.5vw, 1.25rem), env(safe-area-inset-left, 0px));
+  padding-right: max(clamp(0.6rem, 2.5vw, 1.25rem), env(safe-area-inset-right, 0px));
   opacity: 0;
   pointer-events: none;
   overscroll-behavior: contain;
-  touch-action: none;
   transition: opacity var(--t-normal);
 }
 
@@ -897,11 +900,13 @@ section {
   border-radius: 14px;
   max-width: 680px;
   width: 100%;
-  min-height: 65vh;
-  max-height: 88vh;
+  max-height: 90vh;
+  max-height: 90dvh;
+  max-height: calc(90dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
@@ -910,7 +915,24 @@ section {
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85);
   position: relative;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 227, 0.2) transparent;
+  scrollbar-color: rgba(255, 255, 227, 0.18) transparent;
+}
+
+.reader-canvas::-webkit-scrollbar {
+  width: 5px;
+}
+
+.reader-canvas::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.reader-canvas::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 227, 0.18);
+  border-radius: 9999px;
+}
+
+.reader-canvas::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 227, 0.35);
 }
 
 .reader-header-sticky {
@@ -920,8 +942,9 @@ section {
   background: rgba(22, 22, 19, 0.95);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  padding: 1.25rem 1.25rem 0.85rem 1.25rem;
-  border-bottom: 1px solid var(--border);
+  padding: 0.85rem 1.15rem 0.75rem 1.15rem;
+  border-bottom: 1px solid rgba(255, 255, 227, 0.05);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
 
 .reader-header-top {
@@ -945,6 +968,52 @@ section {
   display: flex;
   align-items: center;
   gap: 0.45rem;
+}
+
+.reader-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--ink-secondary);
+  cursor: pointer;
+  transition: all var(--t-fast);
+  padding: 0;
+  position: relative;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* Touch hit expansion (44px target on mobile) */
+.reader-close-btn::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  left: -5px;
+  right: -5px;
+}
+
+.reader-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--border-hover);
+  color: var(--ink);
+  transform: scale(1.05);
+}
+
+.reader-close-btn:active {
+  transform: scale(0.96);
+}
+
+.reader-close-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .reader-stat {
@@ -1080,7 +1149,9 @@ section {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.28rem 0.68rem;
+  height: 34px;
+  min-height: 34px;
+  padding: 0 0.75rem;
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border);
@@ -1092,6 +1163,17 @@ section {
   transition: all var(--t-fast);
   user-select: none;
   line-height: 1;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.reader-lang-toggle::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  left: -5px;
+  right: -5px;
 }
 
 .reader-lang-toggle:hover {
@@ -1103,6 +1185,11 @@ section {
 
 .reader-lang-toggle:active {
   transform: translateY(0);
+}
+
+.reader-lang-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .reader-lang-toggle.active {
@@ -1128,22 +1215,26 @@ section {
 
 .reader-heading {
   font-family: var(--font-poetry-title);
-  font-size: 24px;
+  font-size: clamp(21px, 5.2vw, 25px);
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.22;
   color: var(--ink);
   letter-spacing: -0.01em;
+  margin: 0;
 }
 
 .reader-text {
   flex: 1;
   font-family: var(--font-poetry-body);
-  font-size: 16px;
-  line-height: 1.75;
+  font-size: 15px;
+  line-height: 1.72;
   color: var(--ink);
   font-weight: 400;
   white-space: pre-line;
-  padding: 1.25rem 1.25rem 1.25rem 1.25rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  letter-spacing: 0.01em;
+  padding: 1.15rem 1.15rem 1.75rem 1.15rem;
 }
 
 .ticket-modal-card {
@@ -1600,7 +1691,7 @@ section {
   }
 
   .reader-header-sticky {
-    padding: 1.65rem 2rem 1rem 2rem;
+    padding: 1.25rem 1.75rem 0.9rem 1.75rem;
   }
 
   .reader-cat {
@@ -1608,13 +1699,13 @@ section {
   }
 
   .reader-heading {
-    font-size: 32px;
+    font-size: 30px;
   }
 
   .reader-text {
-    font-size: 18px;
-    line-height: 1.8;
-    padding: 1.5rem 2rem 2.75rem 2rem;
+    font-size: 17px;
+    line-height: 1.76;
+    padding: 1.5rem 1.75rem 2.25rem 1.75rem;
   }
 
   .toast {
@@ -1700,16 +1791,17 @@ section {
   }
 
   .reader-header-sticky {
-    padding: 2.25rem 2.75rem 1.15rem 2.75rem;
+    padding: 1.5rem 2.25rem 1.05rem 2.25rem;
   }
 
   .reader-heading {
-    font-size: 38px;
+    font-size: 34px;
   }
 
   .reader-text {
-    font-size: 19px;
-    padding: 1.75rem 2.75rem 3.5rem 2.75rem;
+    font-size: 18px;
+    line-height: 1.76;
+    padding: 1.75rem 2.25rem 2.75rem 2.25rem;
   }
 }
 
@@ -1943,21 +2035,35 @@ section {
   flex-wrap: wrap;
 }
 
-/* Reader Modal: Bottom Author Signature (Below Divider Line) */
+/* Reader Modal: Bottom Author Signature (Below Subtle Divider Line) */
 .reader-footer-author {
   margin: 0 1.25rem 2rem 1.25rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid rgba(255, 255, 227, 0.06);
 }
 
 @media (min-width: 640px) {
   .reader-bottom-actions {
-    padding: 1rem 2.75rem 1.5rem 2.75rem;
+    padding: 1rem 2.25rem 1.5rem 2.25rem;
   }
 
   .reader-footer-author {
-    margin: 0 2.75rem 2.75rem 2.75rem;
+    margin: 0 2.25rem 2.5rem 2.25rem;
     padding-top: 1.75rem;
+  }
+}
+
+/* Accessibility: Respect user reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .modal-overlay,
+  .reader-canvas,
+  .reader-close-btn,
+  .reader-lang-toggle,
+  .reader-like-btn,
+  .like-heart-icon,
+  .heart-bubble {
+    animation: none !important;
+    transition: none !important;
   }
 }
 
