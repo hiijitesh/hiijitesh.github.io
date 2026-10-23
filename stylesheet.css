@@ -321,6 +321,22 @@ section {
   max-width: 580px;
 }
 
+/* Distinct Literary Italic Typography for Poetry Section Header */
+#poetry .section-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+#poetry .section-desc {
+  font-family: var(--font-poetry-body);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--ink-secondary);
+  line-height: 1.6;
+}
+
 /* ==========================================================================
    POETRY SECTION (MOBILE-FIRST: COMPACT CARDS)
    ========================================================================== */
@@ -638,12 +654,9 @@ section {
   transform: translateY(-1px);
 }
 
-/* ==========================================================================
-   TOUR / CITY UPDATES (BUG FIXED: 100% CONTAINED ON MOBILE)
-   ========================================================================== */
 .city-updates {
   margin-top: 1.5rem;
-  padding: 1.25rem;
+  padding: 1.15rem 1.25rem;
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -651,6 +664,8 @@ section {
   flex-direction: column;
   align-items: stretch;
   gap: 1.15rem;
+  max-width: 480px;
+  width: 100%;
 }
 
 .city-updates h4 {
@@ -1671,13 +1686,19 @@ section {
     padding: 0.4rem 1rem;
   }
 
-  /* Tour Newsletter side-by-side */
+  /* Tour Newsletter */
   .city-updates {
-    padding: 1.6rem 1.85rem;
+    padding: 1.15rem 1.35rem;
     flex-direction: row;
     align-items: center;
+    gap: 1rem;
+    max-width: 480px;
+    width: 100%;
+  }
+
+  .city-updates:has(> div:not([style*="display: none"])) {
+    max-width: 100%;
     justify-content: space-between;
-    gap: 1.25rem;
   }
 
   .city-updates > div {
@@ -1687,7 +1708,8 @@ section {
   .city-form {
     flex-direction: row;
     align-items: center;
-    max-width: 360px;
+    max-width: 100%;
+    width: 100%;
     flex-grow: 1;
   }
 
@@ -1810,7 +1832,13 @@ section {
   }
 
   .city-updates {
-    padding: 2rem 2.25rem;
+    padding: 1.25rem 1.45rem;
+    max-width: 500px;
+  }
+
+  .city-updates:has(> div:not([style*="display: none"])) {
+    max-width: 100%;
+    padding: 1.85rem 2.25rem;
   }
 
   .city-updates h4 {
@@ -1818,7 +1846,7 @@ section {
   }
 
   .city-form {
-    max-width: 380px;
+    max-width: 100%;
   }
 
   .organizer-strip {

@@ -26,15 +26,17 @@
  * Tab: "Stats"        → Auto-managed. Columns: pieceId | Views | Likes
  * Tab: "Subscribers"  → Auto-managed. Columns: Date | Email | IP | Location | Local Time | Source
  * Tab: "Poetry"       → YOU WRITE HERE. Columns:
- *    A: id             (unique slug, e.g. "mere-soch-pare-bhi")
- *    B: category       (Poetry / Nazm / Shayari)
- *    C: title          (Hinglish title)
- *    D: title_hi       (Hindi title in Devanagari)
- *    E: date           (display date, e.g. "Oct 2026")
- *    F: excerpt        (1–2 line preview in Hinglish)
- *    G: content        (full poem body — Hinglish. Use Alt+Enter for newlines inside a cell)
- *    H: content_hi     (full poem body — Hindi Devanagari)
+ *    A: content        (full poem body — Hinglish. Use Alt+Enter for newlines inside a cell)
+ *    B: content_hi     (full poem body — Hindi Devanagari)
+ *    C: id             (unique slug, e.g. "mere-soch-pare-bhi")
+ *    D: category       (Poetry / Nazm / Shayari)
+ *    E: title          (Hinglish title)
+ *    F: title_hi       (Hindi title in Devanagari)
+ *    G: date           (display date, e.g. "Oct 2026")
+ *    H: excerpt        (1–2 line preview in Hinglish)
  *    I: status         (Published / Draft — only "Published" poems are shown on the website)
+ *    J: views          (views count)
+ *    K: likes          (likes count)
  *
  * ==============================================================================
  */
@@ -289,9 +291,11 @@ function seedDefaultPoetry() {
   let poetrySheet = ss.getSheetByName(POETRY_SHEET_NAME);
 
   // Auto-create "Poetry" sheet with headers if missing
+  // User column structure: content | content_hi | id | category | title | title_hi | date | excerpt | status | views | likes
+  const headers = ["content", "content_hi", "id", "category", "title", "title_hi", "date", "excerpt", "status", "views", "likes"];
+
   if (!poetrySheet) {
     poetrySheet = ss.insertSheet(POETRY_SHEET_NAME);
-    const headers = ["id", "category", "title", "title_hi", "date", "excerpt", "content", "content_hi", "status"];
     poetrySheet.appendRow(headers);
 
     const headerRange = poetrySheet.getRange(1, 1, 1, headers.length);
@@ -300,22 +304,30 @@ function seedDefaultPoetry() {
     headerRange.setFontColor("#f8fafc");
     headerRange.setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
     poetrySheet.setFrozenRows(1);
-    poetrySheet.setColumnWidth(1, 180);  // id
-    poetrySheet.setColumnWidth(2, 100);  // category
-    poetrySheet.setColumnWidth(3, 250);  // title
-    poetrySheet.setColumnWidth(4, 250);  // title_hi
-    poetrySheet.setColumnWidth(5, 100);  // date
-    poetrySheet.setColumnWidth(6, 350);  // excerpt
-    poetrySheet.setColumnWidth(7, 500);  // content
-    poetrySheet.setColumnWidth(8, 500);  // content_hi
+    poetrySheet.setColumnWidth(1, 450);  // content
+    poetrySheet.setColumnWidth(2, 450);  // content_hi
+    poetrySheet.setColumnWidth(3, 180);  // id
+    poetrySheet.setColumnWidth(4, 100);  // category
+    poetrySheet.setColumnWidth(5, 250);  // title
+    poetrySheet.setColumnWidth(6, 250);  // title_hi
+    poetrySheet.setColumnWidth(7, 100);  // date
+    poetrySheet.setColumnWidth(8, 300);  // excerpt
     poetrySheet.setColumnWidth(9, 100);  // status
+    poetrySheet.setColumnWidth(10, 80);  // views
+    poetrySheet.setColumnWidth(11, 80);  // likes
   }
 
-  // Find all existing poem IDs in Column A
+  // Read existing headers to find the ID column dynamically
   const existingData = poetrySheet.getDataRange().getValues();
+  const headerRow = existingData.length > 0 
+    ? existingData[0].map(function(h) { return String(h || '').trim().toLowerCase(); })
+    : [];
+  let idColIndex = headerRow.indexOf('id');
+  if (idColIndex === -1) idColIndex = 2; // Default to Col C (index 2) in new layout
+
   const existingIds = {};
   for (let i = 1; i < existingData.length; i++) {
-    const existingId = String(existingData[i][0] || '').trim().toLowerCase();
+    const existingId = String(existingData[i][idColIndex] || '').trim().toLowerCase();
     if (existingId) {
       existingIds[existingId] = true;
     }
@@ -326,15 +338,17 @@ function seedDefaultPoetry() {
     const p = DEFAULT_POETRY[j];
     if (!existingIds[p.id.toLowerCase()]) {
       poetrySheet.appendRow([
+        p.content,
+        p.content_hi,
         p.id,
         p.category,
         p.title,
         p.title_hi,
         p.date,
         p.excerpt,
-        p.content,
-        p.content_hi,
-        p.status || 'Published'
+        p.status || 'Published',
+        p.views || 0,
+        p.likes || 0
       ]);
       existingIds[p.id.toLowerCase()] = true;
       addedCount++;
@@ -353,6 +367,7 @@ function seedDefaultPoetry() {
 
 // =============================================================================
 // POETRY CMS: Read published poems from the "Poetry" sheet
+// Dynamically maps columns by header name (supports new and legacy orders)
 // =============================================================================
 function handleGetPoetry() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -364,51 +379,96 @@ function handleGetPoetry() {
     poetrySheet = ss.getSheetByName(POETRY_SHEET_NAME);
   }
 
-  const lastRow = poetrySheet.getLastRow();
-  // If only header row exists, auto-seed defaults
-  if (lastRow < 2) {
-    seedDefaultPoetry();
-  }
-
-  const updatedLastRow = poetrySheet.getLastRow();
-  if (updatedLastRow < 2) {
+  const allData = poetrySheet.getDataRange().getValues();
+  if (allData.length < 2) {
     return createJsonResponse({
       status: 'success',
       poetry: [],
+      total: 0,
       message: 'Poetry sheet is empty. Add some poems!'
     });
   }
 
-  const data = poetrySheet.getRange(2, 1, updatedLastRow - 1, 9).getValues();
+  // Row 1 contains headers
+  const headers = allData[0].map(function(h) { return String(h || '').trim().toLowerCase(); });
+
+  function findCol(name, altNames, fallbackIdx) {
+    const idx = headers.indexOf(name.toLowerCase());
+    if (idx !== -1) return idx;
+    if (Array.isArray(altNames)) {
+      for (let k = 0; k < altNames.length; k++) {
+        const altIdx = headers.indexOf(altNames[k].toLowerCase());
+        if (altIdx !== -1) return altIdx;
+      }
+    }
+    return fallbackIdx;
+  }
+
+  // Column positions:
+  // User's layout: content(0) | content_hi(1) | id(2) | category(3) | title(4) | title_hi(5) | date(6) | excerpt(7) | status(8) | views(9) | likes(10)
+  const colContent   = findCol('content', ['poem', 'body', 'english_content'], 0);
+  const colContentHi = findCol('content_hi', ['hindi_content', 'content_hindi'], 1);
+  const colId        = findCol('id', ['slug', 'poem_id'], 2);
+  const colCategory  = findCol('category', ['type', 'genre'], 3);
+  const colTitle     = findCol('title', ['name', 'poem_title'], 4);
+  const colTitleHi   = findCol('title_hi', ['hindi_title', 'title_hindi'], 5);
+  const colDate      = findCol('date', ['published_date', 'month_year'], 6);
+  const colExcerpt   = findCol('excerpt', ['summary', 'preview'], 7);
+  const colStatus    = findCol('status', ['state'], 8);
+  const colViews     = findCol('views', ['view_count'], 9);
+  const colLikes     = findCol('likes', ['like_count'], 10);
+
+  // Check Stats sheet for live views/likes counters
+  let statsMap = {};
+  const statsSheet = ss.getSheetByName(STATS_SHEET_NAME);
+  if (statsSheet) {
+    statsMap = getStatsMap(statsSheet);
+  }
+
   const poems = [];
 
-  for (let i = 0; i < data.length; i++) {
-    const row = data[i];
-    let id = String(row[0] || '').trim();
-    const title = String(row[2] || '').trim();
-    const status = String(row[8] || '').trim().toLowerCase();
+  for (let i = 1; i < allData.length; i++) {
+    const row = allData[i];
 
-    // Auto-generate ID slug from title if column A was left blank
+    let content = String(row[colContent] || '').trim();
+    let contentHi = String(row[colContentHi] || '').trim();
+    let id = String(row[colId] || '').trim();
+    let category = String(row[colCategory] || 'Poetry').trim();
+    let title = String(row[colTitle] || '').trim();
+    let titleHi = String(row[colTitleHi] || '').trim();
+    let date = String(row[colDate] || '').trim();
+    let excerpt = String(row[colExcerpt] || '').trim();
+    let status = String(row[colStatus] || '').trim().toLowerCase();
+
+    // Auto-generate ID slug from title if id column was empty
     if (!id && title) {
       id = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     }
 
     // Skip empty rows and drafts
-    if (!id && !title) continue;
+    if (!id && !title && !content) continue;
     if (status !== 'published' && status !== '') continue;
     if (status === 'draft') continue;
 
+    let views = (colViews !== -1 && !isNaN(Number(row[colViews]))) ? Number(row[colViews]) : 0;
+    let likes = (colLikes !== -1 && !isNaN(Number(row[colLikes]))) ? Number(row[colLikes]) : 0;
+
+    if (statsMap[id]) {
+      views = Math.max(views, statsMap[id].views || 0);
+      likes = Math.max(likes, statsMap[id].likes || 0);
+    }
+
     poems.push({
       id: id,
-      category: String(row[1] || 'Poetry').trim(),
-      title: title,
-      title_hi: String(row[3] || '').trim(),
-      date: String(row[4] || '').trim(),
-      excerpt: String(row[5] || '').trim(),
-      content: String(row[6] || '').trim(),
-      content_hi: String(row[7] || '').trim(),
-      views: 0,
-      likes: 0
+      category: category || 'Poetry',
+      title: title || id,
+      title_hi: titleHi,
+      date: date,
+      excerpt: excerpt,
+      content: content,
+      content_hi: contentHi,
+      views: views,
+      likes: likes
     });
   }
 

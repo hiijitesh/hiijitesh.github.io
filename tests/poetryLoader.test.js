@@ -166,6 +166,39 @@ describe('Poetry CMS & Loader Unit Test Suite', () => {
       assert.ok(savedVal.includes('sheet-poem-1'));
     });
 
+    it('should auto-detect and unshift poems if server sent shifted column schema', () => {
+      loader.init();
+      const rawShifted = [
+        {
+          id: "Ek samay tha jahan,\nSab kuch naa paane ka bhay tha\n\nEk aaj waqt hain...",
+          category: "एक समय था जहाँ,\nसब कुछ ना पाने का भय था...",
+          title: "mere-soch-pare-bhi",
+          title_hi: "Poetry",
+          date: "Mere Soch Pare Bhi, Kuch Hona Hain",
+          excerpt: "मेरे सोच परे भी, कुछ होना हैं",
+          content: "Thu Aug 01 2024 00:00:00 GMT+0530 (India Standard Time)",
+          content_hi: "Ek samay tha jahan sab kuch naa paane ka bhay tha...",
+          views: 120,
+          likes: 45
+        }
+      ];
+
+      loader._mergeAndUpdate(rawShifted);
+      const result = loader.getPoems();
+
+      assert.equal(result.length, 1);
+      assert.equal(result[0].id, 'mere-soch-pare-bhi');
+      assert.equal(result[0].category, 'Poetry');
+      assert.equal(result[0].title, 'Mere Soch Pare Bhi, Kuch Hona Hain');
+      assert.equal(result[0].title_hi, 'मेरे सोच परे भी, कुछ होना हैं');
+      assert.equal(result[0].date, 'Aug 2024');
+      assert.equal(result[0].excerpt, 'Ek samay tha jahan sab kuch naa paane ka bhay tha...');
+      assert.ok(result[0].content.startsWith('Ek samay tha jahan'));
+      assert.ok(result[0].content_hi.startsWith('एक समय था जहाँ'));
+      assert.equal(result[0].views, 120);
+      assert.equal(result[0].likes, 45);
+    });
+
     it('should notify registered listeners when poems are fetched', () => {
       loader.init();
       let notified = false;

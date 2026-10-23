@@ -35,15 +35,17 @@ On the first `get_poetry` API call, the script **auto-creates** a `Poetry` tab w
 
 | Column | Header | What to Write |
 |--------|--------|---------------|
-| A | `id` | Unique slug, e.g. `mere-soch-pare-bhi` (no spaces, lowercase) |
-| B | `category` | `Poetry`, `Nazm`, or `Shayari` |
-| C | `title` | Hinglish title, e.g. `Mere Soch Pare Bhi` |
-| D | `title_hi` | Hindi title, e.g. `मेरे सोच परे भी` |
-| E | `date` | Display date, e.g. `Oct 2026` |
-| F | `excerpt` | 1–2 line preview in Hinglish |
-| G | `content` | Full poem body — Hinglish. Use **Alt+Enter** for newlines |
-| H | `content_hi` | Full poem body — Hindi Devanagari |
+| A | `content` | Full poem body — Hinglish. Use **Alt+Enter** for newlines |
+| B | `content_hi` | Full poem body — Hindi Devanagari |
+| C | `id` | Unique slug, e.g. `mere-soch-pare-bhi` (no spaces, lowercase) |
+| D | `category` | `Poetry`, `Nazm`, or `Shayari` |
+| E | `title` | Hinglish title, e.g. `Mere Soch Pare Bhi` |
+| F | `title_hi` | Hindi title in Devanagari, e.g. `मेरे सोच परे भी` |
+| G | `date` | Display date, e.g. `Oct 2026` or date string |
+| H | `excerpt` | 1–2 line preview in Hinglish |
 | I | `status` | **Published** or **Draft** |
+| J | `views` | View count (auto-updated from live interactions) |
+| K | `likes` | Like count (auto-updated from live interactions) |
 
 ### 3. Writing a New Poem
 

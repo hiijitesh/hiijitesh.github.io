@@ -87,6 +87,72 @@ function cleanPoemBody(content, title) {
   return text;
 }
 
+function normalizePoemItem(p, idx) {
+  if (!p || typeof p !== 'object') return null;
+
+  let id = String(p.id || '').trim();
+  let category = String(p.category || 'Poetry').trim();
+  let title = String(p.title || '').trim();
+  let titleHi = String(p.title_hi || '').trim();
+  let date = String(p.date || '').trim();
+  let excerpt = String(p.excerpt || '').trim();
+  let content = String(p.content || '').trim();
+  let contentHi = String(p.content_hi || '').trim();
+  let views = Number(p.views) || 0;
+  let likes = Number(p.likes) || 0;
+
+  // Detect if raw server object has shifted columns
+  const isShifted = (id.includes('\n') || id.length > 70) && 
+                    (title && !title.includes('\n') && title.length <= 60);
+
+  if (isShifted) {
+    const shiftedContent = id;
+    const shiftedContentHi = category;
+    const shiftedId = title;
+    const shiftedCategory = titleHi;
+    const shiftedTitle = date;
+    const shiftedTitleHi = excerpt;
+    const shiftedDate = content;
+    const shiftedExcerpt = contentHi;
+
+    id = shiftedId;
+    category = shiftedCategory || 'Poetry';
+    title = shiftedTitle;
+    titleHi = shiftedTitleHi;
+    date = shiftedDate;
+    excerpt = shiftedExcerpt;
+    content = shiftedContent;
+    contentHi = shiftedContentHi;
+  }
+
+  if (!id && title) {
+    id = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
+  if (!id) {
+    id = `poem-${idx + 1}`;
+  }
+
+  if (!excerpt && content) {
+    const cleanLines = content.split('\n')
+      .map(l => l.trim())
+      .filter(l => l.length > 0 && l.toLowerCase() !== title.toLowerCase());
+    excerpt = cleanLines.slice(0, 2).join(' ') + '...';
+  }
+
+  return {
+    id: id,
+    category: category,
+    title: title || id,
+    title_hi: titleHi,
+    date: formatPoetryDate(date),
+    excerpt: excerpt,
+    content: content,
+    content_hi: contentHi,
+    views: views,
+    likes: likes
+  };
+}
+
 function generatePoemHtml(piece) {
   const canonicalUrl = `${BASE_URL}/poetry/${piece.id}/`;
   const cleanBody = cleanPoemBody(piece.content, piece.title);
@@ -342,16 +408,19 @@ async function main() {
   const livePoems = await fetchLivePoetry();
   if (livePoems.length > 0) {
     writings = livePoems;
-
-    // Update data/writings.json cache with authoritative sheet content
-    fs.writeFileSync(WRITINGS_PATH, JSON.stringify(writings, null, 2), 'utf-8');
-    console.log(`  ✓ Synced ${livePoems.length} live poems from Google Sheet into data/writings.json`);
   }
+
+  // Normalize writings (handles shifted layout or new dynamic headers seamlessly)
+  writings = writings.map((p, idx) => normalizePoemItem(p, idx)).filter(Boolean);
 
   if (!Array.isArray(writings) || writings.length === 0) {
     console.error('Error: No writings found to build');
     process.exit(1);
   }
+
+  // Update data/writings.json cache with authoritative sheet content
+  fs.writeFileSync(WRITINGS_PATH, JSON.stringify(writings, null, 2), 'utf-8');
+  console.log(`  ✓ Synced ${writings.length} live poems from Google Sheet into data/writings.json`);
 
   // Ensure poetry directory exists
   if (!fs.existsSync(POETRY_DIR)) {
@@ -359,15 +428,26 @@ async function main() {
   }
 
   // Generate each poem's page
-  writings.forEach(piece => {
-    const poemDir = path.join(POETRY_DIR, piece.id);
+  writings.forEach((piece, idx) => {
+    let slug = String(piece.id || '').trim();
+    if (slug.includes('\n') || slug.length > 60) {
+      if (piece.title && !piece.title.includes('\n') && piece.title.length <= 60) {
+        slug = piece.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      } else {
+        slug = slug.split('\n')[0].slice(0, 40).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      }
+    }
+    if (!slug) slug = `poem-${idx + 1}`;
+    piece.id = slug;
+
+    const poemDir = path.join(POETRY_DIR, slug);
     if (!fs.existsSync(poemDir)) {
       fs.mkdirSync(poemDir, { recursive: true });
     }
     const htmlContent = generatePoemHtml(piece);
     const filePath = path.join(poemDir, 'index.html');
     fs.writeFileSync(filePath, htmlContent, 'utf-8');
-    console.log(`  ✓ Generated /poetry/${piece.id}/index.html`);
+    console.log(`  ✓ Generated /poetry/${slug}/index.html`);
   });
 
   // Generate sitemap.xml

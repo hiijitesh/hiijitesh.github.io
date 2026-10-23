@@ -107,6 +107,82 @@ window.App = window.App || {};
   // Export helper globally so PoetryCard can also use it
   App.formatPoetryDate = formatPoetryDate;
 
+  /**
+   * Normalizes a raw poem item from the server or cache.
+   * Auto-detects if the item came from an Apps Script reading shifted columns:
+   * Col 0: content | Col 1: content_hi | Col 2: id | Col 3: category | Col 4: title | Col 5: title_hi | Col 6: date | Col 7: excerpt | Col 8: status | Col 9: views | Col 10: likes
+   */
+  function normalizePoemItem(p, idx) {
+    if (!p || typeof p !== 'object') return null;
+
+    let id = String(p.id || '').trim();
+    let category = String(p.category || 'Poetry').trim();
+    let title = String(p.title || '').trim();
+    let titleHi = String(p.title_hi || '').trim();
+    let date = String(p.date || '').trim();
+    let excerpt = String(p.excerpt || '').trim();
+    let content = String(p.content || '').trim();
+    let contentHi = String(p.content_hi || '').trim();
+    let views = Number(p.views) || 0;
+    let likes = Number(p.likes) || 0;
+
+    // Detect if raw server object has shifted columns
+    // (e.g. p.id is multiline text and p.title is a clean slug like "mere-soch-pare-bhi")
+    const isShifted = (id.includes('\n') || id.length > 70) && 
+                      (title && !title.includes('\n') && title.length <= 60);
+
+    if (isShifted) {
+      // Unshift according to user's layout:
+      // content(0) | content_hi(1) | id(2) | category(3) | title(4) | title_hi(5) | date(6) | excerpt(7)
+      const shiftedContent = id;
+      const shiftedContentHi = category;
+      const shiftedId = title;
+      const shiftedCategory = titleHi;
+      const shiftedTitle = date;
+      const shiftedTitleHi = excerpt;
+      const shiftedDate = content;
+      const shiftedExcerpt = contentHi;
+
+      id = shiftedId;
+      category = shiftedCategory || 'Poetry';
+      title = shiftedTitle;
+      titleHi = shiftedTitleHi;
+      date = shiftedDate;
+      excerpt = shiftedExcerpt;
+      content = shiftedContent;
+      contentHi = shiftedContentHi;
+    }
+
+    // Auto-generate slug ID if missing
+    if (!id && title) {
+      id = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+    if (!id) {
+      id = `poem-${idx + 1}`;
+    }
+
+    // Fallback excerpt if empty
+    if (!excerpt && content) {
+      const cleanLines = content.split('\n')
+        .map(l => l.trim())
+        .filter(l => l.length > 0 && l.toLowerCase() !== title.toLowerCase());
+      excerpt = cleanLines.slice(0, 2).join(' ') + '...';
+    }
+
+    return {
+      id: id,
+      category: category,
+      title: title || id,
+      title_hi: titleHi,
+      date: formatPoetryDate(date),
+      excerpt: excerpt,
+      content: content,
+      content_hi: contentHi,
+      views: views,
+      likes: likes
+    };
+  }
+
   class PoetryLoaderService {
     constructor() {
       this.apiEndpoint = null;
@@ -133,10 +209,7 @@ window.App = window.App || {};
             if (cached) {
               const parsed = JSON.parse(cached);
               if (Array.isArray(parsed) && parsed.length > 0) {
-                this.poems = parsed.map(p => ({
-                  ...p,
-                  date: formatPoetryDate(p.date)
-                }));
+                this.poems = parsed.map((p, idx) => normalizePoemItem(p, idx)).filter(Boolean);
               }
             }
           }
@@ -280,25 +353,8 @@ window.App = window.App || {};
     _mergeAndUpdate(serverPoems) {
       if (Array.isArray(serverPoems) && serverPoems.length > 0) {
         const formattedServerPoems = serverPoems
-          .filter(p => p && (p.id || p.title))
-          .map((p, idx) => {
-            let id = String(p.id || '').trim();
-            const title = String(p.title || '').trim();
-
-            if (!id && title) {
-              id = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-            }
-            if (!id) {
-              id = `poem-${Date.now()}-${idx}`;
-            }
-
-            return {
-              ...p,
-              id: id,
-              title: title,
-              date: formatPoetryDate(p.date)
-            };
-          });
+          .map((p, idx) => normalizePoemItem(p, idx))
+          .filter(Boolean);
 
         // Google Sheet is the authoritative source of truth.
         // No defaults are appended, giving complete control over content correction.
@@ -319,6 +375,7 @@ window.App = window.App || {};
     }
   }
 
+  App.normalizePoemItem = normalizePoemItem;
   App.PoetryLoader = new PoetryLoaderService();
   window.PoetryLoader = App.PoetryLoader;
 })(window.App);
