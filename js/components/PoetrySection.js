@@ -30,14 +30,11 @@ window.App = window.App || {};
         App.Engagement.fetchServerStats();
       }
 
-      // Render immediate default writings so page is never empty
-      this.render();
-
       // Initialize PoetryLoader and fetch live poems from Google Sheets
       if (App.PoetryLoader) {
         App.PoetryLoader.init();
 
-        // Use defaults from loader immediately
+        // Use cached or loader poems immediately
         this.writings = App.PoetryLoader.getPoems();
         this.render();
 
@@ -49,6 +46,8 @@ window.App = window.App || {};
 
         // Fire the async fetch from Google Sheets
         await App.PoetryLoader.fetchFromSheet();
+      } else {
+        this.render();
       }
     }
 

@@ -125,7 +125,25 @@ window.App = window.App || {};
     init(customEndpoint) {
       this.apiEndpoint = customEndpoint || this.apiEndpoint || window.ENGAGEMENT_API_URL || null;
 
-      // Only seed with default writings if not already fetched or loaded
+      // 1. Try reading from localStorage cache first so returning visitors see latest sheet poems instantly
+      if (!this.hasFetched && this.poems.length === 0) {
+        try {
+          if (typeof localStorage !== 'undefined') {
+            const cached = localStorage.getItem('jb_poetry_cache');
+            if (cached) {
+              const parsed = JSON.parse(cached);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                this.poems = parsed.map(p => ({
+                  ...p,
+                  date: formatPoetryDate(p.date)
+                }));
+              }
+            }
+          }
+        } catch (e) {}
+      }
+
+      // 2. Only seed with default writings as offline emergency fallback if no cache and no poems yet
       if (!this.hasFetched && this.poems.length === 0) {
         if (App.defaultWritings && Array.isArray(App.defaultWritings)) {
           this.poems = App.defaultWritings.map(p => ({
@@ -261,14 +279,16 @@ window.App = window.App || {};
     }
 
     /**
-     * Merge server poems with defaults and notify listeners.
+     * Update poems strictly from Google Sheet and notify listeners.
      * Formats all dates to "Oct 2026" (Mon YYYY).
-     * Server poems override defaults by matching ID.
-     * Generates fallback slug IDs if omitted.
+     * Google Sheet is the authoritative single source of truth:
+     * Does NOT merge or re-inject hardcoded default writings.
+     * Content corrections, revisions, edits, drafts, or deletions made in
+     * the Google Sheet are directly reflected on the website.
      * @param {Array} serverPoems
      */
     _mergeAndUpdate(serverPoems) {
-      if (serverPoems.length > 0) {
+      if (Array.isArray(serverPoems) && serverPoems.length > 0) {
         const formattedServerPoems = serverPoems
           .filter(p => p && (p.id || p.title))
           .map((p, idx) => {
@@ -290,28 +310,18 @@ window.App = window.App || {};
             };
           });
 
-        const serverMap = new Map();
-        formattedServerPoems.forEach(p => {
-          serverMap.set(p.id.toLowerCase(), p);
-        });
+        // Google Sheet is the authoritative source of truth.
+        // No defaults are appended, giving complete control over content correction.
+        this.poems = formattedServerPoems;
+        console.info(`[PoetryLoader] Loaded ${formattedServerPoems.length} poems strictly from Google Sheet.`);
 
-        // Server poems first, then any defaults not on the server
-        const defaults = (App.defaultWritings || []).map(p => ({
-          ...p,
-          date: formatPoetryDate(p.date)
-        }));
-        const merged = [...formattedServerPoems];
-
-        defaults.forEach(defPoem => {
-          if (defPoem.id && !serverMap.has(defPoem.id.toLowerCase())) {
-            merged.push(defPoem);
+        try {
+          if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('jb_poetry_cache', JSON.stringify(formattedServerPoems));
           }
-        });
-
-        this.poems = merged;
-        console.info(`[PoetryLoader] Loaded ${formattedServerPoems.length} poems from sheet, ${merged.length} total after merge.`);
+        } catch (e) {}
       } else {
-        console.info('[PoetryLoader] Sheet returned 0 poems, keeping defaults.');
+        console.info('[PoetryLoader] Sheet returned 0 poems, keeping existing poems.');
       }
 
       this.hasFetched = true;

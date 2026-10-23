@@ -56,22 +56,33 @@ On the first `get_poetry` API call, the script **auto-creates** a `Poetry` tab w
 > [!TIP]
 > For multi-line poems in a single cell, press **Alt+Enter** (Windows) or **Ctrl+Enter** (Mac) to add a line break inside the cell.
 
-### 4. How the Fallback Works
+### 4. Single Source of Truth & Content Correction
 
-- [`defaultWritings.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/js/data/defaultWritings.js) has your 4 original poems hardcoded
-- [`poetryLoader.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/js/utils/poetryLoader.js) fetches from Google Sheets, then **merges**:
-  - Sheet poems **override** defaults (matched by `id`)
-  - Any defaults not in the sheet are **appended** (safety net)
-- If the user is offline or on `file://` protocol → defaults render instantly
+- **Google Sheets is 100% authoritative**: The website displays exclusively what is in your Google Sheet.
+- **No stale defaults re-injected**: When the sheet is fetched, poems come strictly from the sheet. If you edit words, fix typos, change titles, or draft/remove pieces in Google Sheets, your changes are immediately live.
+- **Instant load with localStorage cache**: The latest sheet data is cached in `localStorage` so repeat visits load instantly without waiting for the network.
+- [`defaultWritings.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/js/data/defaultWritings.js) is used **only** as an emergency offline fallback on first visit or when offline on `file://`.
+
+## How to Add Default Poems to Your Google Sheet
+
+### Option A: 1-Click via Apps Script (Recommended)
+1. Open Google Sheets → **Extensions > Apps Script**
+2. Paste the updated [`scripts/google-apps-script.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/scripts/google-apps-script.js) into `Code.gs`
+3. In the function dropdown at the top, select **`seedDefaultPoetry`** and click **Run**
+4. Deploy → Manage deployments → Edit → New version → Deploy
+All default poems will be automatically added into your `Poetry` tab with full Hindi & Hinglish text, categories, dates, and Published status!
+
+### Option B: One-Click via Browser Link
+After redeploying your Apps Script, visit:
+`<YOUR_APPS_SCRIPT_URL>?action=seed_defaults`
+This will automatically append all missing default poems into your sheet.
 
 ## Files Changed
 
 | File | What Changed |
 |------|-------------|
-| [`scripts/google-apps-script.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/scripts/google-apps-script.js) | Added `get_poetry` action + auto-creates Poetry tab |
-| [`js/utils/poetryLoader.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/js/utils/poetryLoader.js) | **New** — fetches poems from sheet, merges with defaults |
-| [`js/components/PoetrySection.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/js/components/PoetrySection.js) | Uses PoetryLoader instead of local JSON fetch |
-| [`index.html`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/index.html) | Added `poetryLoader.js` script tag |
-
-> [!NOTE]
-> Your existing `defaultWritings.js` is **kept as-is** for offline fallback. You can eventually remove poems from it once they're all in the Google Sheet — the sheet becomes your single source of truth.
+| [`scripts/google-apps-script.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/scripts/google-apps-script.js) | Added `seedDefaultPoetry`, `action=seed_defaults`, and auto-seeder |
+| [`js/utils/poetryLoader.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/js/utils/poetryLoader.js) | Google Sheet is authoritative single source of truth + `localStorage` cache |
+| [`js/components/PoetrySection.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/js/components/PoetrySection.js) | Renders cached sheet data first without flashing defaults |
+| [`js/data/defaultWritings.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/js/data/defaultWritings.js) | Synced offline fallback library |
+| [`scripts/build-seo.js`](file:///Users/hiijitesh/Documents/hiijitesh.github.io/scripts/build-seo.js) | Live Google Sheet is source of truth for SEO builds |

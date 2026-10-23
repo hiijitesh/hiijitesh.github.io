@@ -1,10 +1,75 @@
 /**
  * Default Writings Data
- * Fallback poetry data always available offline, locally, and on file:// protocol.
+ * Fallback poetry data available when offline or on file:// protocol.
+ * When online, Google Sheets is the authoritative single source of truth.
  */
 window.App = window.App || {};
 
 window.App.defaultWritings = [
+  {
+    id: "mer-andar-ki-awaaz",
+    category: "Poetry",
+    title: "Mere Andar Ki Awaaz",
+    title_hi: "मेरे अंदर की आवाज़",
+    date: "Oct 2026",
+    views: 0,
+    likes: 0,
+    excerpt: "mere andar ki awaj kuch kahati hain, main sun raha hu sab, ye mujh se kuch puchhati hain...",
+    content: `mere andar ki awaj kuch kahati hain
+main sun raha hu sab,
+ye mujh se kuch puchhati hain
+
+ja raha hun kaha main, 
+ye mujhko tatol’ti hain
+
+kaha galat kaha sahi
+ye bina dare bolti  hain
+
+main kar saka na, kar paya kya
+uss soch me dhakelti hain
+
+agr bata doon yuhi taal matol ke
+fir ye mujhko koshati hain
+
+chupa chap main rahu toh
+kuch toh mere se bolti hain`,
+    content_hi: `मेरे अंदर की आवाज़ कुछ कहती है,
+मैं सुन रहा हूँ सब, ये मुझसे कुछ पूछती हैं।
+
+जा रहा हूँ कहाँ मैं, ये मुझको टटोलती हैं।
+कहाँ गलत, कहाँ सही, ये बिना डरे बोलती हैं।
+
+मैं कर सका ना, कर पाया क्या, उस सोच में धकेलती हैं।
+अगर बता दूँ यूँ ही टाल-मटोल के, फिर ये मुझको कोसती हैं।
+
+चुपचाप मैं रहूँ तो, कुछ तो मुझसे बोलती हैं।`
+  },
+  {
+    id: "lahare",
+    category: "Poetry",
+    title: "Lahare",
+    title_hi: "लहरें",
+    date: "Oct 2026",
+    views: 0,
+    likes: 0,
+    excerpt: "ye jo lahare uthi main mere under tak, jaa fekegi mujhe samandar tak...",
+    content: `ye jo lahare uthi main mere under tak
+jaa fekegi mujhe samandar tak
+
+bheed me v ek tufaan umarati hain mere under
+sochata hu ki kya sochu ki sochana band krdu
+
+par ye mahaj soch nahi, dil ki laihar hain
+tu khud ko na tarash raha, baitha tu udaas rahaa`,
+    content_hi: `ये जो लहरें उठी हैं मेरे अंदर तक,
+जा फेंकेंगी मुझे समंदर तक।
+
+भीड़ में भी एक तूफान उमड़ती हैं मेरे अंदर,
+सोचता हूँ कि क्या सोचूँ कि सोचना बंद कर दूँ।
+
+पर ये महज सोच नहीं, दिल की लहर हैं,
+तू खुद को ना तराश रहा, बैठा तू उदास रहा।`
+  },
   {
     id: "mere-soch-pare-bhi",
     category: "Poetry",
@@ -60,7 +125,7 @@ Mere soch pare bhi, kuch hona hain.`,
     category: "Nazm",
     title: "Kuch Khayaal Aise Hain",
     title_hi: "कुछ ख़्याल ऐसे हैं",
-    date: "October 2026",
+    date: "Oct 2026",
     views: 2410,
     likes: 195,
     excerpt: "Kuch khayal aise hain jo meet nahi patein, kuch shaam aisi hain jo dhal nahi patein. Log toh charo taraf hain lekin fir sab me hum ghool meel nahi patein...",
@@ -78,16 +143,16 @@ Kuch shaam aisi hain jo dhal nahi patein
 
 Kabhi aarzoo hoti hain apno ki,
 Fir lagta sab thik ho jayegaa
-Par ye toh waqat he batayega,
-Lagta hain ye zindgi yuhi,
+Par ye toh waqat he batayega, 
+Lagta hain ye zindgi yuhi, 
 Tanha kat jayega
 
-Sapne toh hazaar hain,
-Bahut he besoomar hain
-Sapno ko pana hain ya apno ko,
+Sapne toh hazaar hain, 
+Bahut he besoomar hain 
+Sapno ko pana hain ya apno ko, 
 Ye सोच ke dil av bhi bekaraar hain
 
-Anshu toh dil me aatein hain,
+Anshu toh dil me aatein hain, 
 Ankho ki aukaat kya hain
 Sochata hu ro lu jee bhar ke,
 Par itna v ye aashaan kahan hain
@@ -130,7 +195,7 @@ Kuch shaam aisi hain jo dhal nahi patein`,
     category: "Shayari",
     title: "Kahani Me Kuch Khaas Nahi",
     title_hi: "कहानी में कुछ ख़ास नहीं",
-    date: "October 2026",
+    date: "Oct 2026",
     views: 1150,
     likes: 84,
     excerpt: "kahani me ab kuch khaas nahi, ab woh pahale wali baat nahi. phone pe hoti baat sahi, par hoti koi ab mulakaat nahi...",
@@ -158,16 +223,16 @@ kahani me ab kuch khaas nahi`,
     category: "Nazm",
     title: "Tum Woh Ehsaas Ho",
     title_hi: "तुम वो एहसास हो",
-    date: "October 2026",
+    date: "Oct 2026",
     views: 3280,
     likes: 267,
     excerpt: "Tum woh ehsaas ho jo pal pal mere saath ho. Kabhi sochta hu ek din kaise katega tum bin, magar sach toh ye hain ki ek pal bhi sadiyo sa lagega...",
-    content: `Tum woh ehsaas ho
+    content: `Tum woh ehsaas ho 
 jo pal pal mere saath ho
 
-kabhi sochta hu ek din
-kaise katega tum bin,
-magar sach toh ye hain ki
+kabhi sochta hu ek din 
+kaise katega tum bin, 
+magar sach toh ye hain ki 
 ek pal bhi sadiyo sa lagea
 7 janam sa ek ek din
 
@@ -175,8 +240,8 @@ tum woh aadat ban gayi ho
 jisko main gum me khushi me
 jeev jantu sab me dhudhata hun
 
-guzaara nahi hota mera
-tum bin ek pal, kyuki
+guzaara nahi hota mera 
+tum bin ek pal, kyuki 
 sahaaraa ho tum mere pal pal ka
 
 likhana chahatu bahut kuch tumhare baare me

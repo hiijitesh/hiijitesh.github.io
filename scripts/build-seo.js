@@ -341,20 +341,9 @@ async function main() {
   // Fetch live poems from Google Sheets
   const livePoems = await fetchLivePoetry();
   if (livePoems.length > 0) {
-    const map = new Map();
-    livePoems.forEach(p => {
-      if (p.id) map.set(p.id.toLowerCase().trim(), p);
-    });
+    writings = livePoems;
 
-    const merged = [...livePoems];
-    writings.forEach(p => {
-      if (p.id && !map.has(p.id.toLowerCase().trim())) {
-        merged.push(p);
-      }
-    });
-    writings = merged;
-
-    // Update data/writings.json cache
+    // Update data/writings.json cache with authoritative sheet content
     fs.writeFileSync(WRITINGS_PATH, JSON.stringify(writings, null, 2), 'utf-8');
     console.log(`  ✓ Synced ${livePoems.length} live poems from Google Sheet into data/writings.json`);
   }
