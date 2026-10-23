@@ -1,7 +1,7 @@
 /**
  * PoetrySection Component
- * Manages the poetry grid, category filter tabs, asynchronous data fetching,
- * empty conditions state, and reader modal integration.
+ * Manages the poetry grid, category filter tabs, sorting,
+ * live data from Google Sheets via PoetryLoader, and reader modal integration.
  */
 window.App = window.App || {};
 
@@ -22,7 +22,7 @@ window.App = window.App || {};
       this.setupFilters();
       this.setupSorting();
 
-      // Hook real-time Google Sheets sync
+      // Hook real-time Google Sheets engagement stats sync
       if (App.Engagement && typeof App.Engagement.addSyncListener === 'function') {
         App.Engagement.addSyncListener(() => {
           this.render();
@@ -32,8 +32,24 @@ window.App = window.App || {};
 
       // Render immediate default writings so page is never empty
       this.render();
-      // Try to load any updated writings from JSON
-      await this.loadWritings();
+
+      // Initialize PoetryLoader and fetch live poems from Google Sheets
+      if (App.PoetryLoader) {
+        App.PoetryLoader.init();
+
+        // Use defaults from loader immediately
+        this.writings = App.PoetryLoader.getPoems();
+        this.render();
+
+        // Listen for live updates from sheet
+        App.PoetryLoader.addListener((poems) => {
+          this.writings = poems;
+          this.render();
+        });
+
+        // Fire the async fetch from Google Sheets
+        await App.PoetryLoader.fetchFromSheet();
+      }
     }
 
     setupFilters() {
@@ -56,21 +72,6 @@ window.App = window.App || {};
           this.render();
         });
       });
-    }
-
-    async loadWritings() {
-      try {
-        const res = await fetch(`data/writings.json?t=${Date.now()}`, { cache: 'no-store' });
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data)) {
-            this.writings = data;
-            this.render();
-          }
-        }
-      } catch {
-        // Offline / file:// protocol fallback already rendered
-      }
     }
 
     render() {
@@ -140,3 +141,4 @@ window.App = window.App || {};
 
   App.PoetrySectionComponent = PoetrySectionComponent;
 })(window.App);
+
