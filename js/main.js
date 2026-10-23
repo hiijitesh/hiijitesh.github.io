@@ -1,5 +1,5 @@
 /**
- * JITESH GIRI — Main Application Orchestrator
+ * Jitesh Bharti — Main Application Orchestrator
  * Clean modular initializer working universally on both HTTP and local file:// protocols.
  */
 document.addEventListener('DOMContentLoaded', () => {

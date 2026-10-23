@@ -1,4 +1,4 @@
-# Jitesh Giri — Personal Portfolio
+# Jitesh Bharti — Personal Portfolio
 
 > Sound Engineer · Beat Producer · Writer · Photographer
 
@@ -8,7 +8,7 @@ Live at **[hiijitesh.github.io](https://hiijitesh.github.io)**
 
 ## About
 
-Personal portfolio website for **Jitesh Giri**, a multi-disciplinary creative based in Bangalore, India. The site showcases work across four domains:
+Personal portfolio website for **Jitesh Bharti**, a multi-disciplinary creative based in Bangalore, India. The site showcases work across four domains:
 
 - 🎛️ **Mixing & Mastering** — stereo engineering with a live A/B comparison player
 - 🎵 **Beat Production** — licensable instrumentals with an interactive audio player
@@ -111,4 +111,4 @@ python3 -m http.server 8000
 
 ---
 
-© 2026 Jitesh Giri. All creative rights reserved.
+© 2026 Jitesh Bharti. All creative rights reserved.

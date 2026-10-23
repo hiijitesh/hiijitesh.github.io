@@ -1,5 +1,5 @@
 /* ==========================================================================
-   JITESH GIRI — MOBILE-FIRST EDITORIAL STYLESHEET
+   Jitesh Bharti — MOBILE-FIRST EDITORIAL STYLESHEET
    Natural, brotherly, unpretentious tone ('bhai', 'tu', 'tum', raw & warm)
    Warm Obsidian (#10100e) & Ivory (#ffffe3) · Editorial Serif + Clean UI
    Mobile-First Architecture: Base styles for phone -> min-width for larger
@@ -1876,11 +1876,16 @@ section {
 }
 
 .poem-author-avatar {
-  width: 46px;
-  height: 46px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
-  border: 1px solid var(--border);
+  object-position: center;
+  border: 1.5px solid var(--border-medium, rgba(255, 255, 255, 0.15));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  display: block;
+  flex-shrink: 0;
 }
 
 .poem-author-info h4 {

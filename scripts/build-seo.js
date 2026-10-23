@@ -1,11 +1,11 @@
 /**
- * SEO Page & Sitemap Generator for Jitesh Giri (jiteshkumar.in)
- * 
+ * SEO Page & Sitemap Generator for Jitesh Bharti (jiteshkumar.in)
+ *
  * Generates:
  * 1. Dedicated pre-rendered HTML pages for each poem (/poetry/<id>/index.html)
  * 2. sitemap.xml for Google Search Console
  * 3. robots.txt
- * 
+ *
  * Usage: node scripts/build-seo.js
  */
 
@@ -19,7 +19,7 @@ const SITEMAP_PATH = path.join(ROOT_DIR, 'sitemap.xml');
 const ROBOTS_PATH = path.join(ROOT_DIR, 'robots.txt');
 
 const BASE_URL = 'https://jiteshkumar.in';
-const AUTHOR_NAME = 'Jitesh Giri';
+const AUTHOR_NAME = 'Jitesh Bharti';
 
 function escapeHtml(str) {
   if (!str) return '';
@@ -95,7 +95,7 @@ function generatePoemHtml(piece) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <!-- Primary Meta Tags -->
   <title>${escapeHtml(titleTag)}</title>
   <meta name="title" content="${escapeHtml(titleTag)}">
@@ -111,7 +111,7 @@ function generatePoemHtml(piece) {
   <meta property="og:url" content="${canonicalUrl}">
   <meta property="og:title" content="${escapeHtml(piece.title)} — ${escapeHtml(AUTHOR_NAME)}">
   <meta property="og:description" content="${escapeHtml(metaDesc)}">
-  <meta property="og:image" content="${BASE_URL}/images/photography/studio_portrait.png">
+  <meta property="og:image" content="${BASE_URL}/images/jitesh.jpg">
   <meta property="og:locale" content="hi_IN">
   <meta property="article:author" content="${escapeHtml(AUTHOR_NAME)}">
   <meta property="article:section" content="${escapeHtml(piece.category)}">
@@ -121,7 +121,7 @@ function generatePoemHtml(piece) {
   <meta name="twitter:url" content="${canonicalUrl}">
   <meta name="twitter:title" content="${escapeHtml(piece.title)} — ${escapeHtml(AUTHOR_NAME)}">
   <meta name="twitter:description" content="${escapeHtml(metaDesc)}">
-  <meta name="twitter:image" content="${BASE_URL}/images/photography/studio_portrait.png">
+  <meta name="twitter:image" content="${BASE_URL}/images/jitesh.jpg">
 
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="../../favicon.ico">
@@ -133,7 +133,7 @@ function generatePoemHtml(piece) {
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Rozha+One&display=swap" rel="stylesheet">
 
   <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="../../stylesheet.css?v=14">
+  <link rel="stylesheet" href="../../stylesheet.css?v=19">
 
   <!-- Schema.org Structured Data -->
   <script type="application/ld+json">
@@ -202,7 +202,7 @@ ${JSON.stringify(schemaJson, null, 2)}
     <!-- Footer Author / Navigation Card -->
     <div class="poem-footer-cta">
       <div class="poem-author-card">
-        <img src="../../images/photography/studio_portrait.png" alt="${escapeHtml(AUTHOR_NAME)}" class="poem-author-avatar" width="48" height="48" loading="lazy">
+        <img src="../../images/jitesh.jpg" alt="${escapeHtml(AUTHOR_NAME)}" class="poem-author-avatar" width="48" height="48" loading="lazy">
         <div class="poem-author-info">
           <h4>${escapeHtml(AUTHOR_NAME)}</h4>
           <p>Poet & Storyteller &bull; Pure dil se likha hua</p>

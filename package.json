@@ -1,18 +1,18 @@
 {
   "name": "jiteshkumar.in",
   "version": "1.0.0",
-  "description": "Jitesh Giri — Poet, Writer & Technologist portfolio website",
+  "description": "Jitesh Bharti — Poet, Writer & Technologist portfolio website",
   "main": "js/main.js",
   "scripts": {
     "build:seo": "node scripts/build-seo.js"
   },
   "keywords": [
     "poetry",
-    "jitesh-giri",
+    "jitesh-bharti",
     "hindi-poetry",
     "shayari",
     "nazm"
   ],
-  "author": "Jitesh Giri <hiijitesh@gmail.com>",
+  "author": "Jitesh Bharti",
   "license": "MIT"
 }
