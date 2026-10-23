@@ -259,19 +259,24 @@ function handleGetPoetry() {
 
   for (let i = 0; i < data.length; i++) {
     const row = data[i];
-    const id = String(row[0] || '').trim();
+    let id = String(row[0] || '').trim();
+    const title = String(row[2] || '').trim();
     const status = String(row[8] || '').trim().toLowerCase();
 
+    // Auto-generate ID slug from title if column A was left blank
+    if (!id && title) {
+      id = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+
     // Skip empty rows and drafts
-    if (!id) continue;
+    if (!id && !title) continue;
     if (status !== 'published' && status !== '') continue;
-    // If status is explicitly "draft", skip
     if (status === 'draft') continue;
 
     poems.push({
       id: id,
       category: String(row[1] || 'Poetry').trim(),
-      title: String(row[2] || '').trim(),
+      title: title,
       title_hi: String(row[3] || '').trim(),
       date: String(row[4] || '').trim(),
       excerpt: String(row[5] || '').trim(),

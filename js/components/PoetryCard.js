@@ -42,7 +42,7 @@ window.App = window.App || {};
           </svg>
           <span>${stats.formattedViews}</span>
         </span>
-        <span class="row-date">${escapeHtml(piece.date)}</span>
+        <span class="row-date">${escapeHtml(App.formatPoetryDate ? App.formatPoetryDate(piece.date) : piece.date)}</span>
         <span class="row-arrow" aria-hidden="true">→</span>
       </div>
     `;

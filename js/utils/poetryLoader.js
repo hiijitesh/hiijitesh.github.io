@@ -3,20 +3,45 @@
  * Fetches poetry from Google Sheets (Poetry tab) via the Apps Script API.
  * Falls back gracefully to defaultWritings.js when offline or on file:// protocol.
  *
- * Architecture:
- * 1. Immediately returns defaultWritings so the page is never empty.
- * 2. Fires an async fetch to Google Sheets for live poetry data.
- * 3. Merges server poems with local defaults (server takes priority by ID).
- * 4. Notifies listeners so PoetrySection can re-render seamlessly.
+ * Automatically formats sheet date entries into "Oct 2026" (Mon YYYY) format.
  */
 window.App = window.App || {};
 
 (function(App) {
   'use strict';
 
+  /**
+   * Helper to format any date input (Date object, timestamp string, ISO string)
+   * into clean "Oct 2026" (Mon YYYY) format.
+   */
+  function formatPoetryDate(rawDate) {
+    if (!rawDate) return 'Oct 2026';
+
+    // If already in "MMM YYYY" or "MMMM YYYY" format e.g. "Oct 2026"
+    if (typeof rawDate === 'string') {
+      const trimmed = rawDate.trim();
+      const m = trimmed.match(/^([a-zA-Z]{3,9})\s+(\d{4})$/);
+      if (m) {
+        const monthShort = m[1].slice(0, 3);
+        return monthShort.charAt(0).toUpperCase() + monthShort.slice(1).toLowerCase() + ' ' + m[2];
+      }
+    }
+
+    const d = new Date(rawDate);
+    if (!isNaN(d.getTime())) {
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return `${months[d.getMonth()]} ${d.getFullYear()}`;
+    }
+
+    return String(rawDate);
+  }
+
+  // Export helper globally so PoetryCard can also use it
+  App.formatPoetryDate = formatPoetryDate;
+
   class PoetryLoaderService {
     constructor() {
-      this.apiEndpoint = null; // set after DOM
+      this.apiEndpoint = null;
       this.poems = [];
       this.hasFetched = false;
       this.isFetching = false;
@@ -32,7 +57,10 @@ window.App = window.App || {};
 
       // Start with default writings as immediate baseline
       if (App.defaultWritings && Array.isArray(App.defaultWritings)) {
-        this.poems = [...App.defaultWritings];
+        this.poems = App.defaultWritings.map(p => ({
+          ...p,
+          date: formatPoetryDate(p.date)
+        }));
       }
     }
 
@@ -43,7 +71,6 @@ window.App = window.App || {};
     addListener(fn) {
       if (typeof fn === 'function') {
         this.listeners.push(fn);
-        // If we already fetched, immediately call with current poems
         if (this.hasFetched) {
           try { fn(this.poems); } catch(e) { console.error(e); }
         }
@@ -69,68 +96,126 @@ window.App = window.App || {};
     }
 
     /**
+     * Build the full URL with query params for the API call
+     */
+    _buildUrl(action) {
+      const endpoint = this.apiEndpoint;
+      try {
+        const urlObj = new URL(endpoint, window.location.href);
+        urlObj.searchParams.set('action', action);
+        urlObj.searchParams.set('_t', String(Date.now()));
+        return urlObj.toString();
+      } catch {
+        const sep = endpoint.includes('?') ? '&' : '?';
+        return `${endpoint}${sep}action=${encodeURIComponent(action)}&_t=${Date.now()}`;
+      }
+    }
+
+    /**
      * Fetch poems from Google Sheets via Apps Script
-     * Merges with defaults (server poems override by matching ID)
+     * Uses direct GET with follow redirects (simple CORS request, no preflight OPTIONS needed)
      */
     async fetchFromSheet() {
       if (!this.apiEndpoint || this.isFetching) return this.poems;
 
+      // Don't attempt fetch on file:// protocol
+      if (window.location.protocol === 'file:') {
+        console.info('[PoetryLoader] Running on file:// protocol, using defaults only.');
+        return this.poems;
+      }
+
       this.isFetching = true;
       this.fetchError = null;
 
-      try {
-        const separator = this.apiEndpoint.includes('?') ? '&' : '?';
-        const url = `${this.apiEndpoint}${separator}action=get_poetry&_t=${Date.now()}`;
+      const targetUrl = this._buildUrl('get_poetry');
+      console.info('[PoetryLoader] Fetching poems from:', targetUrl);
 
-        const res = await fetch(url, {
+      // Primary: Simple GET request (Apps Script redirects cleanly without CORS preflight block)
+      try {
+        const res = await fetch(targetUrl, {
           method: 'GET',
-          cache: 'no-store',
-          headers: { 'Accept': 'application/json' },
           redirect: 'follow'
         });
 
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
+        if (res.ok) {
+          const data = await res.json();
+          console.info('[PoetryLoader] GET Response:', data);
 
-        const data = await res.json();
-
-        if (data && data.status === 'success' && Array.isArray(data.poetry)) {
-          const serverPoems = data.poetry;
-
-          if (serverPoems.length > 0) {
-            // Build a map of server poem IDs for fast lookup
-            const serverMap = new Map();
-            serverPoems.forEach(p => {
-              if (p.id) serverMap.set(p.id, p);
-            });
-
-            // Merge: server poems take priority, then append any defaults not in server
-            const defaults = App.defaultWritings || [];
-            const merged = [...serverPoems];
-
-            defaults.forEach(defPoem => {
-              if (defPoem.id && !serverMap.has(defPoem.id)) {
-                merged.push(defPoem);
-              }
-            });
-
-            this.poems = merged;
+          if (data && data.status === 'success' && Array.isArray(data.poetry)) {
+            this._mergeAndUpdate(data.poetry);
+            return this.poems;
           }
-          // If server returned 0 poems, keep defaults (sheet may be empty / just created)
+        }
+      } catch (err) {
+        console.warn('[PoetryLoader] GET failed, trying POST fallback:', err.message || err);
+      }
 
-          this.hasFetched = true;
-          this._notifyListeners();
+      // Secondary fallback: POST with text/plain
+      try {
+        const payload = JSON.stringify({ action: 'get_poetry' });
+        const res = await fetch(targetUrl, {
+          method: 'POST',
+          body: payload,
+          headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+          redirect: 'follow'
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.status === 'success' && Array.isArray(data.poetry)) {
+            this._mergeAndUpdate(data.poetry);
+            return this.poems;
+          }
         }
       } catch (err) {
         this.fetchError = err;
-        console.warn('[PoetryLoader] Could not fetch from sheet, using defaults:', err.message || err);
-        // Keep defaults, no re-notify needed
-      } finally {
-        this.isFetching = false;
+        console.warn('[PoetryLoader] Fallback also failed, using defaults:', err.message || err);
       }
 
+      this.isFetching = false;
       return this.poems;
+    }
+
+    /**
+     * Merge server poems with defaults and notify listeners
+     * Formats all dates to "Oct 2026" (Mon YYYY)
+     * Server poems override defaults by matching ID
+     * @param {Array} serverPoems
+     */
+    _mergeAndUpdate(serverPoems) {
+      if (serverPoems.length > 0) {
+        const formattedServerPoems = serverPoems.map(p => ({
+          ...p,
+          date: formatPoetryDate(p.date)
+        }));
+
+        const serverMap = new Map();
+        formattedServerPoems.forEach(p => {
+          if (p.id) serverMap.set(p.id, p);
+        });
+
+        // Server poems first, then any defaults not on the server
+        const defaults = (App.defaultWritings || []).map(p => ({
+          ...p,
+          date: formatPoetryDate(p.date)
+        }));
+        const merged = [...formattedServerPoems];
+
+        defaults.forEach(defPoem => {
+          if (defPoem.id && !serverMap.has(defPoem.id)) {
+            merged.push(defPoem);
+          }
+        });
+
+        this.poems = merged;
+        console.info(`[PoetryLoader] Loaded ${formattedServerPoems.length} poems from sheet, ${merged.length} total after merge.`);
+      } else {
+        console.info('[PoetryLoader] Sheet returned 0 poems, keeping defaults.');
+      }
+
+      this.hasFetched = true;
+      this.isFetching = false;
+      this._notifyListeners();
     }
   }
 
