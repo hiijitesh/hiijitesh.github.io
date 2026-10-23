@@ -12,10 +12,17 @@ document.addEventListener('DOMContentLoaded', () => {
   if (App.TourSectionComponent) {
     App.tourSection = new App.TourSectionComponent();
   }
+  if (App.ThankYouView) {
+    App.ThankYouView.init();
+  }
 
   // Global helper bindings for backward compatibility with HTML attributes
   window.showToast = (msg) => {
     if (App.Toast) App.Toast.show(msg);
+  };
+
+  window.openThankYou = () => {
+    if (App.ThankYouView) App.ThankYouView.open();
   };
 
   window.openTicketModal = (city, date, venue, title, price) => {

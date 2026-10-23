@@ -36,7 +36,7 @@
   <link rel="apple-touch-icon" href="images/favicon.png?v=2">
 
   <!-- Minimal Stylesheet -->
-  <link rel="stylesheet" href="stylesheet.css?v=14">
+  <link rel="stylesheet" href="stylesheet.css?v=16">
 </head>
 <body>
 
@@ -247,6 +247,20 @@
     </div>
   </div>
 
+  <!-- Full-Screen Thank You / Subscribed View (Matches Image 3) -->
+  <div class="thank-you-view" id="thank-you-view" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="thank-you-heading">
+    <div class="thank-you-content">
+      <h1 class="thank-you-title" id="thank-you-heading">Less Go Bhai !</h1>
+      <p class="thank-you-sub">
+        Inbox check kro agr na dikhe toh <strong>Promotions</strong> ya <strong>Spam</strong> folder check maro.
+      </p>
+      <button type="button" class="thank-you-back-btn" id="thank-you-back-btn" aria-label="Wapas jayein">
+        <span class="thank-you-arrow" aria-hidden="true">&larr;</span>
+        <span class="thank-you-wapas">Home Pe Wapas</span>
+      </button>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div class="toast" id="toast">Email copy ho gaya bhai!</div>
 
@@ -271,17 +285,18 @@
   </script>
 
   <!-- Modular Components & Architecture -->
-  <script src="js/data/defaultWritings.js?v=15"></script>
-  <script src="js/utils/validator.js?v=15"></script>
-  <script src="js/utils/transliterator.js?v=15"></script>
-  <script src="js/utils/subscriber.js?v=15"></script>
-  <script src="js/utils/engagement.js?v=15"></script>
-  <script src="js/components/Toast.js?v=15"></script>
-  <script src="js/components/PoetryCard.js?v=15"></script>
-  <script src="js/components/ReaderModal.js?v=15"></script>
-  <script src="js/components/TicketModal.js?v=15"></script>
-  <script src="js/components/PoetrySection.js?v=15"></script>
-  <script src="js/components/TourSection.js?v=15"></script>
-  <script src="js/main.js?v=15"></script>
+  <script src="js/data/defaultWritings.js?v=16"></script>
+  <script src="js/utils/validator.js?v=16"></script>
+  <script src="js/utils/transliterator.js?v=16"></script>
+  <script src="js/utils/subscriber.js?v=16"></script>
+  <script src="js/utils/engagement.js?v=16"></script>
+  <script src="js/components/Toast.js?v=16"></script>
+  <script src="js/components/PoetryCard.js?v=16"></script>
+  <script src="js/components/ReaderModal.js?v=16"></script>
+  <script src="js/components/TicketModal.js?v=16"></script>
+  <script src="js/components/ThankYouView.js?v=16"></script>
+  <script src="js/components/PoetrySection.js?v=16"></script>
+  <script src="js/components/TourSection.js?v=16"></script>
+  <script src="js/main.js?v=16"></script>
 </body>
 </html>

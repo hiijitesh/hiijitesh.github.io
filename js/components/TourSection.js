@@ -53,22 +53,24 @@ window.App = window.App || {};
       }
 
       try {
-        let result = null;
-        if (typeof App.storeUserEmail === 'function') {
-          result = await App.storeUserEmail(email, { source: 'tour_section' });
-        }
+        const storePromise = (typeof App.storeUserEmail === 'function')
+          ? App.storeUserEmail(email, { source: 'tour_section' })
+          : Promise.resolve({ success: true });
 
         if (this.cityForm) this.cityForm.reset();
 
-        if (result && result.alreadySubscribed) {
-          if (App.Toast) App.Toast.show(result.message || 'Tu na already list me hain chill kr');
-        } else {
-          if (App.Toast) App.Toast.show('Done Bhai!');
+        // Show full-screen confirmation view
+        if (App.ThankYouView) {
+          App.ThankYouView.open();
         }
+
+        await storePromise;
       } catch (err) {
         console.error('Failed to store email:', err);
         if (this.cityForm) this.cityForm.reset();
-        if (App.Toast) App.Toast.show('Done Bhai!');
+        if (App.ThankYouView) {
+          App.ThankYouView.open();
+        }
       } finally {
         this.isSubmitting = false;
         if (submitBtn) {

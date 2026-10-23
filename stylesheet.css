@@ -44,6 +44,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
@@ -52,6 +53,7 @@ html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
   overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 ::selection {
@@ -69,6 +71,19 @@ body {
   position: relative;
   overflow-x: hidden;
   overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Eliminate ugly square focus outlines on mouse/tap while preserving keyboard accessibility */
+:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Anchor sections smooth scroll offset below sticky header */
+#tickets,
+#poetry {
+  scroll-margin-top: calc(var(--header-height) + 1.25rem);
 }
 
 /* Grain texture */
@@ -87,6 +102,11 @@ a {
   color: inherit;
   text-decoration: none;
   transition: color var(--t-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+a:focus:not(:focus-visible) {
+  outline: none;
 }
 
 button {
@@ -95,6 +115,14 @@ button {
   border: none;
   background: none;
   color: inherit;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+button:focus:not(:focus-visible) {
+  outline: none;
 }
 
 .container {
@@ -170,11 +198,32 @@ button {
   border-radius: 9999px;
   transition: all var(--t-fast);
   white-space: nowrap;
+  outline: none;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .nav-ticket-btn:hover {
   background: #ffffff;
   transform: translateY(-1px);
+}
+
+.nav-ticket-btn:active {
+  background: #ffffff;
+  transform: translateY(0) scale(0.97);
+}
+
+.nav-ticket-btn:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+.nav-ticket-btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 227, 0.4);
+  outline-offset: 2px;
 }
 
 /* ==========================================================================
@@ -613,11 +662,32 @@ section {
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  transition: background-color var(--t-fast);
+  border: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  transition: background-color var(--t-fast), transform var(--t-fast);
 }
 
 .city-btn:hover {
   background: #ffffff;
+}
+
+.city-btn:active {
+  background: #ffffff;
+  transform: scale(0.98);
+}
+
+.city-btn:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+.city-btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 227, 0.4);
+  outline-offset: 2px;
 }
 
 /* Show Row Table Template (if activated later) */
@@ -1196,34 +1266,163 @@ section {
   color: var(--accent);
 }
 
+/* Transient Toast Notification — Bottom-centered so it NEVER overlaps header/ticket buttons */
 .toast {
   position: fixed;
-  top: 1.25rem;
-  right: 1.25rem;
-  bottom: auto;
-  left: auto;
-  max-width: min(90vw, 360px);
-  width: auto;
+  bottom: 2rem;
+  bottom: max(1.75rem, calc(env(safe-area-inset-bottom, 0px) + 1.25rem));
+  left: 50%;
+  top: auto;
+  right: auto;
+  max-width: min(90vw, 420px);
+  width: max-content;
   background: var(--ink);
   color: var(--bg);
-  padding: 0.55rem 1.1rem;
+  padding: 0.65rem 1.25rem;
   border-radius: 9999px;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 0.8125rem;
   font-weight: 500;
   text-align: center;
   z-index: 9999;
-  transform: translateY(-16px) scale(0.96);
+  transform: translate(-50%, 16px) scale(0.96);
   opacity: 0;
-  transition: all 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .toast.show {
-  transform: translateY(0) scale(1);
+  transform: translate(-50%, 0) scale(1);
   opacity: 1;
+}
+
+/* ==========================================================================
+   THANK YOU VIEW (FULL-SCREEN CONFIRMATION)
+   Matches Image 3: Minimal, Pure Black (#000000), Centered Editorial Layout
+   ========================================================================== */
+.thank-you-view {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  background: #000000;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.28s var(--ease), visibility 0.28s var(--ease);
+  overscroll-behavior: contain;
+}
+
+.thank-you-view.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.thank-you-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  max-width: 680px;
+  width: 100%;
+  margin: auto;
+  animation: thankYouFadeIn 0.35s var(--ease) forwards;
+}
+
+@keyframes thankYouFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.thank-you-title {
+  font-family: var(--font-poetry-title);
+  font-size: clamp(2.4rem, 6.5vw, 4.25rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin-bottom: 1.35rem;
+}
+
+.thank-you-sub {
+  font-family: var(--font-ui);
+  font-size: clamp(0.925rem, 2.4vw, 1.0625rem);
+  font-weight: 400;
+  line-height: 1.65;
+  color: #8c8c7f;
+  max-width: 540px;
+  margin-bottom: 2.75rem;
+}
+
+.thank-you-sub strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.thank-you-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: none;
+  color: #8c8c7f;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 400;
+  padding: 0.5rem 0.85rem;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  transition: color var(--t-fast);
+}
+
+.thank-you-back-btn:hover {
+  color: var(--ink);
+}
+
+.thank-you-back-btn .thank-you-arrow {
+  font-size: 1.15rem;
+  line-height: 1;
+  transition: transform var(--t-fast);
+}
+
+.thank-you-back-btn:hover .thank-you-arrow {
+  transform: translateX(-4px);
+}
+
+.thank-you-back-btn .thank-you-wapas {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.thank-you-back-btn:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+.thank-you-back-btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 227, 0.4);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 /* ==========================================================================
@@ -1411,11 +1610,11 @@ section {
   }
 
   .toast {
-    left: auto;
-    right: 1.5rem;
-    top: 1.5rem;
-    bottom: auto;
-    width: auto;
+    left: 50%;
+    right: auto;
+    top: auto;
+    bottom: 2.25rem;
+    bottom: max(2rem, calc(env(safe-area-inset-bottom, 0px) + 1.5rem));
   }
 }
 
