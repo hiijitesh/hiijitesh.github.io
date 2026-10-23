@@ -1881,7 +1881,7 @@ section {
   border-radius: 50%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
-  object-position: center;
+  object-position: center top;
   border: 1.5px solid var(--border-medium, rgba(255, 255, 255, 0.15));
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   display: block;
